@@ -1,0 +1,53 @@
+:root {
+  --color-primary: #FFB347; /* Pastel Orange */
+  --color-secondary: #FFD1DC; /* Pastel Pink */
+  --color-accent: #77DD77; /* Pastel Green */
+  --color-board-light: #FFFDD0; /* Cream */
+  --color-board-dark: #AEC6CF; /* Pastel Blue */
+  --color-text-main: #555555;
+  --font-family-main: "Comic Sans MS", "Chalkboard SE", "Comic Neue", sans-serif;
+  --spacing-unit: 8px;
+  --border-radius-large: 16px;
+  --border-radius-small: 8px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-main);
+  background-color: var(--color-board-light);
+  color: var(--color-text-main);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+button {
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: var(--border-radius-small);
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: bold;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.1s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.95);
+}
