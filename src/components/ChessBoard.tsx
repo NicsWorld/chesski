@@ -83,7 +83,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove }) => {
     return (
         <div style={{
             width: '100%',
-            maxWidth: '70vmin', // Ensure it fits on screen within viewport min dimension
+            maxWidth: '70vmin',
             aspectRatio: '1 / 1',
             display: 'grid',
             gridTemplateColumns: 'repeat(8, 1fr)',
@@ -91,7 +91,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove }) => {
             border: '8px solid #5a3a29',
             borderRadius: '4px',
             marginTop: '1rem',
-            margin: '0 auto', // Center it
+            margin: '0 auto',
         }}>
             {ranks.map((rank, rankIndex) =>
                 files.map((file, fileIndex) => {
