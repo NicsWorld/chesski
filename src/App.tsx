@@ -50,7 +50,7 @@ function App() {
     <DndProvider backend={HTML5Backend}>
       <div className="game-container">
         <header>
-          <h1 style={{ color: 'var(--color-primary)', fontSize: '3rem', margin: '0.5rem 0' }}>Zoo Chess</h1>
+          <h1 style={{ color: 'var(--color-primary)', fontSize: '3rem', margin: '0.5rem 0' }}>Chess</h1>
           <p style={{ fontSize: '1.2rem' }}>Learn to play with animal friends!</p>
         </header>
 
