@@ -15,32 +15,25 @@ interface BoardSquareProps {
     onDrop: (item: { id: string; position: string }) => void;
     highlight: boolean;
     lastMove: boolean;
+    isOver: boolean;
+    canDrop: boolean;
 }
 
-const BoardSquare: React.FC<BoardSquareProps> = ({ position, isBlack, children, onDrop, highlight, lastMove }) => {
-    const [{ isOver, canDrop }, drop] = useDrop(() => ({
-        accept: 'PIECE',
-        drop: (item: { id: string; position: string }) => onDrop(item),
-        collect: (monitor) => ({
-            isOver: !!monitor.isOver(),
-            canDrop: !!monitor.canDrop(),
-        }),
-    }));
+const BoardSquare: React.FC<BoardSquareProps> = ({ position, isBlack, children, onDrop, highlight, lastMove, isOver, canDrop }) => {
+    // Determine background color based on state
+    // Base color
+    let backgroundColor = isBlack ? 'var(--color-board-black)' : 'var(--color-board-white)';
 
-    let backgroundColor = isBlack ? 'var(--color-board-dark)' : 'var(--color-board-light)';
-    if (highlight) {
-        backgroundColor = isBlack ? '#a9dfbf' : '#d4efdf'; // Green-ish highlight
-    }
+    // Hover state (Yellowish tint)
     if (isOver && canDrop) {
-        backgroundColor = '#f7dc6f'; // Yellow highlight on hover
+        backgroundColor = '#ffeaa7';
     }
-    if (lastMove) {
-        backgroundColor = 'rgba(255, 255, 0, 0.4)'; // Subtle yellow for last move
-    }
+
+    // Last move highlight (Subtle transparency)
+    // if (lastMove) { ... }
 
     return (
         <div
-            ref={drop as unknown as React.RefObject<HTMLDivElement>}
             style={{
                 width: '100%',
                 height: '100%',
@@ -51,12 +44,56 @@ const BoardSquare: React.FC<BoardSquareProps> = ({ position, isBlack, children, 
                 position: 'relative',
             }}
         >
+            {/* Coordinate Labels - Only show on edges */}
+            {position.includes('1') && <span style={{ position: 'absolute', bottom: 4, right: 4, fontSize: '0.65em', fontWeight: 'bold', color: isBlack ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.4)' }}>{position[0]}</span>}
+            {position.includes('a') && <span style={{ position: 'absolute', top: 4, left: 4, fontSize: '0.65em', fontWeight: 'bold', color: isBlack ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.4)' }}>{position[1]}</span>}
+
             {children}
-            {position.includes('1') && <span style={{ position: 'absolute', bottom: 2, right: 2, fontSize: '0.7em', color: isBlack ? '#fff' : '#000' }}>{position[0]}</span>}
-            {position.includes('a') && <span style={{ position: 'absolute', top: 2, left: 2, fontSize: '0.7em', color: isBlack ? '#fff' : '#000' }}>{position[1]}</span>}
+
+            {/* Legal Move Highlight - Dot */}
+            {highlight && !children && (
+                <div style={{
+                    width: '30%',
+                    height: '30%',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+                    pointerEvents: 'none', // Allow clicks to pass through
+                }} />
+            )}
+
+            {/* Legal Move Capture Highlight - Ring (if child exists i.e. capture) */}
+            {highlight && children && (
+                <div style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    boxSizing: 'border-box',
+                    border: '6px solid rgba(0, 0, 0, 0.15)',
+                    borderRadius: '50%', // Optional: rounded piece shape or full square
+                    pointerEvents: 'none',
+                }} />
+            )}
         </div>
     );
 };
+
+// Wrapper handling drop logic to keep BoardSquare clean(er)
+const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { onDrop: (item: any) => void }> = (props) => {
+    const [{ isOver, canDrop }, drop] = useDrop(() => ({
+        accept: 'PIECE',
+        drop: (item: { id: string; position: string }) => props.onDrop(item),
+        collect: (monitor) => ({
+            isOver: !!monitor.isOver(),
+            canDrop: !!monitor.canDrop(),
+        }),
+    }));
+
+    return (
+        <div ref={drop as unknown as React.RefObject<HTMLDivElement>} style={{ width: '100%', height: '100%' }}>
+            <BoardSquare {...props} isOver={isOver} canDrop={canDrop} />
+        </div>
+    )
+}
 
 const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove }) => {
     const [board, setBoard] = useState(game.board());
@@ -66,14 +103,13 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove }) => {
         setBoard(game.board());
     }, [game, game.fen()]);
 
-    // Helper to get square color
     const isBlackSquare = (fileIndex: number, rankIndex: number) => {
         return (fileIndex + rankIndex) % 2 === 1;
     };
 
     const handleDrop = (item: { id: string; position: string }, to: string) => {
         const from = item.position;
-        onMove({ from, to, promotion: 'q' }); // Auto-promote to Queen for simplicity in MVP
+        onMove({ from, to, promotion: 'q' });
         setValidMoves([]);
     };
 
@@ -88,10 +124,10 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove }) => {
             display: 'grid',
             gridTemplateColumns: 'repeat(8, 1fr)',
             gridTemplateRows: 'repeat(8, 1fr)',
-            border: '8px solid #5a3a29',
-            borderRadius: '4px',
-            marginTop: '1rem',
-            margin: '0 auto',
+            border: '8px solid white', // Modern clean border
+            borderRadius: 'var(--radius-sm)',
+            boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
+            overflow: 'hidden', // To clip corners
         }}>
             {ranks.map((rank, rankIndex) =>
                 files.map((file, fileIndex) => {
@@ -100,25 +136,24 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove }) => {
                     const isBlack = isBlackSquare(fileIndex, rankIndex);
 
                     return (
-                        <BoardSquare
+                        <SquareWrapper
                             key={square}
                             position={square}
                             isBlack={isBlack}
                             onDrop={(item) => handleDrop(item, square)}
                             highlight={validMoves.includes(square)}
-                            lastMove={false} // TODO: Implement last move highlighting
+                            lastMove={false}
                         >
                             {piece && <Piece
                                 piece={piece}
                                 position={square}
                                 onDragStart={() => {
-                                    // Get legal moves for this piece
                                     const moves = game.moves({ square: square as any, verbose: true });
                                     setValidMoves(moves.map(m => m.to));
                                 }}
                                 onDragEnd={() => setValidMoves([])}
                             />}
-                        </BoardSquare>
+                        </SquareWrapper>
                     );
                 })
             )}

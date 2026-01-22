@@ -48,34 +48,39 @@ function App() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="game-container">
-        <header>
-          <h1 style={{ color: 'var(--color-primary)', fontSize: '3rem', margin: '0.5rem 0' }}>Chess</h1>
-          <p style={{ fontSize: '1.2rem' }}>Learn to play with animal friends!</p>
+      <div className="app-container">
+        <header className="app-header">
+          <h1>Zoo Chess</h1>
+          <p>Learn to play with animal friends!</p>
         </header>
 
-        <div style={{ position: 'relative' }}>
-          <ChessBoard game={game} onMove={handleMove} />
-        </div>
-
-        <div className="game-controls" style={{
-          backgroundColor: 'white',
-          padding: '2rem',
-          borderRadius: 'var(--border-radius-large)',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-          maxWidth: '600px',
-          width: '100%'
-        }}>
-          <h2 style={{ color: 'var(--color-text-main)' }}>{message}</h2>
-
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}>
-            <button onClick={resetGame}>Reset Game</button>
-            <button onClick={() => {
-              game.undo();
-              setFen(game.fen());
-              updateStatus();
-            }} style={{ backgroundColor: 'var(--color-secondary)' }}>Undo Move</button>
+        <div className="game-layout">
+          <div className="board-area">
+            <ChessBoard game={game} onMove={handleMove} />
           </div>
+
+          <aside className="info-panel">
+            <div className="status-card">
+              <h2>{message}</h2>
+            </div>
+
+            <div className="action-buttons">
+              <button onClick={resetGame}>New Game</button>
+              <button
+                className="btn-secondary"
+                onClick={() => {
+                  game.undo();
+                  setFen(game.fen());
+                  updateStatus();
+                }}
+              >
+                Undo
+              </button>
+            </div>
+
+            {/* Placeholder for future features like "Captured Pieces" */}
+            {/* <div className="captured-area">...</div> */}
+          </aside>
         </div>
       </div>
     </DndProvider>

@@ -1,53 +1,90 @@
 :root {
-  --color-primary: #FFB347; /* Pastel Orange */
-  --color-secondary: #FFD1DC; /* Pastel Pink */
-  --color-accent: #77DD77; /* Pastel Green */
-  --color-board-light: #FFFDD0; /* Cream */
-  --color-board-dark: #AEC6CF; /* Pastel Blue */
-  --color-text-main: #555555;
-  --font-family-main: "Comic Sans MS", "Chalkboard SE", "Comic Neue", sans-serif;
-  --spacing-unit: 8px;
-  --border-radius-large: 16px;
-  --border-radius-small: 8px;
+  /* -- Palette -- */
+  /* Friendly, vibrant primary actions */
+  --color-primary: #FF7675;
+  /* Coral */
+  --color-primary-hover: #D63031;
+
+  /* Background gradients */
+  --bg-gradient-start: #FDC830;
+  --bg-gradient-end: #F37335;
+
+  /* Board Colors - Modern Slate/Teal vibe or Warm */
+  --color-board-white: #F0F3F4;
+  /* Cool White */
+  --color-board-black: #76D7C4;
+  /* Soft Teal/Green */
+  /* --color-board-black: #A29BFE; */
+  /* Alternative: Lavender */
+
+  /* UI Text */
+  --color-text-main: #2D3436;
+  --color-text-muted: #636E72;
+  --color-white: #ffffff;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+
+  /* Typography */
+  --font-main: "Nunito", sans-serif;
+
+  /* Spacing & Radius */
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: var(--font-family-main);
-  background-color: var(--color-board-light);
+  font-family: var(--font-main);
+  /* Energetic Gradient Background */
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
   color: var(--color-text-main);
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
 #root {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 900;
+  letter-spacing: -0.02em;
 }
 
 button {
   background-color: var(--color-primary);
+  color: white;
   border: none;
-  border-radius: var(--border-radius-small);
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: bold;
+  border-radius: var(--radius-md);
+  padding: 0.8em 1.5em;
+  font-size: 1.1em;
+  font-weight: 800;
   font-family: inherit;
   cursor: pointer;
-  transition: transform 0.1s;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 button:hover {
-  transform: scale(1.05);
+  transform: translateY(-2px);
+  background-color: var(--color-primary-hover);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 button:active {
-  transform: scale(0.95);
+  transform: translateY(1px);
 }
