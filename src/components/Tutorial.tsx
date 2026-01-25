@@ -58,17 +58,29 @@ const Tutorial = () => {
         try {
             const result = game.move(move);
             if (result) {
-                setFen(game.fen());
+                const currentFen = game.fen();
+                const fenParts = currentFen.split(' ');
+                fenParts[1] = 'w';
+                const newFen = fenParts.join(' ');
+                const newGame = new Chess(newFen);
+                setGame(newGame);
+                setFen(newGame.fen());
             }
         } catch {
             // Invalid move
         }
     };
 
+    const shouldHidePiece = (piece: { type: string; color: string }) => {
+        if (piece.type === 'k' && piece.color === 'b') return true;
+        if (piece.type === 'k' && piece.color === 'w' && activeTutorial.id !== 'k') return true;
+        return false;
+    };
+
     return (
         <div className="game-layout">
             <div className="board-area">
-                <ChessBoard game={game} onMove={handleMove} />
+                <ChessBoard game={game} onMove={handleMove} shouldHidePiece={shouldHidePiece} />
             </div>
             <aside className="info-panel">
                 <div className="status-card">
