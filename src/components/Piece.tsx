@@ -16,7 +16,7 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
         end: () => {
             onDragEnd();
         }
-    }), [position, onDragEnd]);
+    }), [position, piece, onDragEnd]);
 
     React.useEffect(() => {
         if (isDragging) {
