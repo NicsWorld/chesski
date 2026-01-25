@@ -84,7 +84,7 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
             isOver: !!monitor.isOver(),
             canDrop: !!monitor.canDrop(),
         }),
-    }));
+    }), [props.onDrop]);
 
     return (
         <div ref={drop as unknown as React.RefObject<HTMLDivElement>} style={{ width: '100%', height: '100%' }} data-testid={props.position}>
