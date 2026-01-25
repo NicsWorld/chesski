@@ -58,7 +58,18 @@ const Tutorial = () => {
         try {
             const result = game.move(move);
             if (result) {
-                setFen(game.fen());
+                // To allow free movement, we reset the turn back to the player's color
+                // This lets them move the same piece again immediately
+                const fen = game.fen();
+                const fenParts = fen.split(' ');
+                fenParts[1] = result.color; // Set turn back to whoever just moved
+                const newFen = fenParts.join(' ');
+
+                // We need to load this new FEN into a new instance or the current one
+                // Since state is immutable-ish, we create a new instance
+                const nextGame = new Chess(newFen);
+                setGame(nextGame);
+                setFen(nextGame.fen());
             }
         } catch {
             // Invalid move
@@ -68,7 +79,7 @@ const Tutorial = () => {
     return (
         <div className="game-layout">
             <div className="board-area">
-                <ChessBoard game={game} onMove={handleMove} />
+                <ChessBoard game={game} onMove={handleMove} hideKings={true} />
             </div>
             <aside className="info-panel">
                 <div className="status-card">
