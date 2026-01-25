@@ -3,9 +3,11 @@ import { Chess } from 'chess.js';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import ChessBoard from './components/ChessBoard';
+import Tutorial from './components/Tutorial';
 import './App.css';
 
 function App() {
+  const [view, setView] = useState<'game' | 'tutorial'>('tutorial');
   const [game, setGame] = useState(new Chess());
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_fen, setFen] = useState(game.fen()); // Triggers re-render on move
@@ -18,7 +20,7 @@ function App() {
         setFen(game.fen()); // Update state to re-render board
         updateStatus();
       }
-    } catch (e) {
+    } catch {
       setMessage("Oops! You can't move there.");
       setTimeout(updateStatus, 2000);
     }
@@ -52,36 +54,54 @@ function App() {
         <header className="app-header">
           <h1>Zoo Chess</h1>
           <p>Learn to play with animal friends!</p>
+          <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+            <button
+              className={view === 'game' ? '' : 'btn-secondary'}
+              onClick={() => setView('game')}
+            >
+              Play Game
+            </button>
+            <button
+              className={view === 'tutorial' ? '' : 'btn-secondary'}
+              onClick={() => setView('tutorial')}
+            >
+              Tutorials
+            </button>
+          </div>
         </header>
 
-        <div className="game-layout">
-          <div className="board-area">
-            <ChessBoard game={game} onMove={handleMove} />
+        {view === 'game' ? (
+          <div className="game-layout">
+            <div className="board-area">
+              <ChessBoard game={game} onMove={handleMove} />
+            </div>
+
+            <aside className="info-panel">
+              <div className="status-card">
+                <h2>{message}</h2>
+              </div>
+
+              <div className="action-buttons">
+                <button onClick={resetGame}>New Game</button>
+                <button
+                  className="btn-secondary"
+                  onClick={() => {
+                    game.undo();
+                    setFen(game.fen());
+                    updateStatus();
+                  }}
+                >
+                  Undo
+                </button>
+              </div>
+
+              {/* Placeholder for future features like "Captured Pieces" */}
+              {/* <div className="captured-area">...</div> */}
+            </aside>
           </div>
-
-          <aside className="info-panel">
-            <div className="status-card">
-              <h2>{message}</h2>
-            </div>
-
-            <div className="action-buttons">
-              <button onClick={resetGame}>New Game</button>
-              <button
-                className="btn-secondary"
-                onClick={() => {
-                  game.undo();
-                  setFen(game.fen());
-                  updateStatus();
-                }}
-              >
-                Undo
-              </button>
-            </div>
-
-            {/* Placeholder for future features like "Captured Pieces" */}
-            {/* <div className="captured-area">...</div> */}
-          </aside>
-        </div>
+        ) : (
+          <Tutorial />
+        )}
       </div>
     </DndProvider>
   );

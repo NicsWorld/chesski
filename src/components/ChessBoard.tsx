@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Chess } from 'chess.js';
 import { useDrop } from 'react-dnd';
 import Piece from './Piece';
@@ -19,7 +19,7 @@ interface BoardSquareProps {
     canDrop: boolean;
 }
 
-const BoardSquare: React.FC<BoardSquareProps> = ({ position, isBlack, children, onDrop, highlight, lastMove, isOver, canDrop }) => {
+const BoardSquare: React.FC<BoardSquareProps> = ({ position, isBlack, children, highlight, isOver, canDrop }) => {
     // Determine background color based on state
     // Base color
     let backgroundColor = isBlack ? 'var(--color-board-black)' : 'var(--color-board-white)';
@@ -28,9 +28,6 @@ const BoardSquare: React.FC<BoardSquareProps> = ({ position, isBlack, children, 
     if (isOver && canDrop) {
         backgroundColor = '#ffeaa7';
     }
-
-    // Last move highlight (Subtle transparency)
-    // if (lastMove) { ... }
 
     return (
         <div
@@ -78,7 +75,7 @@ const BoardSquare: React.FC<BoardSquareProps> = ({ position, isBlack, children, 
 };
 
 // Wrapper handling drop logic to keep BoardSquare clean(er)
-const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { onDrop: (item: any) => void }> = (props) => {
+const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { onDrop: (item: { id: string; position: string }) => void }> = (props) => {
     const [{ isOver, canDrop }, drop] = useDrop(() => ({
         accept: 'PIECE',
         drop: (item: { id: string; position: string }) => props.onDrop(item),
@@ -96,12 +93,8 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
 }
 
 const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove }) => {
-    const [board, setBoard] = useState(game.board());
+    const board = game.board();
     const [validMoves, setValidMoves] = useState<string[]>([]);
-
-    useEffect(() => {
-        setBoard(game.board());
-    }, [game, game.fen()]);
 
     const isBlackSquare = (fileIndex: number, rankIndex: number) => {
         return (fileIndex + rankIndex) % 2 === 1;
@@ -148,7 +141,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove }) => {
                                 piece={piece}
                                 position={square}
                                 onDragStart={() => {
-                                    const moves = game.moves({ square: square as any, verbose: true });
+                                    const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
                                     setValidMoves(moves.map(m => m.to));
                                 }}
                                 onDragEnd={() => setValidMoves([])}
