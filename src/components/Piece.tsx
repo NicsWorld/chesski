@@ -6,6 +6,15 @@ interface PieceProps {
     position: string;
 }
 
+const PIECE_IMAGES: Record<string, string> = {
+    p: 'animal_wP.png',
+    n: 'animal_wN.png',
+    b: 'animal_wB.png',
+    r: 'animal_wR.png',
+    q: 'animal_wQ.png',
+    k: 'animal_wK.png',
+};
+
 const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => void }> = ({ piece, position, onDragStart, onDragEnd }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'PIECE',
@@ -24,11 +33,11 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
         }
     }, [isDragging, onDragStart]);
 
-    const getPieceImage = (type: string, color: 'w' | 'b') => {
-        return `${color}${type.toUpperCase()}.svg`;
+    const getPieceImage = (type: string) => {
+        return PIECE_IMAGES[type.toLowerCase()];
     };
 
-    const imageName = getPieceImage(piece.type, piece.color);
+    const imageName = getPieceImage(piece.type);
 
     return (
         <div
@@ -49,7 +58,8 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
                 style={{
                     width: '90%',
                     height: '90%',
-                    objectFit: 'contain'
+                    objectFit: 'contain',
+                    filter: piece.color === 'b' ? 'brightness(0.3) grayscale(0.5)' : undefined
                 }}
             />
         </div>
