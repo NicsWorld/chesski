@@ -16,7 +16,7 @@ const PIECE_IMAGES: Record<string, string> = {
 };
 
 const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => void }> = ({ piece, position, onDragStart, onDragEnd }) => {
-    const [{ isDragging }, drag] = useDrag(() => ({
+    const [{ isDragging }, drag, preview] = useDrag(() => ({
         type: 'PIECE',
         item: { id: `${piece.color}${piece.type}`, position },
         collect: (monitor) => ({
@@ -53,6 +53,7 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
             }}
         >
             <img
+                ref={preview as unknown as React.RefObject<HTMLImageElement>}
                 src={`/pieces/${imageName}`}
                 alt={`${piece.color} ${piece.type}`}
                 style={{
