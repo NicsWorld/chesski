@@ -9,6 +9,7 @@ import './App.css';
 function App() {
   const [view, setView] = useState<'game' | 'tutorial'>('tutorial');
   const [game, setGame] = useState(new Chess());
+  const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_fen, setFen] = useState(game.fen()); // Triggers re-render on move
   const [message, setMessage] = useState("Welcome! Drag the white pieces to start.");
@@ -54,7 +55,7 @@ function App() {
         <header className="app-header">
           <h1>Zoo Chess</h1>
           <p>Learn to play with animal friends!</p>
-          <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+          <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
             <button
               className={view === 'game' ? '' : 'btn-secondary'}
               onClick={() => setView('game')}
@@ -67,13 +68,31 @@ function App() {
             >
               Tutorials
             </button>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '1rem' }}>
+              <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>Theme:</span>
+              <button
+                className="btn-secondary"
+                style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', backgroundColor: pieceTheme === 'zoo' ? 'rgba(255,255,255,0.2)' : 'transparent' }}
+                onClick={() => setPieceTheme('zoo')}
+              >
+                Zoo
+              </button>
+              <button
+                className="btn-secondary"
+                style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', backgroundColor: pieceTheme === 'standard' ? 'rgba(255,255,255,0.2)' : 'transparent' }}
+                onClick={() => setPieceTheme('standard')}
+              >
+                Standard
+              </button>
+            </div>
           </div>
         </header>
 
         {view === 'game' ? (
           <div className="game-layout">
             <div className="board-area">
-              <ChessBoard game={game} onMove={handleMove} />
+              <ChessBoard game={game} onMove={handleMove} pieceTheme={pieceTheme} />
             </div>
 
             <aside className="info-panel">

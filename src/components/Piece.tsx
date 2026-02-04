@@ -4,18 +4,10 @@ import { useDrag } from 'react-dnd';
 interface PieceProps {
     piece: { type: string; color: 'w' | 'b' };
     position: string;
+    pieceTheme: 'zoo' | 'standard';
 }
 
-const PIECE_IMAGES: Record<string, string> = {
-    p: 'animal_wP.png',
-    n: 'animal_wN.png',
-    b: 'animal_wB.png',
-    r: 'animal_wR.png',
-    q: 'animal_wQ.png',
-    k: 'animal_wK.png',
-};
-
-const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => void }> = ({ piece, position, onDragStart, onDragEnd }) => {
+const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => void }> = ({ piece, position, pieceTheme, onDragStart, onDragEnd }) => {
     const [{ isDragging }, drag, preview] = useDrag(() => ({
         type: 'PIECE',
         item: { id: `${piece.color}${piece.type}`, position },
@@ -33,11 +25,15 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
         }
     }, [isDragging, onDragStart]);
 
-    const getPieceImage = (type: string) => {
-        return PIECE_IMAGES[type.toLowerCase()];
+    const getPieceImage = () => {
+        if (pieceTheme === 'standard') {
+            return `${piece.color}${piece.type.toUpperCase()}.svg`;
+        }
+        // Zoo theme
+        return `animal_w${piece.type.toUpperCase()}.png`;
     };
 
-    const imageName = getPieceImage(piece.type);
+    const imageName = getPieceImage();
 
     return (
         <div
@@ -60,7 +56,8 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
                     width: '90%',
                     height: '90%',
                     objectFit: 'contain',
-                    filter: piece.color === 'b' ? 'brightness(0.3) grayscale(0.5)' : undefined
+                    // Only apply filter to black pieces in zoo mode, as they use the white assets
+                    filter: (pieceTheme === 'zoo' && piece.color === 'b') ? 'brightness(0.3) grayscale(0.5)' : undefined
                 }}
             />
         </div>
