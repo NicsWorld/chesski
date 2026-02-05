@@ -119,7 +119,7 @@ function App() {
             </aside>
           </div>
         ) : (
-          <Tutorial />
+          <Tutorial pieceTheme={pieceTheme} />
         )}
       </div>
     </DndProvider>

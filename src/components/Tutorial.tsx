@@ -85,8 +85,8 @@ const addKingsToFen = (fen: string) => {
 
 const removeKings = (game: Chess, tutorialId: string) => {
     const board = game.board();
-    for(let r=0; r<8; r++) {
-        for(let c=0; c<8; c++) {
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
             const piece = board[r][c];
             if (piece) {
                 if (piece.type === 'k' && piece.color === 'b') {
@@ -102,7 +102,7 @@ const removeKings = (game: Chess, tutorialId: string) => {
     }
 };
 
-const Tutorial = () => {
+const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
     const [activeTutorial, setActiveTutorial] = useState(tutorials[0]);
 
     const initGame = (t: typeof tutorials[0]) => {
@@ -154,7 +154,7 @@ const Tutorial = () => {
     return (
         <div className="game-layout">
             <div className="board-area">
-                <ChessBoard game={game} onMove={handleMove} shouldHidePiece={shouldHidePiece} />
+                <ChessBoard game={game} onMove={handleMove} shouldHidePiece={shouldHidePiece} pieceTheme={pieceTheme} />
             </div>
             <aside className="info-panel">
                 <div className="status-card">
@@ -172,7 +172,7 @@ const Tutorial = () => {
                         </button>
                     ))}
                 </div>
-                 <button className="btn-secondary" onClick={() => {
+                <button className="btn-secondary" onClick={() => {
                     const resetGame = initGame(activeTutorial);
                     setGame(resetGame);
                     setFen(resetGame.fen());
