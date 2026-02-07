@@ -30,10 +30,22 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
             return `${piece.color}${piece.type.toUpperCase()}.svg`;
         }
         // Zoo theme
-        return `animal_w${piece.type.toUpperCase()}.png`;
+        if (piece.color === 'w') {
+            return `animal_w${piece.type.toUpperCase()}.png`;
+        } else {
+            // Black pieces
+            // Fallback for Knight (N) which is missing transparent asset currently
+            if (piece.type === 'n') {
+                return `animal_w${piece.type.toUpperCase()}.png`;
+            }
+            return `animal_b${piece.type.toUpperCase()}.png`;
+        }
     };
 
     const imageName = getPieceImage();
+
+    // Special logic for the pending Black Knight which uses the white asset + filter
+    const isFallbackBlackKnight = pieceTheme === 'zoo' && piece.color === 'b' && piece.type === 'n';
 
     return (
         <div
@@ -56,8 +68,8 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
                     width: '100%',
                     height: '100%',
                     objectFit: 'contain',
-                    // Only apply filter to black pieces in zoo mode, as they use the white assets
-                    filter: (pieceTheme === 'zoo' && piece.color === 'b') ? 'brightness(0.4) contrast(1.2)' : undefined
+                    // Only apply filter to the fallback Black Knight
+                    filter: isFallbackBlackKnight ? 'brightness(0.4) contrast(1.2)' : undefined
                 }}
             />
         </div>
