@@ -11,7 +11,22 @@ function App() {
   const [game, setGame] = useState(new Chess());
   const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_fen, setFen] = useState(game.fen()); // Triggers re-render on move
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [fen, setFen] = useState(() => {
+    // Check for FEN in URL on initialization
+    const params = new URLSearchParams(window.location.search);
+    const fenParam = params.get('fen');
+    if (fenParam) {
+      try {
+        const loadedGame = new Chess(fenParam);
+        setGame(loadedGame);
+        return fenParam;
+      } catch (e) {
+        console.error("Invalid FEN in URL", e);
+      }
+    }
+    return game.fen();
+  });
   const [message, setMessage] = useState("Welcome! Drag the white pieces to start.");
 
   const handleMove = (move: { from: string; to: string; promotion?: string }) => {
@@ -44,6 +59,18 @@ function App() {
     setGame(newGame);
     setFen(newGame.fen());
     setMessage("New Game! White starts.");
+    // Clear the URL param
+    window.history.pushState({}, '', window.location.pathname);
+  };
+
+  const shareGame = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('fen', game.fen());
+    navigator.clipboard.writeText(url.toString()).then(() => {
+      const originalMessage = message;
+      setMessage("Link copied to clipboard!");
+      setTimeout(() => setMessage(originalMessage), 2000);
+    });
   };
 
   // Memoize game instance to prevent unnecessary re-creations, though state updates trigger re-render
@@ -111,6 +138,13 @@ function App() {
                   }}
                 >
                   Undo
+                </button>
+                <button
+                  className="btn-secondary"
+                  onClick={shareGame}
+                  title="Copy link to current game"
+                >
+                  Share Game
                 </button>
               </div>
 
