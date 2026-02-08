@@ -7,7 +7,11 @@ import Tutorial from './components/Tutorial';
 import './App.css';
 
 function App() {
-  const [view, setView] = useState<'game' | 'tutorial'>('tutorial');
+  const [view, setView] = useState<'game' | 'tutorial'>(() => {
+    // If we are loading a shared game (fen param exists), default to game view
+    const params = new URLSearchParams(window.location.search);
+    return params.has('fen') ? 'game' : 'tutorial';
+  });
   const [game, setGame] = useState(new Chess());
   const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
