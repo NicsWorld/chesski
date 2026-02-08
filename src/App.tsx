@@ -4,6 +4,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import ChessBoard from './components/ChessBoard';
 import Tutorial from './components/Tutorial';
+import MoveHistory from './components/MoveHistory';
 import './App.css';
 
 function App() {
@@ -130,6 +131,8 @@ function App() {
               <div className="status-card">
                 <h2>{message}</h2>
               </div>
+
+              <MoveHistory history={game.history()} />
 
               <div className="action-buttons">
                 <button onClick={resetGame}>New Game</button>
