@@ -5,6 +5,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import ChessBoard from './components/ChessBoard';
 import Tutorial from './components/Tutorial';
 import MoveHistory from './components/MoveHistory';
+import { evaluateGameStatus } from './utils/gameStatus';
 import './App.css';
 
 function App() {
@@ -39,23 +40,11 @@ function App() {
       const result = game.move(move);
       if (result) {
         setFen(game.fen()); // Update state to re-render board
-        updateStatus();
+        setMessage(evaluateGameStatus(game));
       }
     } catch {
       setMessage("Oops! You can't move there.");
-      setTimeout(updateStatus, 2000);
-    }
-  };
-
-  const updateStatus = () => {
-    if (game.isCheckmate()) {
-      setMessage(`Checkmate! ${game.turn() === 'w' ? 'Black' : 'White'} wins!`);
-    } else if (game.isDraw()) {
-      setMessage("It's a draw!");
-    } else if (game.isCheck()) {
-      setMessage("Check! Watch out!");
-    } else {
-      setMessage(game.turn() === 'w' ? "White's turn (Cute Animals)" : "Black's turn (Cool Animals)");
+      setTimeout(() => setMessage(evaluateGameStatus(game)), 2000);
     }
   };
 
@@ -141,7 +130,7 @@ function App() {
                   onClick={() => {
                     game.undo();
                     setFen(game.fen());
-                    updateStatus();
+                    setMessage(evaluateGameStatus(game));
                   }}
                 >
                   Undo
