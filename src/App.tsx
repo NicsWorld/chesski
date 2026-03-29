@@ -7,31 +7,55 @@ import Tutorial from './components/Tutorial';
 import MoveHistory from './components/MoveHistory';
 import './App.css';
 
+/**
+ * Validates FEN (Forsyth-Edwards Notation) string for format and length.
+ * Prevents potential security risks and application crashes from malformed input.
+ */
+const isValidFen = (s: string) => {
+  if (s.length > 128) return false;
+  // Basic FEN structure regex
+  const fenRegex = /^([rnbqkpRNBQKP1-8]+\/){7}[rnbqkpRNBQKP1-8]+\s[bw]\s(-|[KQkq]{1,4})\s(-|[a-h][36])\s\d+\s\d+$/;
+  if (!fenRegex.test(s)) return false;
+
+  const board = s.split(' ')[0];
+  const rows = board.split('/');
+  // Validate each row has exactly 8 squares
+  return rows.every(row => {
+    let count = 0;
+    for (const char of row) {
+      if (/[1-8]/.test(char)) count += parseInt(char);
+      else count += 1;
+    }
+    return count === 8;
+  });
+};
+
 function App() {
   const [view, setView] = useState<'game' | 'tutorial'>(() => {
     // If we are loading a shared game (fen param exists), default to game view
     const params = new URLSearchParams(window.location.search);
     return params.has('fen') ? 'game' : 'tutorial';
   });
-  const [game, setGame] = useState(new Chess());
-  const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [fen, setFen] = useState(() => {
-    // Check for FEN in URL on initialization
+
+  const [game, setGame] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
-    if (fenParam) {
+    if (fenParam && isValidFen(fenParam)) {
       try {
-        const loadedGame = new Chess(fenParam);
-        setGame(loadedGame);
-        return fenParam;
+        return new Chess(fenParam);
       } catch (e) {
         console.error("Invalid FEN in URL", e);
       }
+    } else if (fenParam) {
+      console.warn("Malformed or too long FEN in URL ignored for security.");
     }
-    return game.fen();
+    return new Chess();
   });
+
+  const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [fen, setFen] = useState(game.fen());
   const [message, setMessage] = useState("Welcome! Drag the white pieces to start.");
 
   const handleMove = (move: { from: string; to: string; promotion?: string }) => {
