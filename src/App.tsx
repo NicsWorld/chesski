@@ -16,8 +16,7 @@ function App() {
   const [game, setGame] = useState(new Chess());
   const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [fen, setFen] = useState(() => {
+  const [_, setFen] = useState(() => {
     // Check for FEN in URL on initialization
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
@@ -76,6 +75,19 @@ function App() {
       setMessage("Link copied to clipboard!");
       setTimeout(() => setMessage(originalMessage), 2000);
     });
+  };
+
+  const downloadPgn = () => {
+    const pgn = game.pgn();
+    const blob = new Blob([pgn], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'game.pgn';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   // Memoize game instance to prevent unnecessary re-creations, though state updates trigger re-render
@@ -152,6 +164,13 @@ function App() {
                   title="Copy link to current game"
                 >
                   Share Game
+                </button>
+                <button
+                  className="btn-secondary"
+                  onClick={downloadPgn}
+                  title="Download game as PGN"
+                >
+                  Download PGN
                 </button>
               </div>
 
