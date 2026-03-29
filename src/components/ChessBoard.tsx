@@ -76,6 +76,9 @@ const BoardSquare: React.FC<BoardSquareProps> = ({ position, isBlack, children, 
     );
 };
 
+const FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+const RANKS = ['8', '7', '6', '5', '4', '3', '2', '1'];
+
 // Wrapper handling drop logic to keep BoardSquare clean(er)
 const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { onDrop: (item: { id: string; position: string }) => void }> = (props) => {
     const [{ isOver, canDrop }, drop] = useDrop(() => ({
@@ -108,9 +111,6 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, shouldHidePiece, 
         setValidMoves([]);
     };
 
-    const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-    const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
-
     return (
         <div style={{
             width: '100%',
@@ -124,8 +124,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, shouldHidePiece, 
             boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
             overflow: 'hidden', // To clip corners
         }}>
-            {ranks.map((rank, rankIndex) =>
-                files.map((file, fileIndex) => {
+            {RANKS.map((rank, rankIndex) =>
+                FILES.map((file, fileIndex) => {
                     const square = `${file}${rank}`;
                     const piece = board[rankIndex][fileIndex];
                     const isBlack = isBlackSquare(fileIndex, rankIndex);
