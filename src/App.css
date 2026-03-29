@@ -1,4 +1,4 @@
-/* Main Glass Container */
+/* Main Container - Solid/Playful */
 .app-container {
   max-width: 1100px;
   /* Wider to allow side-by-side on desktop */
@@ -7,8 +7,8 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
+  border: 3px solid var(--glass-border);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.1), inset 0 -4px 0 rgba(0,0,0,0.05); /* Chunky container feel */
   padding: 2.5rem;
   display: flex;
   flex-direction: column;
@@ -20,14 +20,14 @@
 .app-header h1 {
   font-size: 3.5rem;
   color: var(--color-text-main);
-  text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.5);
+  text-shadow: 3px 3px 0px rgba(255, 255, 255, 0.8); /* Stronger text shadow for 3D */
   margin-bottom: 0.2rem;
 }
 
 .app-header p {
   font-size: 1.3rem;
   color: var(--color-text-muted);
-  font-weight: 700;
+  font-weight: 800; /* Bolder subtitle */
 }
 
 /* Layout for Board + Controls */
@@ -90,15 +90,20 @@
 }
 
 .btn-secondary {
-  background-color: transparent;
-  color: var(--color-text-muted);
-  border: 2px solid #ddd;
-  box-shadow: none;
+  background-color: var(--color-board-white);
+  color: var(--color-text-main);
+  border: 2px solid var(--color-text-muted);
+  box-shadow: 0 6px 0 var(--color-text-muted), 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .btn-secondary:hover {
-  border-color: var(--color-text-muted);
+  background-color: white;
   color: var(--color-text-main);
-  background-color: transparent;
   transform: translateY(-2px);
+  box-shadow: 0 8px 0 var(--color-text-muted), 0 12px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 var(--color-text-muted), 0 4px 8px rgba(0, 0, 0, 0.1);
 }

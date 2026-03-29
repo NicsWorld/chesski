@@ -41,11 +41,22 @@ const BoardSquare: React.FC<BoardSquareProps> = ({ position, isBlack, children, 
                 justifyContent: 'center',
                 alignItems: 'center',
                 position: 'relative',
+                boxShadow: 'inset 0 0 8px rgba(0,0,0,0.05)', /* Subtle inner shadow for depth */
+                border: '1px solid rgba(0,0,0,0.02)', /* Give each square slight definition */
+                boxSizing: 'border-box',
             }}
         >
+            {/* Inner bevel effect to make squares look like distinct tiles */}
+            <div style={{
+                position: 'absolute',
+                top: 0, left: 0, right: 0, bottom: 0,
+                boxShadow: isBlack ? 'inset 2px 2px 4px rgba(255,255,255,0.1), inset -2px -2px 4px rgba(0,0,0,0.1)' : 'inset 2px 2px 4px rgba(255,255,255,0.5), inset -2px -2px 4px rgba(0,0,0,0.05)',
+                pointerEvents: 'none'
+            }} />
+
             {/* Coordinate Labels - Only show on edges */}
-            {position.includes('1') && <span style={{ position: 'absolute', bottom: 4, right: 4, fontSize: '0.65em', fontWeight: 'bold', color: isBlack ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.4)' }}>{position[0]}</span>}
-            {position.includes('a') && <span style={{ position: 'absolute', top: 4, left: 4, fontSize: '0.65em', fontWeight: 'bold', color: isBlack ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.4)' }}>{position[1]}</span>}
+            {position.includes('1') && <span style={{ position: 'absolute', bottom: 4, right: 4, fontSize: '0.7em', fontWeight: '900', color: isBlack ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.4)', zIndex: 1 }}>{position[0]}</span>}
+            {position.includes('a') && <span style={{ position: 'absolute', top: 4, left: 4, fontSize: '0.7em', fontWeight: '900', color: isBlack ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.4)', zIndex: 1 }}>{position[1]}</span>}
 
             {children}
 
@@ -119,10 +130,11 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, shouldHidePiece, 
             display: 'grid',
             gridTemplateColumns: 'repeat(8, 1fr)',
             gridTemplateRows: 'repeat(8, 1fr)',
-            border: '8px solid white', // Modern clean border
+            border: '12px solid var(--board-border-color)', // Thicker, toy-like border
             borderRadius: 'var(--radius-sm)',
-            boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
+            boxShadow: '0 12px 0 var(--board-shadow-color), 0 16px 24px rgba(0,0,0,0.2)', // Heavy 3D "lip" and drop shadow
             overflow: 'hidden', // To clip corners
+            transform: 'translateY(-6px)', // Lift it up so the shadow has room
         }}>
             {ranks.map((rank, rankIndex) =>
                 files.map((file, fileIndex) => {
