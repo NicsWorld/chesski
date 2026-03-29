@@ -1,6 +1,5 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
-import { getPieceAsset } from '../utils/pieceAssets';
 
 interface PieceProps {
     piece: { type: string; color: 'w' | 'b' };
@@ -26,25 +25,39 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
         }
     }, [isDragging, onDragStart]);
 
-    const { src, styleOverrides } = getPieceAsset(pieceTheme, piece);
+    const getPieceImage = () => {
+        if (pieceTheme === 'standard') {
+            return `${piece.color}${piece.type.toUpperCase()}.svg`;
+        }
+        // Zoo theme
+        return `animal_w${piece.type.toUpperCase()}.png`;
+    };
+
+    const imageName = getPieceImage();
 
     return (
         <div
-            className="piece-container"
             ref={drag as unknown as React.RefObject<HTMLDivElement>}
             style={{
                 opacity: isDragging ? 0.5 : 1,
+                cursor: 'move',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
             }}
         >
             <img
                 ref={preview as unknown as React.RefObject<HTMLImageElement>}
-                src={src}
+                src={`/pieces/${imageName}`}
                 alt={`${piece.color} ${piece.type}`}
                 style={{
                     width: '100%',
                     height: '100%',
                     objectFit: 'contain',
-                    ...styleOverrides
+                    // Only apply filter to black pieces in zoo mode, as they use the white assets
+                    filter: (pieceTheme === 'zoo' && piece.color === 'b') ? 'brightness(0.4) contrast(1.2)' : undefined
                 }}
             />
         </div>
