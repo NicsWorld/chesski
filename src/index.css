@@ -1,31 +1,34 @@
 :root {
   /* -- Palette -- */
   /* Friendly, vibrant primary actions */
-  --color-primary: #FF7675;
-  /* Coral */
-  --color-primary-hover: #D63031;
+  --color-primary: #FF6B6B;
+  /* Darker shade for 3D button shadow */
+  --color-primary-dark: #C92A2A;
+  --color-primary-hover: #FA5252;
 
-  /* Background gradients */
-  --bg-gradient-start: #FDC830;
-  --bg-gradient-end: #F37335;
+  /* Background gradients (Sky Blue to Sunny Yellow) */
+  --bg-gradient-start: #4DABF7;
+  --bg-gradient-end: #FFE066;
 
-  /* Board Colors - Modern Slate/Teal vibe or Warm */
-  --color-board-white: #F0F3F4;
-  /* Cool White */
-  --color-board-black: #76D7C4;
-  /* Soft Teal/Green */
-  /* --color-board-black: #A29BFE; */
-  /* Alternative: Lavender */
+  /* Board Colors - Chunky Toy Box */
+  --color-board-white: #FFF3E0;
+  /* Warm Cream */
+  --color-board-black: #4DD0E1;
+  /* Bright Teal */
+
+  /* Board 3D Effects */
+  --board-shadow-color: #2B8A9E;
+  --board-border-color: #E8F4F8;
 
   /* UI Text */
-  --color-text-main: #2D3436;
-  --color-text-muted: #636E72;
+  --color-text-main: #212529;
+  --color-text-muted: #495057;
   --color-white: #ffffff;
 
-  /* Glassmorphism */
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.5);
-  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  /* Solid/Playful Container (Moving away from pure glass) */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.9);
+  --glass-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
 
   /* Typography */
   --font-main: "Nunito", sans-serif;
@@ -73,18 +76,22 @@ button {
   font-weight: 800;
   font-family: inherit;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 0 var(--color-primary-dark), 0 8px 16px rgba(0, 0, 0, 0.1);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  position: relative;
+  /* Ensure button feels solid */
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 button:hover {
   transform: translateY(-2px);
   background-color: var(--color-primary-hover);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 0 var(--color-primary-dark), 0 12px 20px rgba(0, 0, 0, 0.15);
 }
 
 button:active {
-  transform: translateY(1px);
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 var(--color-primary-dark), 0 4px 8px rgba(0, 0, 0, 0.1);
 }
