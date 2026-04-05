@@ -6,6 +6,7 @@ import ChessBoard from './components/ChessBoard';
 import Tutorial from './components/Tutorial';
 import MoveHistory from './components/MoveHistory';
 import { evaluateGameStatus } from './utils/gameStatus';
+import { validateFen } from './utils/fenValidation';
 import './App.css';
 
 function App() {
@@ -21,7 +22,7 @@ function App() {
     // Check for FEN in URL on initialization
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
-    if (fenParam) {
+    if (fenParam && validateFen(fenParam)) {
       try {
         const loadedGame = new Chess(fenParam);
         setGame(loadedGame);
