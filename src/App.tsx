@@ -16,8 +16,7 @@ function App() {
   });
   const [game, setGame] = useState(new Chess());
   const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_fen, setFen] = useState(() => {
+  const [fen, setFen] = useState(() => {
     // Check for FEN in URL on initialization
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
@@ -112,7 +111,7 @@ function App() {
         {view === 'game' ? (
           <div className="game-layout">
             <div className="board-area">
-              <ChessBoard game={game} onMove={handleMove} pieceTheme={pieceTheme} />
+              <ChessBoard game={game} fen={fen} onMove={handleMove} pieceTheme={pieceTheme} />
             </div>
 
             <aside className="info-panel">
