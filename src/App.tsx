@@ -41,7 +41,8 @@ function App() {
         setFen(game.fen()); // Update state to re-render board
         setMessage(evaluateGameStatus(game));
       }
-    } catch {
+    } catch (error) {
+      console.warn('Invalid move attempted:', error);
       setMessage("Oops! You can't move there.");
       setTimeout(() => setMessage(evaluateGameStatus(game)), 2000);
     }
