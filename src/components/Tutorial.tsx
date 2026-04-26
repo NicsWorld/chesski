@@ -55,28 +55,45 @@ const addKingsToFen = (fen: string) => {
     const newRows = rows.map(row => {
         if (whiteKingPlaced && blackKingPlaced) return row;
 
-        let newRow = '';
+        const newRowArr = [];
         for (let i = 0; i < row.length; i++) {
             const char = row[i];
-            if (!isNaN(parseInt(char))) {
-                let count = parseInt(char);
+            const charCode = char.charCodeAt(0);
+            if (charCode >= 49 && charCode <= 56) {
+                let count = charCode - 48;
                 while (count > 0) {
                     if (!whiteKingPlaced) {
-                        newRow += 'K';
+                        newRowArr.push('K');
                         whiteKingPlaced = true;
                     } else if (!blackKingPlaced) {
-                        newRow += 'k';
+                        newRowArr.push('k');
                         blackKingPlaced = true;
                     } else {
-                        newRow += '1';
+                        newRowArr.push('1');
                     }
                     count--;
                 }
             } else {
-                newRow += char;
+                newRowArr.push(char);
             }
         }
-        return newRow.replace(/1+/g, (match) => match.length.toString());
+        let compressed = '';
+        let emptyCount = 0;
+        for (let i = 0; i < newRowArr.length; i++) {
+            if (newRowArr[i] === '1') {
+                emptyCount++;
+            } else {
+                if (emptyCount > 0) {
+                    compressed += emptyCount.toString();
+                    emptyCount = 0;
+                }
+                compressed += newRowArr[i];
+            }
+        }
+        if (emptyCount > 0) {
+            compressed += emptyCount.toString();
+        }
+        return compressed;
     });
 
     parts[0] = newRows.join('/');
