@@ -143,8 +143,6 @@ function App() {
                 </button>
               </div>
 
-              {/* Placeholder for future features like "Captured Pieces" */}
-              {/* <div className="captured-area">...</div> */}
             </aside>
           </div>
         ) : (
