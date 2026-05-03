@@ -41,7 +41,7 @@ const tutorials = [
     }
 ];
 
-const addKingsToFen = (fen: string) => {
+export const addKingsToFen = (fen: string) => {
     const parts = fen.split(' ');
     const boardStr = parts[0];
 
@@ -83,7 +83,7 @@ const addKingsToFen = (fen: string) => {
     return parts.join(' ');
 };
 
-const removeKings = (game: Chess, tutorialId: string) => {
+export const removeKings = (game: Chess, tutorialId: string) => {
     const board = game.board();
     for (let r = 0; r < 8; r++) {
         for (let c = 0; c < 8; c++) {
