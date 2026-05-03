@@ -14,24 +14,21 @@ function App() {
     const params = new URLSearchParams(window.location.search);
     return params.has('fen') ? 'game' : 'tutorial';
   });
-  const [game, setGame] = useState(new Chess());
-  const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_fen, setFen] = useState(() => {
+  const [game, setGame] = useState(() => {
     // Check for FEN in URL on initialization
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
     if (fenParam) {
       try {
-        const loadedGame = new Chess(fenParam);
-        setGame(loadedGame);
-        return fenParam;
+        return new Chess(fenParam);
       } catch (e) {
         console.error("Invalid FEN in URL", e);
       }
     }
-    return game.fen();
+    return new Chess();
   });
+  const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
+  const [, setFen] = useState(game.fen());
   const [message, setMessage] = useState("Welcome! Drag the white pieces to start.");
 
   const handleMove = (move: { from: string; to: string; promotion?: string }) => {
