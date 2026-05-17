@@ -56,27 +56,44 @@ const addKingsToFen = (fen: string) => {
         if (whiteKingPlaced && blackKingPlaced) return row;
 
         let newRow = '';
+        let emptyCount = 0;
+
         for (let i = 0; i < row.length; i++) {
-            const char = row[i];
-            if (!isNaN(parseInt(char))) {
-                let count = parseInt(char);
+            const charCode = row.charCodeAt(i);
+            if (charCode >= 48 && charCode <= 57) { // 0-9
+                let count = charCode - 48;
                 while (count > 0) {
                     if (!whiteKingPlaced) {
+                        if (emptyCount > 0) {
+                            newRow += emptyCount.toString();
+                            emptyCount = 0;
+                        }
                         newRow += 'K';
                         whiteKingPlaced = true;
                     } else if (!blackKingPlaced) {
+                        if (emptyCount > 0) {
+                            newRow += emptyCount.toString();
+                            emptyCount = 0;
+                        }
                         newRow += 'k';
                         blackKingPlaced = true;
                     } else {
-                        newRow += '1';
+                        emptyCount++;
                     }
                     count--;
                 }
             } else {
-                newRow += char;
+                if (emptyCount > 0) {
+                    newRow += emptyCount.toString();
+                    emptyCount = 0;
+                }
+                newRow += row[i];
             }
         }
-        return newRow.replace(/1+/g, (match) => match.length.toString());
+        if (emptyCount > 0) {
+            newRow += emptyCount.toString();
+        }
+        return newRow;
     });
 
     parts[0] = newRows.join('/');
