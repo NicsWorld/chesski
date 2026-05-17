@@ -22,12 +22,16 @@ function App() {
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
     if (fenParam) {
-      try {
-        const loadedGame = new Chess(fenParam);
-        setGame(loadedGame);
-        return fenParam;
-      } catch (e) {
-        console.error("Invalid FEN in URL", e);
+      if (fenParam.length <= 100) {
+        try {
+          const loadedGame = new Chess(fenParam);
+          setGame(loadedGame);
+          return fenParam;
+        } catch {
+          console.error("Invalid FEN in URL");
+        }
+      } else {
+        console.error("Invalid FEN in URL");
       }
     }
     return game.fen();
