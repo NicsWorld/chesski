@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Chess } from 'chess.js';
 import { useDrop } from 'react-dnd';
 import Piece from './Piece';
@@ -111,6 +111,7 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
 const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, shouldHidePiece, pieceTheme }) => {
     const board = game.board();
     const [validMoves, setValidMoves] = useState<string[]>([]);
+    const validMovesSet = useMemo(() => new Set(validMoves), [validMoves]);
 
     const isBlackSquare = (fileIndex: number, rankIndex: number) => {
         return (fileIndex + rankIndex) % 2 === 1;
@@ -149,7 +150,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, shouldHidePiece, 
                             position={square}
                             isBlack={isBlack}
                             onDrop={(item) => handleDrop(item, square)}
-                            highlight={validMoves.includes(square)}
+                            highlight={validMovesSet.has(square)}
                             lastMove={false}
                         >
                             {piece && !isHidden && <Piece
