@@ -14,7 +14,7 @@ function App() {
     const params = new URLSearchParams(window.location.search);
     return params.has('fen') ? 'game' : 'tutorial';
   });
-  const [game, setGame] = useState(new Chess());
+  const [game, setGame] = useState(() => new Chess());
   const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_fen, setFen] = useState(() => {
@@ -67,7 +67,6 @@ function App() {
   };
 
   // Memoize game instance to prevent unnecessary re-creations, though state updates trigger re-render
-  // actually useState(new Chess()) is fine as it's only initial.
 
   return (
     <DndProvider backend={HTML5Backend}>
