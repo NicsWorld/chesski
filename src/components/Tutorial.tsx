@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useState } from 'react';
 import { Chess } from 'chess.js';
 import ChessBoard from './ChessBoard';
@@ -41,7 +42,7 @@ const tutorials = [
     }
 ];
 
-const addKingsToFen = (fen: string) => {
+export const addKingsToFen = (fen: string) => {
     const parts = fen.split(' ');
     const boardStr = parts[0];
 
