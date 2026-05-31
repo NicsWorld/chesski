@@ -37,7 +37,7 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
 
     return (
         <div
-            ref={drag as unknown as React.RefObject<HTMLDivElement>}
+            ref={(node) => { drag(node); }}
             style={{
                 opacity: isDragging ? 0.5 : 1,
                 cursor: 'move',
@@ -49,7 +49,7 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
             }}
         >
             <img
-                ref={preview as unknown as React.RefObject<HTMLImageElement>}
+                ref={(node) => { preview(node); }}
                 src={`/pieces/${imageName}`}
                 alt={`${piece.color} ${piece.type}`}
                 style={{
