@@ -4,7 +4,8 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import ChessBoard from './components/ChessBoard';
 import Tutorial from './components/Tutorial';
-import MoveHistory from './components/MoveHistory';
+import Header from './components/Header';
+import InfoPanel from './components/InfoPanel';
 import { evaluateGameStatus } from './utils/gameStatus';
 import './App.css';
 
@@ -72,42 +73,7 @@ function App() {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="app-container">
-        <header className="app-header">
-          <h1>Zoo Chess</h1>
-          <p>Learn to play with animal friends!</p>
-          <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
-            <button
-              className={view === 'game' ? '' : 'btn-secondary'}
-              onClick={() => setView('game')}
-            >
-              Play Game
-            </button>
-            <button
-              className={view === 'tutorial' ? '' : 'btn-secondary'}
-              onClick={() => setView('tutorial')}
-            >
-              Tutorials
-            </button>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '1rem' }}>
-              <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>Theme:</span>
-              <button
-                className="btn-secondary"
-                style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', backgroundColor: pieceTheme === 'zoo' ? 'rgba(255,255,255,0.2)' : 'transparent' }}
-                onClick={() => setPieceTheme('zoo')}
-              >
-                Zoo
-              </button>
-              <button
-                className="btn-secondary"
-                style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', backgroundColor: pieceTheme === 'standard' ? 'rgba(255,255,255,0.2)' : 'transparent' }}
-                onClick={() => setPieceTheme('standard')}
-              >
-                Standard
-              </button>
-            </div>
-          </div>
-        </header>
+        <Header view={view} setView={setView} pieceTheme={pieceTheme} setPieceTheme={setPieceTheme} />
 
         {view === 'game' ? (
           <div className="game-layout">
@@ -115,37 +81,7 @@ function App() {
               <ChessBoard game={game} onMove={handleMove} pieceTheme={pieceTheme} />
             </div>
 
-            <aside className="info-panel">
-              <div className="status-card">
-                <h2>{message}</h2>
-              </div>
-
-              <MoveHistory history={game.history()} />
-
-              <div className="action-buttons">
-                <button onClick={resetGame}>New Game</button>
-                <button
-                  className="btn-secondary"
-                  onClick={() => {
-                    game.undo();
-                    setFen(game.fen());
-                    setMessage(evaluateGameStatus(game));
-                  }}
-                >
-                  Undo
-                </button>
-                <button
-                  className="btn-secondary"
-                  onClick={shareGame}
-                  title="Copy link to current game"
-                >
-                  Share Game
-                </button>
-              </div>
-
-              {/* Placeholder for future features like "Captured Pieces" */}
-              {/* <div className="captured-area">...</div> */}
-            </aside>
+            <InfoPanel message={message} game={game} resetGame={resetGame} setFen={setFen} setMessage={setMessage} shareGame={shareGame} evaluateGameStatus={evaluateGameStatus} />
           </div>
         ) : (
           <Tutorial pieceTheme={pieceTheme} />
