@@ -1,0 +1,12 @@
+🧪 [testing improvement] Add tests for Piece component
+
+🎯 **What:** The `Piece` component was completely missing unit tests, leaving its drag-and-drop integration and themed rendering untested.
+
+📊 **Coverage:** This PR adds tests covering:
+- Standard rendering state
+- Zoo rendering state (including CSS filters for black pieces)
+- Drag-and-drop state updates by mocking `react-dnd` hooks (`useDrag`)
+- Verifies `onDragStart` and `onDragEnd` are called as appropriate during the drag lifecycle
+- Verifies opacity adjustments reflect the dragging state
+
+✨ **Result:** Test coverage for the `Piece` component has significantly improved from zero to fully covering its interaction and rendering states safely using Vitest and React Testing Library.
