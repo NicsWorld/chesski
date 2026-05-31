@@ -45,41 +45,35 @@ const addKingsToFen = (fen: string) => {
     const parts = fen.split(' ');
     const boardStr = parts[0];
 
-    let whiteKingPlaced = boardStr.includes('K');
-    let blackKingPlaced = boardStr.includes('k');
+    let needsWhiteKing = !boardStr.includes('K');
+    let needsBlackKing = !boardStr.includes('k');
 
-    if (whiteKingPlaced && blackKingPlaced) return fen;
+    if (!needsWhiteKing && !needsBlackKing) return fen;
 
-    const rows = boardStr.split('/');
+    parts[0] = boardStr.replace(/[1-8]/g, (match) => {
+        if (!needsWhiteKing && !needsBlackKing) return match;
 
-    const newRows = rows.map(row => {
-        if (whiteKingPlaced && blackKingPlaced) return row;
+        let spaces = parseInt(match, 10);
+        let replacement = '';
 
-        let newRow = '';
-        for (let i = 0; i < row.length; i++) {
-            const char = row[i];
-            if (!isNaN(parseInt(char))) {
-                let count = parseInt(char);
-                while (count > 0) {
-                    if (!whiteKingPlaced) {
-                        newRow += 'K';
-                        whiteKingPlaced = true;
-                    } else if (!blackKingPlaced) {
-                        newRow += 'k';
-                        blackKingPlaced = true;
-                    } else {
-                        newRow += '1';
-                    }
-                    count--;
-                }
-            } else {
-                newRow += char;
+        while (spaces > 0 && (needsWhiteKing || needsBlackKing)) {
+            if (needsWhiteKing) {
+                replacement += 'K';
+                needsWhiteKing = false;
+            } else if (needsBlackKing) {
+                replacement += 'k';
+                needsBlackKing = false;
             }
+            spaces--;
         }
-        return newRow.replace(/1+/g, (match) => match.length.toString());
+
+        if (spaces > 0) {
+            replacement += spaces.toString();
+        }
+
+        return replacement;
     });
 
-    parts[0] = newRows.join('/');
     return parts.join(' ');
 };
 
