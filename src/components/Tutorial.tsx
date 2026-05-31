@@ -41,7 +41,8 @@ const tutorials = [
     }
 ];
 
-const addKingsToFen = (fen: string) => {
+/* eslint-disable-next-line react-refresh/only-export-components */
+export const addKingsToFen = (fen: string) => {
     const parts = fen.split(' ');
     const boardStr = parts[0];
 
