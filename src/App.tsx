@@ -14,7 +14,7 @@ function App() {
     const params = new URLSearchParams(window.location.search);
     return params.has('fen') ? 'game' : 'tutorial';
   });
-  const [game, setGame] = useState(new Chess());
+  const [game, setGame] = useState(() => new Chess());
   const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_fen, setFen] = useState(() => {
