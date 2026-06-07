@@ -122,6 +122,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, shouldHidePiece, 
         setValidMoves([]);
     };
 
+    const validMovesSet = new Set(validMoves);
+
     return (
         <div style={{
             width: '100%',
@@ -149,7 +151,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, shouldHidePiece, 
                             position={square}
                             isBlack={isBlack}
                             onDrop={(item) => handleDrop(item, square)}
-                            highlight={validMoves.includes(square)}
+                            highlight={validMovesSet.has(square)}
                             lastMove={false}
                         >
                             {piece && !isHidden && <Piece
