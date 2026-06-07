@@ -63,6 +63,11 @@ function App() {
       const originalMessage = message;
       setMessage("Link copied to clipboard!");
       setTimeout(() => setMessage(originalMessage), 2000);
+    }).catch(() => {
+      const originalMessage = message;
+      setMessage("Failed to copy link.");
+      console.error("Failed to copy link to clipboard");
+      setTimeout(() => setMessage(originalMessage), 2000);
     });
   };
 
