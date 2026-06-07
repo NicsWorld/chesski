@@ -55,28 +55,28 @@ const addKingsToFen = (fen: string) => {
     const newRows = rows.map(row => {
         if (whiteKingPlaced && blackKingPlaced) return row;
 
-        let newRow = '';
+        const newRowArr = [];
         for (let i = 0; i < row.length; i++) {
             const char = row[i];
             if (!isNaN(parseInt(char))) {
                 let count = parseInt(char);
                 while (count > 0) {
                     if (!whiteKingPlaced) {
-                        newRow += 'K';
+                        newRowArr.push('K');
                         whiteKingPlaced = true;
                     } else if (!blackKingPlaced) {
-                        newRow += 'k';
+                        newRowArr.push('k');
                         blackKingPlaced = true;
                     } else {
-                        newRow += '1';
+                        newRowArr.push('1');
                     }
                     count--;
                 }
             } else {
-                newRow += char;
+                newRowArr.push(char);
             }
         }
-        return newRow.replace(/1+/g, (match) => match.length.toString());
+        return newRowArr.join('').replace(/1+/g, (match) => match.length.toString());
     });
 
     parts[0] = newRows.join('/');
