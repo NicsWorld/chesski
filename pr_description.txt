@@ -1,0 +1,18 @@
+docs: add high-value feature suggestions based on codebase review
+
+This PR introduces a curated document (`docs/feature-suggestions.md`) containing 5 highly actionable, well-scoped feature ideas for the Chesski product.
+
+### What
+A ranked list of 5 high-value feature suggestions based on the current state of the `chesski` codebase.
+The features proposed are:
+1. Pawn Promotion Choice UI
+2. Captured Pieces Display
+3. Export Game (PGN)
+4. Flip Board Toggle
+5. Load Game from FEN Text Input
+
+### Why
+To outline focused, self-contained work items that extend the product's core value without requiring foundational rewrites, new external dependencies, or speculative bets, completely adhering to prioritized constraints.
+
+### Result
+A clear, actionable roadmap of tickets (`docs/feature-suggestions.md`) that will reduce user friction, close obvious gaps in the core chess experience, and leverage existing infrastructure.
