@@ -26,8 +26,8 @@ function App() {
         const loadedGame = new Chess(fenParam);
         setGame(loadedGame);
         return fenParam;
-      } catch (e) {
-        console.error("Invalid FEN in URL", e);
+      } catch {
+        console.error("Invalid FEN in URL");
       }
     }
     return game.fen();
