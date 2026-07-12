@@ -110,7 +110,7 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
 
 const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, shouldHidePiece, pieceTheme }) => {
     const board = game.board();
-    const [validMoves, setValidMoves] = useState<string[]>([]);
+    const [validMoves, setValidMoves] = useState<Set<string>>(new Set());
 
     const isBlackSquare = (fileIndex: number, rankIndex: number) => {
         return (fileIndex + rankIndex) % 2 === 1;
@@ -119,7 +119,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, shouldHidePiece, 
     const handleDrop = (item: { id: string; position: string }, to: string) => {
         const from = item.position;
         onMove({ from, to, promotion: 'q' });
-        setValidMoves([]);
+        setValidMoves(new Set());
     };
 
     return (
@@ -149,7 +149,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, shouldHidePiece, 
                             position={square}
                             isBlack={isBlack}
                             onDrop={(item) => handleDrop(item, square)}
-                            highlight={validMoves.includes(square)}
+                            highlight={validMoves.has(square)}
                             lastMove={false}
                         >
                             {piece && !isHidden && <Piece
@@ -158,9 +158,9 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, shouldHidePiece, 
                                 pieceTheme={pieceTheme}
                                 onDragStart={() => {
                                     const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
-                                    setValidMoves(moves.map(m => m.to));
+                                    setValidMoves(new Set(moves.map(m => m.to)));
                                 }}
-                                onDragEnd={() => setValidMoves([])}
+                                onDragEnd={() => setValidMoves(new Set())}
                             />}
                         </SquareWrapper>
                     );
