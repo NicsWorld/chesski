@@ -1,14 +1,10 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# 🔒 [security fix description]
 
 🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+Fixed a vulnerability/linting issue in `src/components/Tutorial.tsx` where `parseInt` was being called without a radix parameter.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+⚠️ **Risk:**
+When `parseInt` is called without a radix parameter, strings starting with certain characters (like `0` or `0x`) could be interpreted as octal or hexadecimal, respectively, in older JavaScript environments. Even in modern environments where it defaults to base-10, it's a security/linting best practice to explicitly specify the radix to avoid any ambiguity, potential unexpected parsing behavior, or exploitation through crafted inputs.
 
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+🛡️ **Solution:**
+Added the base-10 radix parameter (`10`) to both instances of `parseInt` on lines 61 and 62 in `src/components/Tutorial.tsx`. This ensures that characters are always parsed explicitly as base-10 integers, resolving the security/linting issue while preserving existing functionality.
