@@ -1,14 +1,16 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# 📝 [Documentation] Draft feature suggestions based on codebase context focusing on growth and monetization
 
-🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+## 🎯 What
+This PR adds a new documentation file `docs/GROWTH_FEATURE_SUGGESTIONS.md` that contains 6 focused, high-value feature suggestions. These suggestions are specifically tailored to drive user growth and generate revenue while adhering to the constraints of leveraging existing infrastructure (like URL parsing, UI state, and themes) and avoiding external dependencies or large rewrites.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+## 📝 Details
+The document includes the following well-scoped, ranked suggestions:
+1. **"Challenge a Friend" Viral Loop (Growth):** Reusing the `fen` URL param pattern to create a `challenge` param for inviting new players.
+2. **Premium "Dinosaur" Theme (Monetization):** Adding a lock-gated third option to the existing `pieceTheme` state linked to a payment gateway.
+3. **Share to X / Twitter Intent (Growth):** Adding a dynamic social sharing button triggered by the existing checkmate string from `evaluateGameStatus`.
+4. **"Support the Developer" Endgame Hook (Monetization):** A subtle tip jar button that pulses when a game ends naturally.
+5. **Embeddable Chess Widget (Growth):** Utilizing a new `embed=true` URL parameter to hide padding/headers, allowing external sites to embed the app.
+6. **Freemium Puzzle Mode (Growth/Retention):** Reusing the `ChessBoard` component to render static FEN puzzles, gating the daily puzzle behind an email capture.
 
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+## ✨ Result
+Product owners and contributors now have a clear, strictly-formatted, and highly actionable backlog of small-to-medium scoped tasks that directly target growth and monetization without requiring major architectural shifts.
