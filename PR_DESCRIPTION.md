@@ -1,14 +1,16 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# 🧹 [Code Health] Remove redundant `shouldHidePiece` logic from Tutorial component
 
-🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+## 🎯 What
+Removed the `shouldHidePiece` function and its usage within `src/components/Tutorial.tsx` and the `<ChessBoard>` component prop.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+## 💡 Why
+The `shouldHidePiece` logic was completely redundant. It was attempting to hide kings on the tutorial board based on their color and the active tutorial. However, an inline comment explicitly noted that kings were already being physically removed from the `chess.js` game state by the `removeKings` function. Because the pieces don't exist in the game state, this display logic was essentially dead code. Removing it cleans up the component, reducing cognitive load and improving maintainability.
 
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+## ✅ Verification
+- Confirmed the file compiles without TypeScript errors.
+- Ran the test suite (`npx vitest run`) and it passes (1/1).
+- Ran ESLint (`npm run lint`) and it passes cleanly.
+- Ran a production build (`npm run build`) and it succeeds.
+
+## ✨ Result
+A cleaner, simpler `Tutorial` component with fewer unnecessary props passed to the `ChessBoard` component, leading to improved code readability.
