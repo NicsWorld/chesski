@@ -1,14 +1,5 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+## 🧪 [Add missing FEN URL tests]
 
-🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
-
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
-
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+**🎯 What:** The `App.test.tsx` file was updated to comprehensively test URL FEN parsing logic, adding a missing test for valid FEN strings and refactoring the location mocking to support multiple test cases.
+**📊 Coverage:** Tests now cover both the happy path (valid FEN) and the error path (invalid FEN) when initializing the App state via URL parameters.
+**✨ Result:** Increased reliability and confidence in the initialization logic, ensuring that valid URLs load properly without error logs, while invalid URLs gracefully fall back and log appropriately.
