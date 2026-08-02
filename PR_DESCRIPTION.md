@@ -1,14 +1,15 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# 🧪 [testing improvement] Add Tutorial component test coverage
 
 🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+Added a missing test file `src/components/Tutorial.test.tsx` to provide proper test coverage for the `Tutorial` component, which has complex internal state.
 
 📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+The new tests cover:
+- Initial default rendering of the Pawn tutorial.
+- State transitions when different tutorials are selected via user interactions.
+- Board resets to the initial tutorial state.
+- Graceful handling (ignoring) of invalid moves by mocking the `ChessBoard` component's `onMove` callback.
+- Auxiliary piece rendering logic by verifying the output of the `shouldHidePiece` function passed to `ChessBoard`.
 
 ✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+Increased test coverage and confidence in refactoring the `Tutorial` component, ensuring the complex sequence of steps and state updates function correctly without regressions.
