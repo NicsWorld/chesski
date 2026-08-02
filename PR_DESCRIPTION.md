@@ -1,14 +1,13 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# 🧪 [Testing Improvement: Add invalid move error path test]
 
-🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+## 🎯 What
+Added an error path test in `src/App.test.tsx` to verify that when an invalid move is attempted, the `catch` block in `handleMove` executes correctly, updates the message to `'Oops! You can't move there.'`, and then reverts the message back to the appropriate turn status after 2 seconds.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+## 📊 Coverage
+This test covers:
+* The error `catch` path in the `handleMove` function within `App.tsx` where `chess.js` rejects an invalid move (such as an illegal pawn double move from `e2` to `e5` in the starting position).
+* Correct application of the UI error message.
+* Proper timing and delayed message reset functionality using fake timers.
 
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+## ✨ Result
+Improved test coverage for edge cases involving illegal moves and UI state transitions (the 2-second timeout warning messages) in the `App` component, ensuring more robust and well-tested behavior when interacting with the chess board.
