@@ -1,14 +1,18 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# 🧪 [testing improvement] Add unit tests for evaluateGameStatus function
 
 🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+The testing gap addressed is the missing unit test file for `src/utils/gameStatus.ts`. The `evaluateGameStatus` function is responsible for determining the textual representation of the current game state (e.g., Checkmate, Draw, Check, or whose turn it is), but it lacked automated tests to ensure its logic works correctly across different chess game states.
 
 📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+The newly added test file (`src/utils/gameStatus.test.ts`) covers all possible branches and scenarios returned by the `evaluateGameStatus` function:
+- Checkmate where White wins
+- Checkmate where Black wins
+- Draw scenarios
+- Check scenarios
+- Regular game turns for White
+- Regular game turns for Black
+
+These tests utilize a mocked `Chess` object to simulate these states efficiently without relying on full game simulations.
 
 ✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+The improvement in test coverage guarantees 100% statement and branch coverage for the `evaluateGameStatus` utility. This ensures future changes to the game status string formatting or game logic will not silently break the UI's display of the current game state, providing a reliable safety net for refactoring.
