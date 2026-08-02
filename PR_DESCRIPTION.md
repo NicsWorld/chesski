@@ -1,14 +1,13 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# 🧹 Remove commented out JSX code in App.tsx
 
-🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+**🎯 What:**
+Removed a block of commented-out JSX code (a placeholder for "Captured Pieces") in `src/App.tsx`.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+**💡 Why:**
+The commented-out code was dead code serving as a placeholder. Removing it reduces visual clutter in the codebase, and improves general maintainability and readability by keeping the file focused on active logic without changing any existing functionality.
 
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+**✅ Verification:**
+I used `sed` and `git diff` to verify exactly which lines were removed. I then successfully ran the project's linter (`npm run lint`), build script (`npm run build`), and test suite (`npx vitest run`) to ensure no regressions were introduced. Finally, code review confirmed the safety and correctness of the change.
+
+**✨ Result:**
+The `src/App.tsx` file is now cleaner, containing only active, functional JSX.
