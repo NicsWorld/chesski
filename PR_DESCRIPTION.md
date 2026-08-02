@@ -1,14 +1,16 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+## 🧹 [code health: remove unused fen variable and eslint-disable comment]
 
-🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+### 🎯 What
+Removed the unused `_fen` variable and its associated `// eslint-disable-next-line @typescript-eslint/no-unused-vars` comment in `src/App.tsx`.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+### 💡 Why
+The initial destructuring `const [_fen, setFen] = useState(...)` assigned the state value to `_fen` only to be ignored. By adopting the standard JavaScript array destructuring pattern `const [, setFen] = useState(...)`, the code achieves the same result (omitting the unused value) without needing a named variable or an ESLint override. This improves code cleanliness and readability.
 
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+### ✅ Verification
+- Read the modified file visually to confirm the exact `sed` replacement logic ran successfully and the destructuring syntax is correct.
+- Executed `npm run lint` and confirmed 0 errors.
+- Executed `npm run build` and confirmed the TypeScript compilation succeeded.
+- Executed `npx vitest run` and all existing unit tests passed.
+
+### ✨ Result
+Cleaner destructuring in `src/App.tsx` and one fewer unnecessary ESLint disable comment.
