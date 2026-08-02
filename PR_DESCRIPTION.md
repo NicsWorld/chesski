@@ -1,14 +1,13 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# 🔒 Security Fix: Mitigate FEN parsing vulnerability
 
-🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+## 🎯 What
+This PR fixes a security vulnerability in `src/App.tsx` where an untrusted FEN string obtained from a URL parameter (`fen`) was passed directly to the `chess.js` constructor without sufficient validation. The fix introduces a strict length limit (<= 100 characters) and utilizes the `chess.js` `validateFen` utility to ensure the payload is correctly formatted before instantiation.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+## ⚠️ Risk
+If left unfixed, the application is vulnerable to Regular Expression Denial of Service (ReDoS) or memory exhaustion attacks. A malicious actor could craft an excessively long or malformed FEN string and distribute the URL. When a victim opens the link, the unsafe parsing by `chess.js` could cause severe performance degradation, hang the application, or exhaust browser memory.
 
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+## 🛡️ Solution
+The issue was addressed by implementing the following pre-validation steps before passing the FEN parameter to the `Chess` constructor:
+- **Length Constraint**: Enforced a strict boundary check that verifies the `fenParam.length` is 100 characters or less.
+- **Format Verification**: Added `validateFen(fenParam).ok` from `chess.js` to securely validate the structural integrity of the FEN string.
+- If the FEN string fails these checks, an error is logged to the console ("Invalid FEN in URL", "FEN string failed validation"), and the application gracefully falls back to the default `game.fen()`, ensuring no exceptions disrupt the user experience.
