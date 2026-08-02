@@ -1,14 +1,16 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# 🧹 [Code Health] Remove unnecessary unused variable and eslint-disable in App.tsx
 
-🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+### 🎯 What:
+In `src/App.tsx`, the `useState` hook for initializing `fen` was capturing the state value into a variable `_fen` which was never used. This required an accompanying `eslint-disable-next-line @typescript-eslint/no-unused-vars` comment. This PR removes the unused variable using array destructuring (`,`) and removes the unnecessary ESLint disable comment.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+### 💡 Why:
+Removing unused variables and their associated linting overrides improves code readability, reduces noise, and keeps the code strictly adhering to linter rules without exceptions.
 
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+### ✅ Verification:
+- Code was manually inspected to ensure `_fen` was not used anywhere else in the file.
+- Ran `npm run lint` and confirmed no errors are present.
+- Ran the test suite `npx vitest run` to ensure functionality remains unchanged.
+- Ran the build `npm run build` which succeeded.
+
+### ✨ Result:
+The codebase is cleaner, standard array destructuring for unused state variables is used (`const [, setFen] = useState(...)`), and one less ESLint exception is present in the codebase.
