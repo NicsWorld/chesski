@@ -1,14 +1,23 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# 🔒 [Security Fix] Add Content Security Policy (CSP) to index.html
 
-🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+## 🎯 What
+Added a Content Security Policy (CSP) meta tag to the `index.html` file to restrict the origins of content that the browser is allowed to load.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+## ⚠️ Risk
+Without a CSP, the application is highly vulnerable to Cross-Site Scripting (XSS) attacks. If an attacker manages to inject malicious scripts or styles into the application, the browser would execute them, potentially leading to data theft, session hijacking, or defacement. Furthermore, malicious actors could embed unauthorized external resources (images, fonts, scripts) or exfiltrate data via unauthorized connections.
 
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+## 🛡️ Solution
+Implemented a strict but functional CSP using the `<meta>` tag in `index.html`.
+
+The policy configured is:
+`default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' ws: wss:;`
+
+This addresses the vulnerability by:
+- **`default-src 'self'`**: Restricting all unhandled resource types to the application's own origin by default.
+- **`script-src 'self' 'unsafe-inline'`**: Permitting scripts from the same origin. `'unsafe-inline'` is currently required for Vite's module injection/react-refresh during local development and for standard lightweight React apps without nonces.
+- **`style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`**: Allowing styles from the same origin, inline styles (often used by CSS-in-JS or dynamic React components), and specifically whitelisting the Google Fonts API.
+- **`font-src 'self' https://fonts.gstatic.com`**: Allowing fonts to load locally or from the Google Fonts CDN.
+- **`img-src 'self' data:`**: Restricting images to the same origin and permitting `data:` URIs (useful for inline SVG icons or placeholders).
+- **`connect-src 'self' ws: wss:`**: Limiting network requests (fetch, XHR) to the origin, while allowing WebSocket connections (`ws: wss:`) strictly required for Vite's Hot Module Replacement (HMR).
+
+This significantly improves the security posture while maintaining developer experience and functional parity.
