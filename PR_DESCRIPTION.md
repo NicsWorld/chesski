@@ -1,14 +1,14 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# Document Improvement: Refactor Suggestions
 
-🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+**🎯 What:**
+Added a `REFACTOR_SUGGESTIONS.md` file to the root of the `chesski` repository containing a ranked list of 5 small, low-risk, high-leverage refactor opportunities.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+**✨ Result:**
+The suggestions focus on areas recently modified (App initialization, ChessBoard rendering, and Tutorial logic) and emphasize improving maintainability without altering product behavior. The 5 identified tasks are:
+1. Extract URL parsing logic in `App.tsx` into a reusable, validated helper function.
+2. Utilize existing black piece assets in `Piece.tsx` instead of filtering white piece assets in the `zoo` theme.
+3. Optimize valid move tracking in `ChessBoard.tsx` by migrating from an Array to a Set for O(1) lookups.
+4. Wire up the existing but hardcoded `lastMove` prop on `BoardSquare` components within `ChessBoard.tsx`.
+5. Decouple complex string manipulation (Kings addition logic) from the `Tutorial.tsx` view layer.
 
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+All documentation adheres to the specific formatting constraints required. No application code was modified during this change.
