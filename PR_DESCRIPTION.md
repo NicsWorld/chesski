@@ -1,14 +1,10 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# 🔒 [Security] Fix Missing Radix in parseInt
 
-🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+## 🎯 What
+Added the missing radix parameter (base 10) to `parseInt` function calls in `src/components/Tutorial.tsx`.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+## ⚠️ Risk
+When `parseInt` is called without a radix parameter, the base is determined dynamically based on the input string format. This can lead to unexpected behaviors or vulnerabilities if an input starts with "0x" (interpreted as hex) or "0" (interpreted as octal in older JS engines), which could be manipulated maliciously. Furthermore, omitting the radix is flagged by modern security/linting tools as a poor practice since untrusted inputs can result in non-base-10 interpretations and potential logic flaws.
 
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+## 🛡️ Solution
+Explicitly provided the base 10 radix parameter (`parseInt(char, 10)`) to explicitly instruct JavaScript to parse all numerical characters natively as base-10 integers. This eliminates ambiguity and prevents unintended radix interpretation.
