@@ -1,14 +1,18 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# 🧪 [testing improvement] Add comprehensive tests for gameStatus.ts draw and check edge cases
 
-🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+## 🎯 What
+This PR addresses a missing test gap for the `evaluateGameStatus` utility function in `src/utils/gameStatus.ts`. While the main functional paths might have been implicitly covered, specific edge case handling for draws, checks, and checkmates lacked explicit unit tests to ensure `chess.js` conditions were correctly evaluated and surfaced to the UI.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+## 📊 Coverage
+The new test suite explicitly verifies the following scenarios:
+*   Standard turns for both White and Black.
+*   Checkmate evaluation when either White or Black wins.
+*   Check alerts.
+*   All `chess.js` draw edge cases, including:
+    *   Stalemate
+    *   Insufficient material
+    *   Threefold repetition
+    *   50-move rule
 
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+## ✨ Result
+The `gameStatus` utility function is now fully tested, preventing accidental regressions if the underlying `chess.js` conditions or the status string logic is updated in the future.
