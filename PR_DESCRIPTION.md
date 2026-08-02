@@ -1,14 +1,18 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+🧹 Remove unused variables and eslint-disable comments in `Tutorial.tsx` and `App.tsx`
 
 🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+- Changed `const [_, setFen]` to `const [, setFen]` in `src/components/Tutorial.tsx`.
+- Changed `const [_fen, setFen]` to `const [, setFen]` in `src/App.tsx`.
+- Removed the accompanying `eslint-disable-next-line @typescript-eslint/no-unused-vars` comments.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+💡 **Why:**
+- Improves code cleanliness and readability by removing dead code.
+- Reduces reliance on `eslint-disable` comments, enforcing stricter linting rules by leveraging array destructuring syntax appropriately to skip unused initial tuple elements natively in JavaScript/TypeScript.
+
+✅ **Verification:**
+- Ran `npm run lint` successfully with no errors or warnings.
+- Built the project with `npm run build` and verified the build succeeds.
+- Verified test suite passes successfully with `npx vitest run`.
 
 ✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+- Cleaner, more maintainable code with fewer linter-suppression comments and slightly reduced boilerplate.
