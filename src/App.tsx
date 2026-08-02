@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Chess } from 'chess.js';
+import { Chess, validateFen } from 'chess.js';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import ChessBoard from './components/ChessBoard';
@@ -12,7 +12,8 @@ function App() {
   const [view, setView] = useState<'game' | 'tutorial'>(() => {
     // If we are loading a shared game (fen param exists), default to game view
     const params = new URLSearchParams(window.location.search);
-    return params.has('fen') ? 'game' : 'tutorial';
+    const fenParam = params.get('fen');
+    return (fenParam && fenParam.length <= 100 && validateFen(fenParam).ok) ? 'game' : 'tutorial';
   });
   const [game, setGame] = useState(new Chess());
   const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
@@ -21,13 +22,13 @@ function App() {
     // Check for FEN in URL on initialization
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
-    if (fenParam) {
+    if (fenParam && fenParam.length <= 100 && validateFen(fenParam).ok) {
       try {
         const loadedGame = new Chess(fenParam);
         setGame(loadedGame);
         return fenParam;
-      } catch (e) {
-        console.error("Invalid FEN in URL", e);
+      } catch {
+        console.error("Invalid FEN in URL");
       }
     }
     return game.fen();

@@ -1,14 +1,13 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# 🔒 Secure FEN URL Parameter Parsing
 
 🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+The application was directly instantiating a `new Chess(fenParam)` instance from a FEN string provided via URL parameter `?fen=` without proper length limits or strict validation, causing exceptions when invalid strings were supplied. In addition, raw exception objects containing internal stack traces were logged directly to the browser console.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+⚠️ **Risk:**
+Parsing arbitrary, unsanitized strings using the `chess.js` parser exposes the application to potential Regular Expression Denial of Service (ReDoS) or memory exhaustion attacks if specially crafted, excessively long strings are provided via the URL. Additionally, logging the raw error object leaks internal implementation details (stack traces) to the end user.
 
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+🛡️ **Solution:**
+- Added a strict length limit check (`<= 100` characters, safely accommodating valid FEN representations) for the `fenParam` before parsing.
+- Incorporated `validateFen(fenParam).ok` natively provided by `chess.js` to ensure the parameter format is fully legitimate before allowing it to dictate game or view state.
+- Removed raw exception logging from the `catch` block; it now utilizes optional catch binding and logs a safe, sanitized generic error message.
+- Updated relevant test cases to assert this rejection and fallback logic without throwing.

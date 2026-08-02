@@ -41,13 +41,10 @@ describe('App invalid FEN fallback', () => {
     render(<App />);
 
     // It should have logged the error
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Invalid FEN in URL',
-      expect.any(Error)
-    );
+    // It shouldn't log an error anymore because we reject invalid FENs before trying to parse them
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
 
-    // It should still render the game view because a fen param was present
-    // but the FEN was invalid so it defaults to the initial game.fen()
-    expect(screen.getByTestId('mock-chessboard')).toBeInTheDocument();
+    // It should render the tutorial view because the invalid FEN param is rejected during initialization
+    expect(screen.getByTestId('mock-tutorial')).toBeInTheDocument();
   });
 });
