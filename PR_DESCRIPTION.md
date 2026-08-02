@@ -1,14 +1,13 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+# 🧹 [Code Health] Remove redundant `shouldHidePiece` logic from Tutorial and ChessBoard
 
-🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+## 🎯 What
+The `shouldHidePiece` function in `Tutorial.tsx` and the associated optional prop in `ChessBoard.tsx` (including its interface, variable declaration, and conditional rendering logic) have been removed.
 
-📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+## 💡 Why
+The logic for removing kings during tutorials was explicitly marked in code comments as physically removing the pieces (`removeKings` function), making the React-level rendering check (`shouldHidePiece`) redundant. Removing dead/redundant code improves codebase readability, reduces complexity in the `ChessBoard` component props, and prevents potential confusion for future contributors.
 
-✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+## ✅ Verification
+I created Python scripts using Regex/String replacement to surgically target and remove only the `shouldHidePiece` code. After removing it, I ran `npm run lint` and `npm run build` without any errors. The test suite (`npx vitest run`) also passed, confirming that no existing functionality was broken by removing this prop.
+
+## ✨ Result
+A cleaner, simpler `Tutorial` and `ChessBoard` component. The `ChessBoard` component no longer carries an unused optional prop and conditional rendering check, making it more focused and maintainable.
