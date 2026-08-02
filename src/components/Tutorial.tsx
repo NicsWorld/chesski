@@ -43,43 +43,28 @@ const tutorials = [
 
 const addKingsToFen = (fen: string) => {
     const parts = fen.split(' ');
-    const boardStr = parts[0];
+    let boardStr = parts[0];
 
-    let whiteKingPlaced = boardStr.includes('K');
-    let blackKingPlaced = boardStr.includes('k');
+    const whiteKingPlaced = boardStr.includes('K');
+    const blackKingPlaced = boardStr.includes('k');
 
     if (whiteKingPlaced && blackKingPlaced) return fen;
 
-    const rows = boardStr.split('/');
+    if (!whiteKingPlaced) {
+        boardStr = boardStr.replace(/[1-8]/, match => {
+            const num = parseInt(match);
+            return 'K' + (num > 1 ? (num - 1).toString() : '');
+        });
+    }
 
-    const newRows = rows.map(row => {
-        if (whiteKingPlaced && blackKingPlaced) return row;
+    if (!blackKingPlaced) {
+        boardStr = boardStr.replace(/[1-8]/, match => {
+            const num = parseInt(match);
+            return 'k' + (num > 1 ? (num - 1).toString() : '');
+        });
+    }
 
-        let newRow = '';
-        for (let i = 0; i < row.length; i++) {
-            const char = row[i];
-            if (!isNaN(parseInt(char))) {
-                let count = parseInt(char);
-                while (count > 0) {
-                    if (!whiteKingPlaced) {
-                        newRow += 'K';
-                        whiteKingPlaced = true;
-                    } else if (!blackKingPlaced) {
-                        newRow += 'k';
-                        blackKingPlaced = true;
-                    } else {
-                        newRow += '1';
-                    }
-                    count--;
-                }
-            } else {
-                newRow += char;
-            }
-        }
-        return newRow.replace(/1+/g, (match) => match.length.toString());
-    });
-
-    parts[0] = newRows.join('/');
+    parts[0] = boardStr;
     return parts.join(' ');
 };
 
