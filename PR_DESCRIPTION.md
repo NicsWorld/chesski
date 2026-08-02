@@ -1,14 +1,12 @@
-## 🧪 [testing improvement] Add test for invalid FEN URL fallback in App component
+Title: 🧪 Add error path test for invalid move in Tutorial.tsx
 
 🎯 **What:**
-The application supports sharing and loading game states via URL parameters (e.g. `?fen=...`). However, the scenario where the provided FEN string is malformed or invalid was lacking test coverage. This PR introduces a unit test that verifies the application gracefully handles an invalid FEN parameter by rendering the game view using the default initial board state and logging an appropriate error.
+Added a test to `src/components/Tutorial.test.tsx` to verify the error path in `Tutorial.tsx` when an invalid chess move is made. The `chess.js` library throws an error for invalid moves, and `Tutorial.tsx` includes a `try-catch` block inside its `handleMove` function to handle it. This test validates that mechanism.
 
 📊 **Coverage:**
-- Configured Vitest and testing-library for unit tests in this project.
-- Added a test file `src/App.test.tsx` focused on component initialization.
-- Mocks `window.location` to simulate navigating to an invalid FEN string in the URL.
-- Spies on `console.error` to ensure the `"Invalid FEN in URL"` error is properly captured without interrupting execution.
-- Asserts that the game view (`ChessBoard`) is successfully rendered as a fallback.
+- Covers the `catch` block path in `Tutorial.tsx`'s `handleMove` function.
+- Mocks `ChessBoard` to programmatically trigger an invalid move (e.g., pawn from 'a1' to 'a8').
+- Ensures that the invalid move does not bubble up as an unhandled exception, thereby gracefully ignoring the bad interaction.
 
 ✨ **Result:**
-The test suite now guarantees that invalid FEN string URL arguments will not crash the application during the initialization of the `App` component, ensuring the `catch` block correctly defaults to the standard starting chessboard.
+Increased test coverage and confidence that edge-case user interactions (like dragging a piece to an invalid square in tutorial mode) will fail gracefully without breaking the application state.
