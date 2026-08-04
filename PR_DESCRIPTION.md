@@ -1,16 +1,19 @@
-# 📝 [Documentation] Draft feature suggestions based on codebase context focusing on growth and monetization
+# 📝 [documentation] Add Prioritized Feature Suggestions
 
 ## 🎯 What
-This PR adds a new documentation file `docs/GROWTH_FEATURE_SUGGESTIONS.md` that contains 6 focused, high-value feature suggestions. These suggestions are specifically tailored to drive user growth and generate revenue while adhering to the constraints of leveraging existing infrastructure (like URL parsing, UI state, and themes) and avoiding external dependencies or large rewrites.
+Adds `FEATURE_SUGGESTIONS.md`, containing a ranked list of 5 well-scoped, actionable feature suggestions tailored to the Chesski codebase.
 
-## 📝 Details
-The document includes the following well-scoped, ranked suggestions:
-1. **"Challenge a Friend" Viral Loop (Growth):** Reusing the `fen` URL param pattern to create a `challenge` param for inviting new players.
-2. **Premium "Dinosaur" Theme (Monetization):** Adding a lock-gated third option to the existing `pieceTheme` state linked to a payment gateway.
-3. **Share to X / Twitter Intent (Growth):** Adding a dynamic social sharing button triggered by the existing checkmate string from `evaluateGameStatus`.
-4. **"Support the Developer" Endgame Hook (Monetization):** A subtle tip jar button that pulses when a game ends naturally.
-5. **Embeddable Chess Widget (Growth):** Utilizing a new `embed=true` URL parameter to hide padding/headers, allowing external sites to embed the app.
-6. **Freemium Puzzle Mode (Growth/Retention):** Reusing the `ChessBoard` component to render static FEN puzzles, gating the daily puzzle behind an email capture.
+## 💡 Why
+The user requested a specific set of high-value feature ideas that leverage existing infrastructure to improve core user value without introducing new external dependencies or requiring large platform rebuilds.
 
-## ✨ Result
-Product owners and contributors now have a clear, strictly-formatted, and highly actionable backlog of small-to-medium scoped tasks that directly target growth and monetization without requiring major architectural shifts.
+## 📝 Documented Suggestions
+1. **Material Advantage / Captured Pieces Display:** Utilizing the existing `captured-area` placeholder in `App.tsx` to show piece differences.
+2. **Implement Last Move Highlighting:** Wiring up the currently hardcoded `lastMove` prop in `ChessBoard.tsx`.
+3. **Tutorial Navigation Controls:** Adding Next/Previous buttons to `Tutorial.tsx` to iterate through the existing `tutorials` array.
+4. **Proper Pawn Promotion Selection UI:** Intercepting the hardcoded `promotion: 'q'` in `ChessBoard.tsx` with a selection modal.
+5. **Fix Black Animal Assets in Zoo Theme:** Removing the CSS filter hack in `Piece.tsx` and using the actual `b` (black) asset files.
+
+## ✅ Verification
+- Ensured the document format matches user constraints (Repo, Area, File, Gap, Feature, Impact, Effort, Fit).
+- Confirmed suggestions are firmly grounded in the actual codebase state (e.g. referencing specific unused props and placeholders).
+- Verified `npm run lint`, `npm run build`, and tests still pass.
