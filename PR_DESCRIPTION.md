@@ -1,16 +1,21 @@
 # 📝 [Documentation] Draft feature suggestions based on codebase context focusing on growth and monetization
 
 ## 🎯 What
-This PR adds a new documentation file `docs/GROWTH_FEATURE_SUGGESTIONS.md` that contains 6 focused, high-value feature suggestions. These suggestions are specifically tailored to drive user growth and generate revenue while adhering to the constraints of leveraging existing infrastructure (like URL parsing, UI state, and themes) and avoiding external dependencies or large rewrites.
+This PR adds a `FEATURE_SUGGESTIONS.md` document containing a prioritized list of 6 highly actionable, small-to-medium scoped feature ideas for the Chesski application.
 
-## 📝 Details
-The document includes the following well-scoped, ranked suggestions:
-1. **"Challenge a Friend" Viral Loop (Growth):** Reusing the `fen` URL param pattern to create a `challenge` param for inviting new players.
-2. **Premium "Dinosaur" Theme (Monetization):** Adding a lock-gated third option to the existing `pieceTheme` state linked to a payment gateway.
-3. **Share to X / Twitter Intent (Growth):** Adding a dynamic social sharing button triggered by the existing checkmate string from `evaluateGameStatus`.
-4. **"Support the Developer" Endgame Hook (Monetization):** A subtle tip jar button that pulses when a game ends naturally.
-5. **Embeddable Chess Widget (Growth):** Utilizing a new `embed=true` URL parameter to hide padding/headers, allowing external sites to embed the app.
-6. **Freemium Puzzle Mode (Growth/Retention):** Reusing the `ChessBoard` component to render static FEN puzzles, gating the daily puzzle behind an email capture.
+## 💡 Why
+The user requested a curated list of feature suggestions that leverage existing patterns in the codebase, prioritize growth/monetization/core value, and are concrete enough to become immediate engineering tickets.
 
-## ✨ Result
-Product owners and contributors now have a clear, strictly-formatted, and highly actionable backlog of small-to-medium scoped tasks that directly target growth and monetization without requiring major architectural shifts.
+## 🛠️ Details
+The suggestions are heavily grounded in the current state of the codebase:
+1. **Shareable "Wordle-style" Emoji Game Summary:** Leverages the existing `game.history()` to create a viral, clipboard-ready summary text. (Growth)
+2. **Material Advantage / Captured Pieces Display:** Implements the currently commented-out `{/* <div className="captured-area">...</div> */}` placeholder in `App.tsx` by parsing FEN strings. (Core Value)
+3. **Premium/Unlockable Piece Themes:** Replaces the hacky CSS brightness filter on the 'zoo' theme with the actual `animal_b*` assets and proposes adding a third, paid theme via a simple Stripe checkout link. (Monetization / Debt)
+4. **Pawn Underpromotion UI:** Fixes the hardcoded `promotion: 'q'` in `ChessBoard.tsx` by introducing a simple piece selection UI for moves reaching the final rank. (Core Value)
+5. **Interactive Tutorial Progression:** Wires up navigation buttons (Next/Previous) to the existing, static `activeTutorial` state in `Tutorial.tsx`. (Growth / Onboarding)
+6. **Last Move Highlighting:** Wires up the existing, unused `lastMove` prop on `BoardSquareProps` by reading the latest move from the `chess.js` history. (Friction Reduction)
+
+## ✅ Verification
+- Document formatting conforms strictly to the user's requirements (Repo, Area, Relevant files, Gap, Specific feature, Why it's a good task, Impact, Effort, Fit).
+- Contains exactly 6 suggestions, ranked best-first.
+- All verifications (`npm run lint`, `npm run build`, `npx vitest run`) pass, confirming no code breakages.
