@@ -1,16 +1,16 @@
-# 📝 [Documentation] Draft feature suggestions based on codebase context focusing on growth and monetization
+# 🧹 [Code Health] Remove unused `_` state and `setFen` hook from Tutorial component
 
-## 🎯 What
-This PR adds a new documentation file `docs/GROWTH_FEATURE_SUGGESTIONS.md` that contains 6 focused, high-value feature suggestions. These suggestions are specifically tailored to drive user growth and generate revenue while adhering to the constraints of leveraging existing infrastructure (like URL parsing, UI state, and themes) and avoiding external dependencies or large rewrites.
+🎯 **What:**
+Removed the unused `_` state variable and its `setFen` setter from `src/components/Tutorial.tsx`. Cleaned up the `eslint-disable` comment and all occurrences of `setFen(...)` within the component (in `handleSelectTutorial`, `handleMove`, and the reset button `onClick` handler).
 
-## 📝 Details
-The document includes the following well-scoped, ranked suggestions:
-1. **"Challenge a Friend" Viral Loop (Growth):** Reusing the `fen` URL param pattern to create a `challenge` param for inviting new players.
-2. **Premium "Dinosaur" Theme (Monetization):** Adding a lock-gated third option to the existing `pieceTheme` state linked to a payment gateway.
-3. **Share to X / Twitter Intent (Growth):** Adding a dynamic social sharing button triggered by the existing checkmate string from `evaluateGameStatus`.
-4. **"Support the Developer" Endgame Hook (Monetization):** A subtle tip jar button that pulses when a game ends naturally.
-5. **Embeddable Chess Widget (Growth):** Utilizing a new `embed=true` URL parameter to hide padding/headers, allowing external sites to embed the app.
-6. **Freemium Puzzle Mode (Growth/Retention):** Reusing the `ChessBoard` component to render static FEN puzzles, gating the daily puzzle behind an email capture.
+💡 **Why:**
+The `_` state and `setFen` were entirely unused within the `Tutorial` component, as the reactivity is properly handled by `setGame` which triggers re-renders appropriately when `new Chess(...)` object references are passed to it. Leaving unused variables and disabled linter rules pollutes the codebase and decreases readability. Removing them improves the maintainability and cleanliness of the code without altering any functionality.
 
-## ✨ Result
-Product owners and contributors now have a clear, strictly-formatted, and highly actionable backlog of small-to-medium scoped tasks that directly target growth and monetization without requiring major architectural shifts.
+✅ **Verification:**
+- Verified visually using `git diff --cached` that all instances of the hook, setter usages, and the linter suppression comment were accurately removed.
+- Ran `npm run lint` and confirmed no ESLint warnings or errors were generated.
+- Ran `npx vitest run` and ensured the test suite passed successfully.
+- Ran `npm run build` and confirmed the application builds correctly.
+
+✨ **Result:**
+The `Tutorial` component is now cleaner, more concise, and free of unnecessary state management and linter suppression comments. The codebase maintainability is improved with zero behavioral regressions.
