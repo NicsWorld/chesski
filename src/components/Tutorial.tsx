@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Chess } from 'chess.js';
+import { Chess, SQUARES } from 'chess.js';
 import ChessBoard from './ChessBoard';
 
 const tutorials = [
@@ -84,22 +84,16 @@ const addKingsToFen = (fen: string) => {
 };
 
 const removeKings = (game: Chess, tutorialId: string) => {
-    const board = game.board();
-    for (let r = 0; r < 8; r++) {
-        for (let c = 0; c < 8; c++) {
-            const piece = board[r][c];
-            if (piece) {
-                if (piece.type === 'k' && piece.color === 'b') {
-                    // Remove black king
-                    game.remove(piece.square);
-                }
-                if (piece.type === 'k' && piece.color === 'w' && tutorialId !== 'k') {
-                    // Remove white king unless it's king tutorial
-                    game.remove(piece.square);
-                }
+    SQUARES.forEach((square) => {
+        const piece = game.get(square);
+        if (piece && piece.type === 'k') {
+            if (piece.color === 'b') {
+                game.remove(square);
+            } else if (piece.color === 'w' && tutorialId !== 'k') {
+                game.remove(square);
             }
         }
-    }
+    });
 };
 
 const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
