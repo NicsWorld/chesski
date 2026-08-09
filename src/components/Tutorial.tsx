@@ -58,8 +58,9 @@ const addKingsToFen = (fen: string) => {
         let newRow = '';
         for (let i = 0; i < row.length; i++) {
             const char = row[i];
-            if (!isNaN(parseInt(char))) {
-                let count = parseInt(char);
+            const parsedCount = parseInt(char, 10);
+            if (!isNaN(parsedCount)) {
+                let count = parsedCount;
                 while (count > 0) {
                     if (!whiteKingPlaced) {
                         newRow += 'K';
