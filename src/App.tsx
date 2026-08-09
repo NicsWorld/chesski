@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Chess } from 'chess.js';
+import { Chess, validateFen } from 'chess.js';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import ChessBoard from './components/ChessBoard';
@@ -22,6 +22,10 @@ function App() {
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
     if (fenParam) {
+      if (!(fenParam.length <= 100 && validateFen(fenParam).ok)) {
+        console.error("Invalid FEN in URL", new Error("Invalid FEN"));
+        return game.fen();
+      }
       try {
         const loadedGame = new Chess(fenParam);
         setGame(loadedGame);
