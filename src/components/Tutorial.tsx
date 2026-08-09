@@ -41,75 +41,10 @@ const tutorials = [
     }
 ];
 
-const addKingsToFen = (fen: string) => {
-    const parts = fen.split(' ');
-    const boardStr = parts[0];
-
-    let whiteKingPlaced = boardStr.includes('K');
-    let blackKingPlaced = boardStr.includes('k');
-
-    if (whiteKingPlaced && blackKingPlaced) return fen;
-
-    const rows = boardStr.split('/');
-
-    const newRows = rows.map(row => {
-        if (whiteKingPlaced && blackKingPlaced) return row;
-
-        let newRow = '';
-        for (let i = 0; i < row.length; i++) {
-            const char = row[i];
-            if (!isNaN(parseInt(char))) {
-                let count = parseInt(char);
-                while (count > 0) {
-                    if (!whiteKingPlaced) {
-                        newRow += 'K';
-                        whiteKingPlaced = true;
-                    } else if (!blackKingPlaced) {
-                        newRow += 'k';
-                        blackKingPlaced = true;
-                    } else {
-                        newRow += '1';
-                    }
-                    count--;
-                }
-            } else {
-                newRow += char;
-            }
-        }
-        return newRow.replace(/1+/g, (match) => match.length.toString());
-    });
-
-    parts[0] = newRows.join('/');
-    return parts.join(' ');
-};
-
-const removeKings = (game: Chess, tutorialId: string) => {
-    const board = game.board();
-    for (let r = 0; r < 8; r++) {
-        for (let c = 0; c < 8; c++) {
-            const piece = board[r][c];
-            if (piece) {
-                if (piece.type === 'k' && piece.color === 'b') {
-                    // Remove black king
-                    game.remove(piece.square);
-                }
-                if (piece.type === 'k' && piece.color === 'w' && tutorialId !== 'k') {
-                    // Remove white king unless it's king tutorial
-                    game.remove(piece.square);
-                }
-            }
-        }
-    }
-};
-
 const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
     const [activeTutorial, setActiveTutorial] = useState(tutorials[0]);
 
-    const initGame = (t: typeof tutorials[0]) => {
-        const g = new Chess(t.fen);
-        removeKings(g, t.id);
-        return g;
-    };
+    const initGame = (t: typeof tutorials[0]) => new Chess(t.fen);
 
     const [game, setGame] = useState(() => initGame(tutorials[0]));
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -131,10 +66,7 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
                 fenParts[1] = 'w';
                 currentFen = fenParts.join(' ');
 
-                const validFen = addKingsToFen(currentFen);
-                const newGame = new Chess(validFen);
-
-                removeKings(newGame, activeTutorial.id);
+                const newGame = new Chess(currentFen);
 
                 setGame(newGame);
                 setFen(newGame.fen());
@@ -145,7 +77,7 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
     };
 
     const shouldHidePiece = (piece: { type: string; color: string }) => {
-        // Since we remove kings physically, this might be redundant but safe to keep
+        // Kings are kept physically on the board for validation, so we must hide them visually
         if (piece.type === 'k' && piece.color === 'b') return true;
         if (piece.type === 'k' && piece.color === 'w' && activeTutorial.id !== 'k') return true;
         return false;
