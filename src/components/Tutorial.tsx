@@ -112,8 +112,7 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
     };
 
     const [game, setGame] = useState(() => initGame(tutorials[0]));
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    const [_, setFen] = useState(game.fen());
+    const [, setFen] = useState(game.fen());
 
     const handleSelectTutorial = (t: typeof tutorials[0]) => {
         setActiveTutorial(t);
