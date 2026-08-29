@@ -66,9 +66,6 @@ function App() {
     });
   };
 
-  // Memoize game instance to prevent unnecessary re-creations, though state updates trigger re-render
-  // actually useState(new Chess()) is fine as it's only initial.
-
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="app-container">
