@@ -6,6 +6,7 @@ import ChessBoard from './components/ChessBoard';
 import Tutorial from './components/Tutorial';
 import MoveHistory from './components/MoveHistory';
 import { evaluateGameStatus } from './utils/gameStatus';
+import { isValidFen } from './utils/fenValidation';
 import './App.css';
 
 function App() {
@@ -21,14 +22,16 @@ function App() {
     // Check for FEN in URL on initialization
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
-    if (fenParam) {
+    if (fenParam && isValidFen(fenParam)) {
       try {
         const loadedGame = new Chess(fenParam);
         setGame(loadedGame);
         return fenParam;
-      } catch (e) {
-        console.error("Invalid FEN in URL", e);
+      } catch {
+        console.error("Invalid FEN in URL");
       }
+    } else if (fenParam) {
+      console.error("Invalid FEN in URL");
     }
     return game.fen();
   });
