@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useReducer } from 'react';
 import { Chess } from 'chess.js';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -14,31 +14,27 @@ function App() {
     const params = new URLSearchParams(window.location.search);
     return params.has('fen') ? 'game' : 'tutorial';
   });
-  const [game, setGame] = useState(new Chess());
-  const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_fen, setFen] = useState(() => {
-    // Check for FEN in URL on initialization
+  const [game, setGame] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
     if (fenParam) {
       try {
-        const loadedGame = new Chess(fenParam);
-        setGame(loadedGame);
-        return fenParam;
-      } catch (e) {
-        console.error("Invalid FEN in URL", e);
+        return new Chess(fenParam);
+      } catch {
+        console.error("Invalid FEN in URL");
       }
     }
-    return game.fen();
+    return new Chess();
   });
+  const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
+  const [, forceRender] = useReducer((x) => x + 1, 0);
   const [message, setMessage] = useState("Welcome! Drag the white pieces to start.");
 
   const handleMove = (move: { from: string; to: string; promotion?: string }) => {
     try {
       const result = game.move(move);
       if (result) {
-        setFen(game.fen()); // Update state to re-render board
+        forceRender(); // Update state to re-render board
         setMessage(evaluateGameStatus(game));
       }
     } catch {
@@ -50,7 +46,6 @@ function App() {
   const resetGame = () => {
     const newGame = new Chess();
     setGame(newGame);
-    setFen(newGame.fen());
     setMessage("New Game! White starts.");
     // Clear the URL param
     window.history.pushState({}, '', window.location.pathname);
@@ -128,7 +123,7 @@ function App() {
                   className="btn-secondary"
                   onClick={() => {
                     game.undo();
-                    setFen(game.fen());
+                    forceRender();
                     setMessage(evaluateGameStatus(game));
                   }}
                 >
