@@ -112,14 +112,13 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
     };
 
     const [game, setGame] = useState(() => initGame(tutorials[0]));
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    const [_, setFen] = useState(game.fen());
+
 
     const handleSelectTutorial = (t: typeof tutorials[0]) => {
         setActiveTutorial(t);
         const newGame = initGame(t);
         setGame(newGame);
-        setFen(newGame.fen());
+
     };
 
     const handleMove = (move: { from: string; to: string; promotion?: string }) => {
@@ -137,7 +136,7 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
                 removeKings(newGame, activeTutorial.id);
 
                 setGame(newGame);
-                setFen(newGame.fen());
+
             }
         } catch {
             // Invalid move
@@ -175,7 +174,7 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
                 <button className="btn-secondary" onClick={() => {
                     const resetGame = initGame(activeTutorial);
                     setGame(resetGame);
-                    setFen(resetGame.fen());
+
                 }}>Reset Position</button>
             </aside>
         </div>
