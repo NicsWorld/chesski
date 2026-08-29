@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { groupMovesIntoPairs } from '../utils/moveUtils';
 
 interface MoveHistoryProps {
     history: string[];
@@ -15,13 +16,7 @@ const MoveHistory: React.FC<MoveHistoryProps> = ({ history }) => {
     }, [history]);
 
     // Group moves into pairs (White, Black)
-    const movePairs: { white: string; black?: string }[] = [];
-    for (let i = 0; i < history.length; i += 2) {
-        movePairs.push({
-            white: history[i],
-            black: history[i + 1]
-        });
-    }
+    const movePairs = groupMovesIntoPairs(history);
 
     return (
         <div className="move-history-card">
