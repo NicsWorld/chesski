@@ -141,6 +141,7 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
             }
         } catch {
             // Invalid move
+            console.warn('Invalid move attempted');
         }
     };
 
