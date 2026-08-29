@@ -112,8 +112,7 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
     };
 
     const [game, setGame] = useState(() => initGame(tutorials[0]));
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    const [_, setFen] = useState(game.fen());
+    const [fen, setFen] = useState(game.fen());
 
     const handleSelectTutorial = (t: typeof tutorials[0]) => {
         setActiveTutorial(t);
@@ -154,7 +153,7 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
     return (
         <div className="game-layout">
             <div className="board-area">
-                <ChessBoard game={game} onMove={handleMove} shouldHidePiece={shouldHidePiece} pieceTheme={pieceTheme} />
+                <ChessBoard game={game} fen={fen} onMove={handleMove} shouldHidePiece={shouldHidePiece} pieceTheme={pieceTheme} />
             </div>
             <aside className="info-panel">
                 <div className="status-card">

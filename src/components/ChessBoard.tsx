@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Chess } from 'chess.js';
 import { useDrop } from 'react-dnd';
 import Piece from './Piece';
 
 interface ChessBoardProps {
     game: Chess;
+    fen: string;
     onMove: (move: { from: string; to: string; promotion?: string }) => void;
     shouldHidePiece?: (piece: { type: string; color: string }) => boolean;
     pieceTheme: 'zoo' | 'standard';
@@ -108,8 +109,8 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
     )
 }
 
-const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, shouldHidePiece, pieceTheme }) => {
-    const board = game.board();
+const ChessBoard: React.FC<ChessBoardProps> = ({ game, fen, onMove, shouldHidePiece, pieceTheme }) => {
+    const board = useMemo(() => game.board(), [game, fen]);
     const [validMoves, setValidMoves] = useState<string[]>([]);
 
     const isBlackSquare = (fileIndex: number, rankIndex: number) => {
