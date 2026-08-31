@@ -15,34 +15,31 @@ function App() {
     const params = new URLSearchParams(window.location.search);
     return params.has('fen') ? 'game' : 'tutorial';
   });
-  const [game, setGame] = useState(new Chess());
-  const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_fen, setFen] = useState(() => {
-    // Check for FEN in URL on initialization
+  const [game, setGame] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
     if (fenParam && fenParam.length <= 100 && validateFen(fenParam).ok) {
       try {
-        const loadedGame = new Chess(fenParam);
-        setGame(loadedGame);
-        return fenParam;
+        return new Chess(fenParam);
       } catch (e) {
         console.error("Invalid FEN in URL", e);
       }
     } else if (fenParam) {
       console.error("Invalid FEN in URL", new Error("FEN length exceeded 100 characters or validation failed"));
     }
-    return game.fen();
+    return new Chess();
   });
+  const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
   const [message, setMessage] = useState("Welcome! Drag the white pieces to start.");
 
   const handleMove = (move: { from: string; to: string; promotion?: string }) => {
     try {
-      const result = game.move(move);
+      const gameClone = new Chess();
+      gameClone.loadPgn(game.pgn());
+      const result = gameClone.move(move);
       if (result) {
-        setFen(game.fen()); // Update state to re-render board
-        setMessage(evaluateGameStatus(game));
+        setGame(gameClone);
+        setMessage(evaluateGameStatus(gameClone));
       }
     } catch {
       setMessage("Oops! You can't move there.");
@@ -53,7 +50,6 @@ function App() {
   const resetGame = () => {
     const newGame = new Chess();
     setGame(newGame);
-    setFen(newGame.fen());
     setMessage("New Game! White starts.");
     // Clear the URL param
     window.history.pushState({}, '', window.location.pathname);
@@ -130,9 +126,11 @@ function App() {
                 <button
                   className="btn-secondary"
                   onClick={() => {
-                    game.undo();
-                    setFen(game.fen());
-                    setMessage(evaluateGameStatus(game));
+                    const gameClone = new Chess();
+                    gameClone.loadPgn(game.pgn());
+                    gameClone.undo();
+                    setGame(gameClone);
+                    setMessage(evaluateGameStatus(gameClone));
                   }}
                 >
                   Undo
