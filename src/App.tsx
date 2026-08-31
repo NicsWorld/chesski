@@ -5,6 +5,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import ChessBoard from './components/ChessBoard';
 import Tutorial from './components/Tutorial';
 import MoveHistory from './components/MoveHistory';
+import CapturedPieces from './components/CapturedPieces';
 import { evaluateGameStatus } from './utils/gameStatus';
 import './App.css';
 
@@ -143,8 +144,7 @@ function App() {
                 </button>
               </div>
 
-              {/* Placeholder for future features like "Captured Pieces" */}
-              {/* <div className="captured-area">...</div> */}
+              <CapturedPieces game={game} pieceTheme={pieceTheme} />
             </aside>
           </div>
         ) : (
