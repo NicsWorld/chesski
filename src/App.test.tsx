@@ -43,7 +43,7 @@ describe('App invalid FEN fallback', () => {
     // It should have logged the error
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'Invalid FEN in URL',
-      expect.any(Error)
+
     );
 
     // It should still render the game view because a fen param was present
