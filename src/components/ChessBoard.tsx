@@ -6,8 +6,8 @@ import Piece from './Piece';
 interface ChessBoardProps {
     game: Chess;
     onMove: (move: { from: string; to: string; promotion?: string }) => void;
-    shouldHidePiece?: (piece: { type: string; color: string }) => boolean;
     pieceTheme: 'zoo' | 'standard';
+    shouldHidePiece?: (piece: { type: string; color: string }) => boolean;
 }
 
 interface BoardSquareProps {
@@ -108,7 +108,7 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
     )
 }
 
-const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, shouldHidePiece, pieceTheme }) => {
+const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme, shouldHidePiece }) => {
     const board = game.board();
     const [validMoves, setValidMoves] = useState<string[]>([]);
 
@@ -141,7 +141,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, shouldHidePiece, 
                     const square = `${file}${rank}`;
                     const piece = board[rankIndex][fileIndex];
                     const isBlack = isBlackSquare(fileIndex, rankIndex);
-                    const isHidden = piece && shouldHidePiece && shouldHidePiece(piece);
+                    const isHidden = piece && shouldHidePiece ? shouldHidePiece(piece) : false;
 
                     return (
                         <SquareWrapper

@@ -71,8 +71,8 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
                 setGame(newGame);
                 setFen(newGame.fen());
             }
-        } catch {
-            // Invalid move
+        } catch (error) {
+            console.debug("Invalid move:", error);
         }
     };
 
