@@ -75,7 +75,7 @@ function App() {
         <header className="app-header">
           <h1>Zoo Chess</h1>
           <p>Learn to play with animal friends!</p>
-          <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="app-header-controls">
             <button
               className={view === 'game' ? '' : 'btn-secondary'}
               onClick={() => setView('game')}
@@ -89,18 +89,16 @@ function App() {
               Tutorials
             </button>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '1rem' }}>
-              <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>Theme:</span>
+            <div className="theme-selector">
+              <span className="theme-selector-label">Theme:</span>
               <button
-                className="btn-secondary"
-                style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', backgroundColor: pieceTheme === 'zoo' ? 'rgba(255,255,255,0.2)' : 'transparent' }}
+                className={`btn-secondary theme-btn ${pieceTheme === 'zoo' ? 'active' : ''}`}
                 onClick={() => setPieceTheme('zoo')}
               >
                 Zoo
               </button>
               <button
-                className="btn-secondary"
-                style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', backgroundColor: pieceTheme === 'standard' ? 'rgba(255,255,255,0.2)' : 'transparent' }}
+                className={`btn-secondary theme-btn ${pieceTheme === 'standard' ? 'active' : ''}`}
                 onClick={() => setPieceTheme('standard')}
               >
                 Standard
