@@ -133,22 +133,15 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
                 setGame(newGame);
                 setFen(newGame.fen());
             }
-        } catch {
-            // Invalid move
+        } catch (error) {
+            console.debug("Invalid move:", error);
         }
-    };
-
-    const shouldHidePiece = (piece: { type: string; color: string }) => {
-        // Since we remove kings physically, this might be redundant but safe to keep
-        if (piece.type === 'k' && piece.color === 'b') return true;
-        if (piece.type === 'k' && piece.color === 'w' && activeTutorial.id !== 'k') return true;
-        return false;
     };
 
     return (
         <div className="game-layout">
             <div className="board-area">
-                <ChessBoard game={game} onMove={handleMove} shouldHidePiece={shouldHidePiece} pieceTheme={pieceTheme} />
+                <ChessBoard game={game} onMove={handleMove} pieceTheme={pieceTheme} />
             </div>
             <aside className="info-panel">
                 <div className="status-card">
