@@ -57,11 +57,11 @@ describe('Piece component', () => {
             />
         );
         const img = screen.getByRole('img');
-        expect(img).toHaveAttribute('src', '/pieces/animal_wP.png');
+        expect(img).toHaveAttribute('src', '/pieces/wP.svg');
         expect(img).not.toHaveStyle('filter: brightness(0.4) contrast(1.2)');
     });
 
-    it('renders zoo piece image with filter for black', () => {
+    it('renders zoo piece image for black', () => {
         render(
             <Piece
                 piece={{ type: 'p', color: 'b' }}
@@ -72,8 +72,7 @@ describe('Piece component', () => {
             />
         );
         const img = screen.getByRole('img');
-        expect(img).toHaveAttribute('src', '/pieces/animal_wP.png');
-        expect(img).toHaveStyle('filter: brightness(0.4) contrast(1.2)');
+        expect(img).toHaveAttribute('src', '/pieces/bP.svg');
     });
 
     it('calls onDragStart when isDragging becomes true', () => {

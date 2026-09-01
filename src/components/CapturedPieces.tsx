@@ -45,10 +45,7 @@ const CapturedPieces: React.FC<CapturedPiecesProps> = ({ game, pieceTheme }) => 
     const blackCaptured = getCaptured('b'); // Black pieces captured by white
 
     const renderPieceIcon = (type: string, color: 'w' | 'b', index: number) => {
-        const isStandard = pieceTheme === 'standard';
-        const imageName = isStandard
-            ? `${color}${type.toUpperCase()}.svg`
-            : `animal_w${type.toUpperCase()}.png`;
+        const imageName = `${color}${type.toUpperCase()}.svg`;
 
         return (
             <img
@@ -59,7 +56,6 @@ const CapturedPieces: React.FC<CapturedPiecesProps> = ({ game, pieceTheme }) => 
                     width: '24px',
                     height: '24px',
                     objectFit: 'contain',
-                    filter: (!isStandard && color === 'b') ? 'brightness(0.4) contrast(1.2)' : undefined,
                     marginRight: '-8px' // slight overlap for tighter display
                 }}
             />
