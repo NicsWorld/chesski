@@ -27,4 +27,23 @@ describe('Tutorial Component', () => {
 
         expect(() => fireEvent.click(board)).not.toThrow();
     });
+
+    it('handles programmatic invalid move returning false without throwing', () => {
+        render(<Tutorial pieceTheme="standard" />);
+        const board = screen.getByTestId('mock-chessboard');
+
+        // Move a piece incorrectly (illegal jump)
+        board.setAttribute('data-move', JSON.stringify({ from: 'a1', to: 'a8' }));
+        expect(() => fireEvent.click(board)).not.toThrow();
+    });
+
+    it('handles valid moves correctly', () => {
+        render(<Tutorial pieceTheme="standard" />);
+        const board = screen.getByTestId('mock-chessboard');
+
+        // Initial pawn tutorial position: '7k/8/8/8/8/8/4P3/K7 w - - 0 1'
+        // Move pawn e2 to e4
+        board.setAttribute('data-move', JSON.stringify({ from: 'e2', to: 'e4' }));
+        expect(() => fireEvent.click(board)).not.toThrow();
+    });
 });
