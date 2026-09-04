@@ -1,3 +1,14 @@
-🎯 **What:** The testing gap in App.tsx was addressed by adding tests for the main functionality, including `handleMove` logic, button interactions (New Game, Undo, Share Game), and view/theme state changes.
-📊 **Coverage:** Valid moves, invalid moves with timeouts, game reset, undo, URL sharing, and UI state switches are now fully tested.
-✨ **Result:** Enhanced test reliability and coverage for the core App component, catching potential regressions in user interactions and game logic.
+# 🧹 [code health improvement verify]
+
+## 🎯 What
+Verified the removal of the redundant `shouldHidePiece` function from `src/components/Tutorial.tsx` and related props.
+
+## 💡 Why
+The `shouldHidePiece` function was marked as redundant since kings were already physically removed from the board, meaning the hiding logic was no longer needed and amounted to dead code. Removing it improves the maintainability and readability of the `Tutorial` and `ChessBoard` components.
+
+## ✅ Verification
+- Confirmed via file inspection that `shouldHidePiece` is completely removed from the codebase.
+- Ran `npm run lint` and `npx vitest run` to ensure no functionality is broken and no remaining references cause errors.
+
+## ✨ Result
+Improved maintainability by having the dead code safely stripped out, with the codebase now passing all checks seamlessly.
