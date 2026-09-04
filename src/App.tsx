@@ -18,7 +18,9 @@ function App() {
   const [game, setGame] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
-    if (fenParam && fenParam.length <= 100 && validateFen(fenParam).ok) {
+    // Basic regex validation to prevent malformed input from being evaluated by the library
+    const fenRegex = /^([pnbrqkPNBRQK1-8]+\/){7}[pnbrqkPNBRQK1-8]+ [wb] (-|[KkQq]+) (-|[a-h][36])( \d+ \d+)?$/;
+    if (fenParam && fenParam.length <= 100 && fenRegex.test(fenParam) && validateFen(fenParam).ok) {
       try {
         return new Chess(fenParam);
       } catch (e) {
