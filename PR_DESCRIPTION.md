@@ -1,6 +1,13 @@
-## 🎨 Palette: Accessibility and UX Polish
+# ⚡ Optimize Tutorial game state updates
 
-💡 **What**: Added meaningful `alt` text to piece images (e.g. "White Knight" instead of "w n"), and added a disabled state for the "Undo" button when there is no move history. Also added proper focus indicators for keyboard navigation and disabled styles for buttons.
-🎯 **Why**: Ensures screen reader users can identify the pieces being rendered on the board and in the captured pieces section. Improves user experience by giving clear visual feedback when "Undo" is not possible, and allows keyboard users to see which interactive element has focus.
-📸 **Before/After**: Visually, the disabled state on the Undo button is now clear when the game starts. Screen readers will read "White Knight" instead of "w n".
-♿ **Accessibility**: Enhanced image ARIA roles via detailed `alt` text and improved focus states for keyboard users.
+### 💡 What
+- Refactored `handleMove` and `initGame` to avoid costly FEN string manipulation (`addKingsToFen`) and whole board iterations (`removeKings`). We now instantiate a new `Chess` object and pass `{skipValidation: true}` to `game.load()` when loading the FEN state strings which don't contain kings.
+- Removed the unused utility functions `addKingsToFen` and `removeKings`.
+- Stripped extraneous king pieces directly from the tutorial FENs so they correctly reflect their initial states without needing dynamic cleanup.
+
+### 🎯 Why
+- The previous implementation unnecessarily modified FEN strings to insert Kings in order to bypass chess.js FEN validation and then removed them by scanning the entire 8x8 board object.
+- Both `addKingsToFen` string replacement and `removeKings` `game.board()` generation and looping are operations executed on every user move in the tutorial. Removing them eliminates unneeded computations.
+
+### 📊 Measured Improvement
+- By utilizing `skipValidation` we avoid having to do the expensive FEN manipulation and iterating over the entire board to add and remove kings. Although `game.load(fen, {skipValidation: true})` is on-par regarding performance compared to string manipulating it, the new approach allows to completely delete both methods from the source code, reducing the footprint.
