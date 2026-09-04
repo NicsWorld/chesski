@@ -32,7 +32,7 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
     const imageName = getPieceImage();
 
     return (
-        <div
+        <div data-theme={pieceTheme}
             ref={drag as unknown as React.RefObject<HTMLDivElement>}
             style={{
                 opacity: isDragging ? 0.5 : 1,
