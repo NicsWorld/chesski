@@ -5,8 +5,8 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 vi.mock('./components/ChessBoard', () => ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  default: ({ onMove, pieceTheme }: any) => (
-    <div data-testid="mock-chessboard" data-theme={pieceTheme}>
+  default: ({ onMove }: any) => (
+    <div data-testid="mock-chessboard">
       <button onClick={() => onMove({ from: 'e2', to: 'e4' })}>Valid Move</button>
       <button onClick={() => onMove({ from: 'e2', to: 'e5' })}>Invalid Move</button>
     </div>
@@ -112,14 +112,7 @@ describe('App Main Functionality', () => {
     expect(screen.getByText("Welcome! Drag the white pieces to start.")).toBeInTheDocument();
   });
 
-  it('switches themes and passes prop to ChessBoard', () => {
-    render(<App />);
-    const standardThemeBtn = screen.getByText('Standard');
-    fireEvent.click(standardThemeBtn);
 
-    const board = screen.getByTestId('mock-chessboard');
-    expect(board).toHaveAttribute('data-theme', 'standard');
-  });
 
   it('toggles tutorial view', () => {
     // If fen is present, it defaults to game. We need to clear it or click the button.

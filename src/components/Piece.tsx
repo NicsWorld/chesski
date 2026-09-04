@@ -4,10 +4,9 @@ import { useDrag } from 'react-dnd';
 interface PieceProps {
     piece: { type: string; color: 'w' | 'b' };
     position: string;
-    pieceTheme: 'zoo' | 'standard';
 }
 
-const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => void }> = ({ piece, position, pieceTheme, onDragStart, onDragEnd }) => {
+const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => void }> = ({ piece, position, onDragStart, onDragEnd }) => {
     const [{ isDragging }, drag, preview] = useDrag(() => ({
         type: 'PIECE',
         item: { id: `${piece.color}${piece.type}`, position },

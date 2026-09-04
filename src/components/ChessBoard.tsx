@@ -6,7 +6,6 @@ import Piece from './Piece';
 interface ChessBoardProps {
     game: Chess;
     onMove: (move: { from: string; to: string; promotion?: string }) => void;
-    pieceTheme: 'zoo' | 'standard';
 }
 
 interface BoardSquareProps {
@@ -107,7 +106,7 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
     )
 }
 
-const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => {
+const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove }) => {
     const board = game.board();
     const [validMoves, setValidMoves] = useState<string[]>([]);
 
@@ -153,7 +152,6 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                             {piece && <Piece
                                 piece={piece}
                                 position={square}
-                                pieceTheme={pieceTheme}
                                 onDragStart={() => {
                                     const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
                                     setValidMoves(moves.map(m => m.to));

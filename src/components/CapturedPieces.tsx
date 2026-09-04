@@ -3,14 +3,13 @@ import { Chess, type PieceSymbol } from 'chess.js';
 
 interface CapturedPiecesProps {
     game: Chess;
-    pieceTheme: 'zoo' | 'standard';
 }
 
 const STARTING_COUNTS: Record<PieceSymbol, number> = {
     p: 8, n: 2, b: 2, r: 2, q: 1, k: 1
 };
 
-const CapturedPieces: React.FC<CapturedPiecesProps> = ({ game, pieceTheme }) => {
+const CapturedPieces: React.FC<CapturedPiecesProps> = ({ game }) => {
     // Calculate captured pieces
     const board = game.board();
     const currentCounts = {
