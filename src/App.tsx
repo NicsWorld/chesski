@@ -130,6 +130,8 @@ function App() {
                     setGame(gameClone);
                     setMessage(evaluateGameStatus(gameClone));
                   }}
+                  disabled={game.history().length === 0}
+                  title={game.history().length === 0 ? "No moves to undo" : "Undo last move"}
                 >
                   Undo
                 </button>
