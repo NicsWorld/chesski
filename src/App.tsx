@@ -29,7 +29,6 @@ function App() {
     }
     return new Chess();
   });
-  const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
   const [message, setMessage] = useState("Welcome! Drag the white pieces to start.");
 
   const handleMove = (move: { from: string; to: string; promotion?: string }) => {
@@ -88,28 +87,13 @@ function App() {
               Tutorials
             </button>
 
-            <div className="theme-selector">
-              <span className="theme-selector-label">Theme:</span>
-              <button
-                className={`btn-secondary theme-btn ${pieceTheme === 'zoo' ? 'active' : ''}`}
-                onClick={() => setPieceTheme('zoo')}
-              >
-                Zoo
-              </button>
-              <button
-                className={`btn-secondary theme-btn ${pieceTheme === 'standard' ? 'active' : ''}`}
-                onClick={() => setPieceTheme('standard')}
-              >
-                Standard
-              </button>
-            </div>
           </div>
         </header>
 
         {view === 'game' ? (
           <div className="game-layout">
             <div className="board-area">
-              <ChessBoard game={game} onMove={handleMove} pieceTheme={pieceTheme} />
+              <ChessBoard game={game} onMove={handleMove} />
             </div>
 
             <aside className="info-panel">
@@ -142,11 +126,11 @@ function App() {
                 </button>
               </div>
 
-              <CapturedPieces game={game} pieceTheme={pieceTheme} />
+              <CapturedPieces game={game} />
             </aside>
           </div>
         ) : (
-          <Tutorial pieceTheme={pieceTheme} />
+          <Tutorial />
         )}
       </div>
     </DndProvider>

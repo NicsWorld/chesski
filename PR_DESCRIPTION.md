@@ -1,3 +1,6 @@
-🎯 **What:** The testing gap in App.tsx was addressed by adding tests for the main functionality, including `handleMove` logic, button interactions (New Game, Undo, Share Game), and view/theme state changes.
-📊 **Coverage:** Valid moves, invalid moves with timeouts, game reset, undo, URL sharing, and UI state switches are now fully tested.
-✨ **Result:** Enhanced test reliability and coverage for the core App component, catching potential regressions in user interactions and game logic.
+🧹 [code health improvement: remove dead pieceTheme state and prop drilling]
+
+🎯 What: Removed `pieceTheme` state and the associated Theme selector buttons from `App.tsx` and removed the `pieceTheme` prop from `ChessBoard`, `Piece`, `Tutorial`, and `CapturedPieces`.
+💡 Why: The `pieceTheme` state is no longer used by the components since the animal assets have been removed, making the state and the prop drilling dead code.
+✅ Verification: Ran `npm run lint` and `npx vitest run` and all checks passed.
+✨ Result: Cleaned up unused state and eliminated prop drilling across 5 components.

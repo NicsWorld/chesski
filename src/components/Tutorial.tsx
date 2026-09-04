@@ -102,7 +102,7 @@ const removeKings = (game: Chess, tutorialId: string) => {
     }
 };
 
-const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
+const Tutorial = () => {
     const [activeTutorial, setActiveTutorial] = useState(tutorials[0]);
 
     const initGame = (t: typeof tutorials[0]) => {
@@ -147,7 +147,7 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
     return (
         <div className="game-layout">
             <div className="board-area">
-                <ChessBoard game={game} onMove={handleMove} pieceTheme={pieceTheme} />
+                <ChessBoard game={game} onMove={handleMove} />
             </div>
             <aside className="info-panel">
                 <div className="status-card">
