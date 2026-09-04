@@ -37,7 +37,8 @@ describe('App Main Functionality', () => {
     originalLocation = window.location;
     // @ts-expect-error mock window.location
     delete window.location;
-    window.location = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).location = {
       ...originalLocation,
       // Provide a valid FEN so the app doesn't complain
       search: '?fen=rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
@@ -49,7 +50,8 @@ describe('App Main Functionality', () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
-    window.location = originalLocation;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).location = originalLocation;
     cleanup();
   });
 
@@ -141,17 +143,19 @@ describe('App invalid FEN fallback', () => {
     originalLocation = window.location;
     // @ts-expect-error mock window.location
     delete window.location;
-    window.location = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).location = {
       ...originalLocation,
       search: '?fen=invalid_fen_string',
       pathname: '/',
       href: 'http://localhost/?fen=invalid_fen_string',
-    } as Location;
+    };
   });
 
   afterEach(() => {
     consoleErrorSpy.mockRestore();
-    window.location = originalLocation;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).location = originalLocation;
     cleanup();
   });
 

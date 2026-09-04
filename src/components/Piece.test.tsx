@@ -19,8 +19,8 @@ vi.mock('react-dnd', () => ({
                     (node as any).__dragSpec = mockSpec;
                 }
             },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-            (node: any) => {}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            () => {}
         ];
     }
 }));

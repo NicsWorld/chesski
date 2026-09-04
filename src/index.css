@@ -95,3 +95,25 @@ button:active {
   transform: translateY(4px);
   box-shadow: 0 2px 0 var(--color-primary-dark), 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+button:focus-visible {
+  outline: 3px solid var(--color-text-main);
+  outline-offset: 4px;
+}
+
+button:disabled,
+button:disabled:hover,
+button:disabled:active {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 6px 0 var(--color-primary-dark), 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary:disabled,
+.btn-secondary:disabled:hover,
+.btn-secondary:disabled:active {
+  background-color: var(--color-board-white);
+  color: var(--color-text-main);
+  box-shadow: 0 6px 0 var(--color-text-muted), 0 8px 16px rgba(0, 0, 0, 0.1);
+}
