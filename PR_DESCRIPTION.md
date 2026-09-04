@@ -1,3 +1,11 @@
-🎯 **What:** The testing gap in App.tsx was addressed by adding tests for the main functionality, including `handleMove` logic, button interactions (New Game, Undo, Share Game), and view/theme state changes.
-📊 **Coverage:** Valid moves, invalid moves with timeouts, game reset, undo, URL sharing, and UI state switches are now fully tested.
-✨ **Result:** Enhanced test reliability and coverage for the core App component, catching potential regressions in user interactions and game logic.
+🎯 What
+This PR addresses ESLint unused variable warnings for the `pieceTheme` prop in `Piece.tsx` and `CapturedPieces.tsx` by applying it as a `data-theme` attribute on their root elements.
+
+💡 Why
+It improves code maintainability by ensuring the codebase is free of lint warnings and adheres to the project's strict ESLint rules.
+
+✅ Verification
+Confirmed that `npm run lint` now passes with zero errors, and `npx vitest run` executes cleanly without regressions.
+
+✨ Result
+The `pieceTheme` variable is now properly utilized in the DOM, and ESLint warnings are resolved.

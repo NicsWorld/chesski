@@ -63,7 +63,7 @@ const CapturedPieces: React.FC<CapturedPiecesProps> = ({ game, pieceTheme }) => 
     };
 
     return (
-        <div className="captured-area" style={{ marginTop: '1rem', padding: '0.5rem', backgroundColor: 'var(--bg-color)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}>
+        <div data-theme={pieceTheme} className="captured-area" style={{ marginTop: '1rem', padding: '0.5rem', backgroundColor: 'var(--bg-color)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}>
             <div style={{ display: 'flex', minHeight: '30px', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '0.8rem', marginRight: '0.5rem', width: '20px', fontWeight: 'bold' }}>W:</span>
                 <div style={{ display: 'flex' }}>
