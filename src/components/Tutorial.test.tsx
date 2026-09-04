@@ -18,6 +18,7 @@ vi.mock('./ChessBoard', () => ({
 
 describe('Tutorial Component', () => {
     it('handles invalid moves safely without throwing', () => {
+        const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
         render(<Tutorial pieceTheme="standard" />);
 
         const board = screen.getByTestId('mock-chessboard');
@@ -26,5 +27,8 @@ describe('Tutorial Component', () => {
         board.setAttribute('data-move', JSON.stringify({ from: 'h8', to: 'a1' }));
 
         expect(() => fireEvent.click(board)).not.toThrow();
+        expect(consoleSpy).toHaveBeenCalledWith('Invalid move attempted:', expect.any(Error));
+
+        consoleSpy.mockRestore();
     });
 });
