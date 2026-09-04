@@ -26,7 +26,11 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
     }, [isDragging, onDragStart]);
 
     const getPieceImage = () => {
-        return `${piece.color}${piece.type.toUpperCase()}.svg`;
+        if (pieceTheme === 'standard') {
+            return `${piece.color}${piece.type.toUpperCase()}.svg`;
+        }
+        // Zoo theme
+        return `animal_w${piece.type.toUpperCase()}.png`;
     };
 
     const imageName = getPieceImage();
@@ -52,6 +56,8 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
                     width: '100%',
                     height: '100%',
                     objectFit: 'contain',
+                    // Only apply filter to black pieces in zoo mode, as they use the white assets
+                    filter: (pieceTheme === 'zoo' && piece.color === 'b') ? 'brightness(0.4) contrast(1.2)' : undefined
                 }}
             />
         </div>

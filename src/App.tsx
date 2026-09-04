@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { Chess, validateFen } from 'chess.js';
+import { Chess } from 'chess.js';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import ChessBoard from './components/ChessBoard';
 import Tutorial from './components/Tutorial';
 import MoveHistory from './components/MoveHistory';
-import CapturedPieces from './components/CapturedPieces';
 import { evaluateGameStatus } from './utils/gameStatus';
 import './App.css';
 
@@ -15,31 +14,32 @@ function App() {
     const params = new URLSearchParams(window.location.search);
     return params.has('fen') ? 'game' : 'tutorial';
   });
-  const [game, setGame] = useState(() => {
+  const [game, setGame] = useState(new Chess());
+  const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_fen, setFen] = useState(() => {
+    // Check for FEN in URL on initialization
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
-    if (fenParam && fenParam.length <= 100 && validateFen(fenParam).ok) {
+    if (fenParam) {
       try {
-        return new Chess(fenParam);
+        const loadedGame = new Chess(fenParam);
+        setGame(loadedGame);
+        return fenParam;
       } catch (e) {
         console.error("Invalid FEN in URL", e);
       }
-    } else if (fenParam) {
-      console.error("Invalid FEN in URL", new Error("FEN length exceeded 100 characters or validation failed"));
     }
-    return new Chess();
+    return game.fen();
   });
-  const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
   const [message, setMessage] = useState("Welcome! Drag the white pieces to start.");
 
   const handleMove = (move: { from: string; to: string; promotion?: string }) => {
     try {
-      const gameClone = new Chess();
-      gameClone.loadPgn(game.pgn());
-      const result = gameClone.move(move);
+      const result = game.move(move);
       if (result) {
-        setGame(gameClone);
-        setMessage(evaluateGameStatus(gameClone));
+        setFen(game.fen()); // Update state to re-render board
+        setMessage(evaluateGameStatus(game));
       }
     } catch {
       setMessage("Oops! You can't move there.");
@@ -50,6 +50,7 @@ function App() {
   const resetGame = () => {
     const newGame = new Chess();
     setGame(newGame);
+    setFen(newGame.fen());
     setMessage("New Game! White starts.");
     // Clear the URL param
     window.history.pushState({}, '', window.location.pathname);
@@ -74,7 +75,7 @@ function App() {
         <header className="app-header">
           <h1>Zoo Chess</h1>
           <p>Learn to play with animal friends!</p>
-          <div className="app-header-controls">
+          <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
             <button
               className={view === 'game' ? '' : 'btn-secondary'}
               onClick={() => setView('game')}
@@ -88,16 +89,18 @@ function App() {
               Tutorials
             </button>
 
-            <div className="theme-selector">
-              <span className="theme-selector-label">Theme:</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '1rem' }}>
+              <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>Theme:</span>
               <button
-                className={`btn-secondary theme-btn ${pieceTheme === 'zoo' ? 'active' : ''}`}
+                className="btn-secondary"
+                style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', backgroundColor: pieceTheme === 'zoo' ? 'rgba(255,255,255,0.2)' : 'transparent' }}
                 onClick={() => setPieceTheme('zoo')}
               >
                 Zoo
               </button>
               <button
-                className={`btn-secondary theme-btn ${pieceTheme === 'standard' ? 'active' : ''}`}
+                className="btn-secondary"
+                style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', backgroundColor: pieceTheme === 'standard' ? 'rgba(255,255,255,0.2)' : 'transparent' }}
                 onClick={() => setPieceTheme('standard')}
               >
                 Standard
@@ -124,11 +127,9 @@ function App() {
                 <button
                   className="btn-secondary"
                   onClick={() => {
-                    const gameClone = new Chess();
-                    gameClone.loadPgn(game.pgn());
-                    gameClone.undo();
-                    setGame(gameClone);
-                    setMessage(evaluateGameStatus(gameClone));
+                    game.undo();
+                    setFen(game.fen());
+                    setMessage(evaluateGameStatus(game));
                   }}
                 >
                   Undo
@@ -142,7 +143,8 @@ function App() {
                 </button>
               </div>
 
-              <CapturedPieces game={game} pieceTheme={pieceTheme} />
+              {/* Placeholder for future features like "Captured Pieces" */}
+              {/* <div className="captured-area">...</div> */}
             </aside>
           </div>
         ) : (
