@@ -135,11 +135,11 @@ describe('App Main Functionality', () => {
 });
 
 describe('App invalid FEN fallback', () => {
-  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+  let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
   let originalLocation: Location;
 
   beforeEach(() => {
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     originalLocation = window.location;
     // @ts-expect-error mock window.location
     delete window.location;
@@ -153,7 +153,7 @@ describe('App invalid FEN fallback', () => {
   });
 
   afterEach(() => {
-    consoleErrorSpy.mockRestore();
+    consoleWarnSpy.mockRestore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).location = originalLocation;
     cleanup();
@@ -161,7 +161,7 @@ describe('App invalid FEN fallback', () => {
 
   it('catches invalid FEN in URL, logs error, and falls back to default board', () => {
     render(<App />);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
       'Invalid FEN in URL',
       expect.any(Error)
     );
