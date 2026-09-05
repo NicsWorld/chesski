@@ -1,15 +1,11 @@
-## PR_DESCRIPTION
-🎨 Palette: Add linear navigation to tutorials
+# 🔒 Fix: Add Regex FEN Validation
 
-### 💡 What
-Added "Previous" and "Next" buttons to the tutorial view to allow users to navigate through the tutorials sequentially.
+## 🎯 What
+Added Regex validation to the FEN string parsing logic in `src/App.tsx`. The FEN string from the URL is now validated against a regular expression before it is passed to the `chess.js` library for evaluation.
 
-### 🎯 Why
-Previously, users could only navigate the tutorials by clicking the individual tutorial buttons. Providing explicit "Previous" and "Next" buttons improves the flow for users going through the tutorials in order.
+## ⚠️ Risk
+The application read a `fen` URL parameter and passed it directly to `chess.js`'s `validateFen` and `new Chess()` functions without first ensuring it adheres to a basic structure. Malicious actors could inject malformed strings that could potentially exploit vulnerabilities in the FEN parsing logic of `chess.js`, leading to unexpected behavior, errors, or application crashes (Denial of Service).
 
-### 📸 Before/After
-Before: The tutorial view only had buttons for each individual tutorial.
-After: The tutorial view now features prominent "Previous" and "Next" buttons below the tutorial description, which are appropriately disabled when at the beginning or end of the tutorial list.
-
-### ♿ Accessibility
-Added `aria-label` attributes (`aria-label="Previous tutorial"` and `aria-label="Next tutorial"`) to the new buttons to ensure screen reader users have clear context for these controls. The buttons also use proper `disabled` states when no further navigation in that direction is possible, preventing confusion and following standard interactive patterns.
+## 🛡️ Solution
+Implemented a straightforward Regex pattern `^([rnbqkpRNBQKP1-8]+\/){7}[rnbqkpRNBQKP1-8]+ [wb] (-|[KQkq]+) (-|[a-h][36])( \d+ \d+)?$` to validate the structure of the FEN string prior to any processing by `chess.js`.
+Also changed `console.error` to `console.warn` for invalid FENs.
