@@ -1,15 +1,10 @@
-## PR_DESCRIPTION
-🎨 Palette: Add linear navigation to tutorials
+# 🔒 [Security] Fix: Add strict regex validation for FEN URL parameter
 
-### 💡 What
-Added "Previous" and "Next" buttons to the tutorial view to allow users to navigate through the tutorials sequentially.
+🎯 **What:**
+Added a strict regular expression validation step for the `fen` URL parameter before it is passed to the `chess.js` library for initialization and validation.
 
-### 🎯 Why
-Previously, users could only navigate the tutorials by clicking the individual tutorial buttons. Providing explicit "Previous" and "Next" buttons improves the flow for users going through the tutorials in order.
+⚠️ **Risk:**
+Without strict string validation prior to passing it to the library, malformed or excessively long/complex input strings could potentially be evaluated, leading to unsafe execution paths or performance degradation (such as ReDoS if the library is vulnerable). This protects the client from evaluating unexpected payloads.
 
-### 📸 Before/After
-Before: The tutorial view only had buttons for each individual tutorial.
-After: The tutorial view now features prominent "Previous" and "Next" buttons below the tutorial description, which are appropriately disabled when at the beginning or end of the tutorial list.
-
-### ♿ Accessibility
-Added `aria-label` attributes (`aria-label="Previous tutorial"` and `aria-label="Next tutorial"`) to the new buttons to ensure screen reader users have clear context for these controls. The buttons also use proper `disabled` states when no further navigation in that direction is possible, preventing confusion and following standard interactive patterns.
+🛡️ **Solution:**
+Introduced a rigid regex `FEN_REGEX` that enforces the structural shape of a valid FEN string (six space-separated fields with appropriate characters for piece placement, turn, castling, en passant, halfmove clock, and fullmove number) directly in `src/App.tsx`. The FEN string is now verified against this regex before `validateFen` or the `Chess` constructor is called. Also updated error handling from `console.error` to `console.warn` to track this handled boundary condition appropriately.
