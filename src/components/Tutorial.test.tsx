@@ -1,5 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import Tutorial from './Tutorial';
 
 vi.mock('./ChessBoard', () => ({
@@ -17,7 +17,13 @@ vi.mock('./ChessBoard', () => ({
 }));
 
 describe('Tutorial Component', () => {
+    afterEach(() => {
+        cleanup();
+        vi.restoreAllMocks();
+    });
+
     it('handles invalid moves safely without throwing', () => {
+        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
         render(<Tutorial pieceTheme="standard" />);
 
         const board = screen.getByTestId('mock-chessboard');
@@ -26,5 +32,6 @@ describe('Tutorial Component', () => {
         board.setAttribute('data-move', JSON.stringify({ from: 'h8', to: 'a1' }));
 
         expect(() => fireEvent.click(board)).not.toThrow();
+        expect(consoleWarnSpy).toHaveBeenCalledWith("Invalid move:", expect.any(Error));
     });
 });
