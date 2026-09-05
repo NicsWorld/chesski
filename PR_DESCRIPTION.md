@@ -1,15 +1,10 @@
-## PR_DESCRIPTION
-🎨 Palette: Add linear navigation to tutorials
+# 🔒 [Security] Add Regex Validation to FEN URL Parameter
 
-### 💡 What
-Added "Previous" and "Next" buttons to the tutorial view to allow users to navigate through the tutorials sequentially.
+## 🎯 What
+The application previously accepted a FEN string parameter directly from the URL and passed it to `validateFen` and the `Chess` constructor without structurally validating it first. A regex check has now been added to ensure the `fen` URL parameter matches the standard FEN string format.
 
-### 🎯 Why
-Previously, users could only navigate the tutorials by clicking the individual tutorial buttons. Providing explicit "Previous" and "Next" buttons improves the flow for users going through the tutorials in order.
+## ⚠️ Risk
+Without structural validation, malformed or excessively complex FEN inputs could be evaluated by the underlying `chess.js` library. While the library's `validateFen` function exists to identify valid configurations, it does not guarantee safe handling of maliciously crafted inputs designed to cause excessive processing or potential injection attacks when evaluated.
 
-### 📸 Before/After
-Before: The tutorial view only had buttons for each individual tutorial.
-After: The tutorial view now features prominent "Previous" and "Next" buttons below the tutorial description, which are appropriately disabled when at the beginning or end of the tutorial list.
-
-### ♿ Accessibility
-Added `aria-label` attributes (`aria-label="Previous tutorial"` and `aria-label="Next tutorial"`) to the new buttons to ensure screen reader users have clear context for these controls. The buttons also use proper `disabled` states when no further navigation in that direction is possible, preventing confusion and following standard interactive patterns.
+## 🛡️ Solution
+A strict Regular Expression (`/^[a-zA-Z0-9/]+\s+[bw]\s+[KQkq-]+\s+[a-h36-]+( \d+ \d+)?$/`) was added to ensure the FEN parameter structurally represents a standard chess position *before* it is passed to `validateFen`. This pre-validation prevents potentially dangerous malformed input from ever reaching the `chess.js` engine for processing.
