@@ -1,15 +1,14 @@
-## PR_DESCRIPTION
-🎨 Palette: Add linear navigation to tutorials
+# 🧪 Testing: MoveHistory improvements
 
-### 💡 What
-Added "Previous" and "Next" buttons to the tutorial view to allow users to navigate through the tutorials sequentially.
+🎯 **What:** The testing gap addressed
+This PR addresses missing tests for the `MoveHistory` component. Specifically, it ensures that DOM state does not leak between test cases by explicitly calling `cleanup()` in the `afterEach` block. It also adds an additional test case for rendering a large number of moves.
 
-### 🎯 Why
-Previously, users could only navigate the tutorials by clicking the individual tutorial buttons. Providing explicit "Previous" and "Next" buttons improves the flow for users going through the tutorials in order.
+📊 **Coverage:** What scenarios are now tested
+- Empty history rendering ("No moves yet").
+- Rendering an even number of moves.
+- Rendering an odd number of moves.
+- Auto-scrolling behavior when history updates.
+- Rendering a large number of moves (100 moves) to ensure it renders correctly and lists the expected number of moves.
 
-### 📸 Before/After
-Before: The tutorial view only had buttons for each individual tutorial.
-After: The tutorial view now features prominent "Previous" and "Next" buttons below the tutorial description, which are appropriately disabled when at the beginning or end of the tutorial list.
-
-### ♿ Accessibility
-Added `aria-label` attributes (`aria-label="Previous tutorial"` and `aria-label="Next tutorial"`) to the new buttons to ensure screen reader users have clear context for these controls. The buttons also use proper `disabled` states when no further navigation in that direction is possible, preventing confusion and following standard interactive patterns.
+✨ **Result:** The improvement in test coverage
+Test coverage is improved by adding the large move history test and explicitly calling `cleanup()` in the `afterEach` block, resulting in more robust tests that do not interfere with one another.

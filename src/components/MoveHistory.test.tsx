@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import MoveHistory from './MoveHistory';
 
@@ -36,6 +36,7 @@ describe('MoveHistory component', () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             delete (HTMLDivElement.prototype as any).scrollTop;
         }
+        cleanup();
     });
 
     it('renders "No moves yet" when history is empty', () => {
@@ -80,5 +81,16 @@ describe('MoveHistory component', () => {
         rerender(<MoveHistory history={['e4', 'e5']} />);
 
         expect(moveList.scrollTop).toBe(1000);
+    });
+
+    it('renders a large number of moves correctly', () => {
+        const history = Array.from({ length: 100 }, (_, i) => `move${i}`);
+        render(<MoveHistory history={history} />);
+
+        expect(screen.getByText('move0')).toBeInTheDocument();
+        expect(screen.getByText('move99')).toBeInTheDocument();
+
+        const moveNumbers = screen.getAllByText(/\d+\./);
+        expect(moveNumbers).toHaveLength(50);
     });
 });
