@@ -144,6 +144,10 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
         }
     };
 
+    const currentIndex = tutorials.findIndex(t => t.id === activeTutorial.id);
+    const hasPrev = currentIndex > 0;
+    const hasNext = currentIndex < tutorials.length - 1;
+
     return (
         <div className="game-layout">
             <div className="board-area">
@@ -153,6 +157,24 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
                 <div className="status-card">
                     <h2>Tutorial: {activeTutorial.title}</h2>
                     <p>{activeTutorial.description}</p>
+                </div>
+                <div className="action-buttons" style={{ marginBottom: '1rem' }}>
+                    <button
+                        className="btn-secondary"
+                        onClick={() => handleSelectTutorial(tutorials[currentIndex - 1])}
+                        disabled={!hasPrev}
+                        aria-label="Previous tutorial"
+                    >
+                        Previous
+                    </button>
+                    <button
+                        className="btn-secondary"
+                        onClick={() => handleSelectTutorial(tutorials[currentIndex + 1])}
+                        disabled={!hasNext}
+                        aria-label="Next tutorial"
+                    >
+                        Next
+                    </button>
                 </div>
                 <div className="action-buttons" style={{ flexWrap: 'wrap' }}>
                     {tutorials.map(t => (
