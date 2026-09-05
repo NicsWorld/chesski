@@ -9,6 +9,10 @@ vi.mock('./components/ChessBoard', () => ({
     <div data-testid="mock-chessboard" data-theme={pieceTheme}>
       <button onClick={() => onMove({ from: 'e2', to: 'e4' })}>Valid Move</button>
       <button onClick={() => onMove({ from: 'e2', to: 'e5' })}>Invalid Move</button>
+      <button onClick={() => onMove({ from: 'f2', to: 'f3' })}>Fool1</button>
+      <button onClick={() => onMove({ from: 'e7', to: 'e5' })}>Fool2</button>
+      <button onClick={() => onMove({ from: 'g2', to: 'g4' })}>Fool3</button>
+      <button onClick={() => onMove({ from: 'd8', to: 'h4' })}>Fool4</button>
     </div>
   ),
 }));
@@ -160,6 +164,117 @@ describe('App invalid FEN fallback', () => {
   });
 
   it('catches invalid FEN in URL, logs error, and falls back to default board', () => {
+    render(<App />);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Invalid FEN in URL',
+      expect.any(Error)
+    );
+    expect(screen.getByTestId('mock-chessboard')).toBeInTheDocument();
+  });
+});
+
+describe('App View Initialization (No FEN)', () => {
+  let originalLocation: Location;
+
+  beforeEach(() => {
+    originalLocation = window.location;
+    // @ts-expect-error mock window.location
+    delete window.location;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).location = {
+      ...originalLocation,
+      search: '',
+      pathname: '/',
+      href: 'http://localhost/',
+    };
+  });
+
+  afterEach(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).location = originalLocation;
+    cleanup();
+  });
+
+  it('defaults to tutorial view when no fen parameter is present', () => {
+    render(<App />);
+    expect(screen.getByTestId('mock-tutorial')).toBeInTheDocument();
+    expect(screen.queryByTestId('mock-chessboard')).not.toBeInTheDocument();
+  });
+});
+
+describe('App Game Status & History', () => {
+  let originalLocation: Location;
+
+  beforeEach(() => {
+    originalLocation = window.location;
+    // @ts-expect-error mock window.location
+    delete window.location;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).location = {
+      ...originalLocation,
+      search: '?fen=rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+      pathname: '/',
+      href: 'http://localhost/?fen=rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    } as Location;
+  });
+
+  afterEach(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).location = originalLocation;
+    cleanup();
+  });
+
+  it('undo button is disabled initially', () => {
+    render(<App />);
+    const undoBtn = screen.getByText('Undo');
+    expect(undoBtn).toBeDisabled();
+  });
+
+  it('evaluates checkmate on fools mate', () => {
+    render(<App />);
+    fireEvent.click(screen.getByText('Fool1'));
+    fireEvent.click(screen.getByText('Fool2'));
+    fireEvent.click(screen.getByText('Fool3'));
+    fireEvent.click(screen.getByText('Fool4'));
+    expect(screen.getByText('Checkmate! Black wins!')).toBeInTheDocument();
+  });
+
+  it('clears URL param on reset game', () => {
+    const pushStateSpy = vi.spyOn(window.history, 'pushState');
+    render(<App />);
+    fireEvent.click(screen.getByText('Valid Move'));
+    fireEvent.click(screen.getByText('New Game'));
+    expect(pushStateSpy).toHaveBeenCalledWith({}, '', window.location.pathname);
+    pushStateSpy.mockRestore();
+  });
+});
+
+describe('App long FEN fallback', () => {
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+  let originalLocation: Location;
+
+  beforeEach(() => {
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    originalLocation = window.location;
+    // @ts-expect-error mock window.location
+    delete window.location;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).location = {
+      ...originalLocation,
+      search: '?fen=' + 'a'.repeat(101),
+      pathname: '/',
+      href: 'http://localhost/?fen=' + 'a'.repeat(101),
+    };
+  });
+
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).location = originalLocation;
+    cleanup();
+  });
+
+  it('catches long FEN in URL, logs error, and falls back to default board', () => {
     render(<App />);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'Invalid FEN in URL',

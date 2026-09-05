@@ -41,7 +41,8 @@ function App() {
         setGame(gameClone);
         setMessage(evaluateGameStatus(gameClone));
       }
-    } catch {
+    } catch (e) {
+      console.debug("Invalid move attempted", e);
       setMessage("Oops! You can't move there.");
       setTimeout(() => setMessage(evaluateGameStatus(game)), 2000);
     }
