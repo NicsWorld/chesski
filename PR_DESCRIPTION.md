@@ -1,15 +1,10 @@
-## PR_DESCRIPTION
-🎨 Palette: Add linear navigation to tutorials
+# 🔒 Security: Validate FEN string with regex to prevent injection or ReDoS
 
-### 💡 What
-Added "Previous" and "Next" buttons to the tutorial view to allow users to navigate through the tutorials sequentially.
+### 🎯 What
+The `fen` URL parameter was being passed to the `chess.js` library's `validateFen` function before structural validation. This could potentially expose the application to denial of service or unexpected parsing behaviors if `validateFen` has performance issues with certain malformed strings (like ReDoS) or if `chess.js` constructor is exposed to malformed input. This PR adds strict structural validation using a Regular Expression before parsing the FEN string.
 
-### 🎯 Why
-Previously, users could only navigate the tutorials by clicking the individual tutorial buttons. Providing explicit "Previous" and "Next" buttons improves the flow for users going through the tutorials in order.
+### ⚠️ Risk
+Without structural validation, malformed or excessively long/complex FEN strings supplied via the URL parameter (`?fen=...`) could be evaluated by the underlying chess library. This increases the risk of Regular Expression Denial of Service (ReDoS) or other injection vulnerabilities where the parsing library might hang or fail unexpectedly, leading to application unavailability or crashes for the user loading the crafted URL.
 
-### 📸 Before/After
-Before: The tutorial view only had buttons for each individual tutorial.
-After: The tutorial view now features prominent "Previous" and "Next" buttons below the tutorial description, which are appropriately disabled when at the beginning or end of the tutorial list.
-
-### ♿ Accessibility
-Added `aria-label` attributes (`aria-label="Previous tutorial"` and `aria-label="Next tutorial"`) to the new buttons to ensure screen reader users have clear context for these controls. The buttons also use proper `disabled` states when no further navigation in that direction is possible, preventing confusion and following standard interactive patterns.
+### 🛡️ Solution
+Added a strict Regular Expression (`fenRegex`) to validate the structure of the `fen` URL parameter before passing it to `validateFen(fenParam).ok` or the `Chess` constructor. The regex `^([pPnNbBrRqQkK1-8]+\/){7}[pPnNbBrRqQkK1-8]+ [wb] (-|[KQkq]+) (-|[a-h][36])( \d+ \d+)?$` ensures that the string strictly matches the standard 4- or 6-part FEN format, rejecting malformed input early and preventing it from being processed by the library.
