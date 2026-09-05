@@ -7,20 +7,19 @@ let mockIsDragging = false;
 let mockSpec: any = null;
 
 vi.mock('react-dnd', () => ({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useDrag: (specFn: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        useDrag: (specFn: any) => {
         mockSpec = specFn();
         return [
             { isDragging: mockIsDragging },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (node: any) => {
                 if (node) {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     (node as any).__dragSpec = mockSpec;
                 }
             },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            () => {}
+                        () => {}
         ];
     }
 }));
