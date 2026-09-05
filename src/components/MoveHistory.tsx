@@ -7,7 +7,7 @@ interface MoveHistoryProps {
 const MoveHistory: React.FC<MoveHistoryProps> = ({ history }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
 
-    // Auto-scroll to bottom when history updates
+    // Automatically scroll to bottom when history updates
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;

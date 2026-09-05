@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import MoveHistory from './MoveHistory';
 
@@ -23,6 +23,7 @@ describe('MoveHistory component', () => {
     });
 
     afterEach(() => {
+        cleanup();
         if (originalScrollHeight) {
             Object.defineProperty(HTMLDivElement.prototype, 'scrollHeight', originalScrollHeight);
         } else {
@@ -80,5 +81,13 @@ describe('MoveHistory component', () => {
         rerender(<MoveHistory history={['e4', 'e5']} />);
 
         expect(moveList.scrollTop).toBe(1000);
+    });
+
+
+    it('renders table headers correctly when there are moves', () => {
+        render(<MoveHistory history={['e4']} />);
+        expect(screen.getByText('#')).toBeInTheDocument();
+        expect(screen.getByText('White')).toBeInTheDocument();
+        expect(screen.getByText('Black')).toBeInTheDocument();
     });
 });
