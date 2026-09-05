@@ -18,14 +18,15 @@ function App() {
   const [game, setGame] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
-    if (fenParam && fenParam.length <= 100 && validateFen(fenParam).ok) {
+    const FEN_REGEX = /^([rnbqkpRNBQKP1-8]+\/){7}[rnbqkpRNBQKP1-8]+ [wb] (?:-|K?Q?k?q?) (?:-|[a-h][36])(?: \d+ \d+)?$/;
+    if (fenParam && fenParam.length <= 100 && FEN_REGEX.test(fenParam) && validateFen(fenParam).ok) {
       try {
         return new Chess(fenParam);
       } catch (e) {
-        console.error("Invalid FEN in URL", e);
+        console.warn("Invalid FEN in URL", e);
       }
     } else if (fenParam) {
-      console.error("Invalid FEN in URL", new Error("FEN length exceeded 100 characters or validation failed"));
+      console.warn("Invalid FEN in URL", new Error("FEN length exceeded 100 characters or validation failed"));
     }
     return new Chess();
   });
