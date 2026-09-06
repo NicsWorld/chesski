@@ -1,15 +1,11 @@
-## PR_DESCRIPTION
-🎨 Palette: Add linear navigation to tutorials
+🎯 What
+Extracted inline game cloning logic into a reusable `cloneGame` utility function in `src/App.tsx`.
 
-### 💡 What
-Added "Previous" and "Next" buttons to the tutorial view to allow users to navigate through the tutorials sequentially.
+💡 Why
+The exact same logic for cloning a `chess.js` instance (`const gameClone = new Chess(); gameClone.loadPgn(game.pgn());`) was duplicated in `handleMove` and the undo functionality. Extracting it DRYs up the code and provides a single place for any future optimizations to this deep-clone pattern.
 
-### 🎯 Why
-Previously, users could only navigate the tutorials by clicking the individual tutorial buttons. Providing explicit "Previous" and "Next" buttons improves the flow for users going through the tutorials in order.
+✅ Verification
+Ran the test suite and confirmed tests still pass, meaning functionality remains identical.
 
-### 📸 Before/After
-Before: The tutorial view only had buttons for each individual tutorial.
-After: The tutorial view now features prominent "Previous" and "Next" buttons below the tutorial description, which are appropriately disabled when at the beginning or end of the tutorial list.
-
-### ♿ Accessibility
-Added `aria-label` attributes (`aria-label="Previous tutorial"` and `aria-label="Next tutorial"`) to the new buttons to ensure screen reader users have clear context for these controls. The buttons also use proper `disabled` states when no further navigation in that direction is possible, preventing confusion and following standard interactive patterns.
+✨ Result
+A more maintainable App component with deduplicated state cloning.

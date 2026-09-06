@@ -9,6 +9,12 @@ import CapturedPieces from './components/CapturedPieces';
 import { evaluateGameStatus } from './utils/gameStatus';
 import './App.css';
 
+const cloneGame = (game: Chess) => {
+  const gameClone = new Chess();
+  gameClone.loadPgn(game.pgn());
+  return gameClone;
+};
+
 function App() {
   const [view, setView] = useState<'game' | 'tutorial'>(() => {
     // If we are loading a shared game (fen param exists), default to game view
@@ -34,8 +40,7 @@ function App() {
 
   const handleMove = (move: { from: string; to: string; promotion?: string }) => {
     try {
-      const gameClone = new Chess();
-      gameClone.loadPgn(game.pgn());
+      const gameClone = cloneGame(game);
       const result = gameClone.move(move);
       if (result) {
         setGame(gameClone);
@@ -124,8 +129,7 @@ function App() {
                 <button
                   className="btn-secondary"
                   onClick={() => {
-                    const gameClone = new Chess();
-                    gameClone.loadPgn(game.pgn());
+                    const gameClone = cloneGame(game);
                     gameClone.undo();
                     setGame(gameClone);
                     setMessage(evaluateGameStatus(gameClone));
