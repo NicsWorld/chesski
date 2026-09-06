@@ -117,3 +117,26 @@ button:disabled:active {
   color: var(--color-text-main);
   box-shadow: 0 6px 0 var(--color-text-muted), 0 8px 16px rgba(0, 0, 0, 0.1);
 }
+.empty-history {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--color-text-muted);
+}
+
+.empty-history-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.4;
+}
+
+.empty-history-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.empty-history-subtitle {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
