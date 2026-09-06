@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Chess, type PieceSymbol } from 'chess.js';
 
 interface CapturedPiecesProps {
@@ -11,38 +11,44 @@ const STARTING_COUNTS: Record<PieceSymbol, number> = {
 };
 
 const CapturedPieces: React.FC<CapturedPiecesProps> = ({ game }) => {
+    const fen = game.fen();
     // Calculate captured pieces
-    const board = game.board();
-    const currentCounts = {
-        w: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
-        b: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 }
-    };
+    const { whiteCaptured, blackCaptured } = useMemo(() => {
+        const board = game.board();
+        const currentCounts = {
+            w: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
+            b: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 }
+        };
 
-    // Count pieces currently on the board
-    for (let r = 0; r < 8; r++) {
-        for (let c = 0; c < 8; c++) {
-            const piece = board[r][c];
-            if (piece) {
-                currentCounts[piece.color as 'w' | 'b'][piece.type as PieceSymbol]++;
+        // Count pieces currently on the board
+        for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+                const piece = board[r][c];
+                if (piece) {
+                    currentCounts[piece.color as 'w' | 'b'][piece.type as PieceSymbol]++;
+                }
             }
         }
-    }
 
-    // Determine what's missing (captured)
-    const getCaptured = (color: 'w' | 'b') => {
-        const captured: string[] = [];
-        const types: PieceSymbol[] = ['p', 'n', 'b', 'r', 'q']; // kings can't be captured
-        for (const type of types) {
-            const missing = STARTING_COUNTS[type] - currentCounts[color][type];
-            for (let i = 0; i < missing; i++) {
-                captured.push(type);
+        // Determine what's missing (captured)
+        const getCaptured = (color: 'w' | 'b') => {
+            const captured: string[] = [];
+            const types: PieceSymbol[] = ['p', 'n', 'b', 'r', 'q']; // kings can't be captured
+            for (const type of types) {
+                const missing = STARTING_COUNTS[type] - currentCounts[color][type];
+                for (let i = 0; i < missing; i++) {
+                    captured.push(type);
+                }
             }
-        }
-        return captured;
-    };
+            return captured;
+        };
 
-    const whiteCaptured = getCaptured('w'); // White pieces captured by black
-    const blackCaptured = getCaptured('b'); // Black pieces captured by white
+        return {
+            whiteCaptured: getCaptured('w'), // White pieces captured by black
+            blackCaptured: getCaptured('b')  // Black pieces captured by white
+        };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fen]);
 
     const renderPieceIcon = (type: string, color: 'w' | 'b', index: number) => {
         const imageName = `${color}${type.toUpperCase()}.svg`;
