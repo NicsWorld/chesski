@@ -1,15 +1,17 @@
-## PR_DESCRIPTION
-🎨 Palette: Add linear navigation to tutorials
+# ✨ Feature: Share Game with Full Move History (PGN via URL)
 
-### 💡 What
-Added "Previous" and "Next" buttons to the tutorial view to allow users to navigate through the tutorials sequentially.
+## 🎯 What
+This PR updates the "Share Game" functionality to export the full move history using the standard PGN format in the URL instead of just the FEN string. It also updates the app initialization logic to parse and load this PGN, falling back to FEN for backwards compatibility.
 
-### 🎯 Why
-Previously, users could only navigate the tutorials by clicking the individual tutorial buttons. Providing explicit "Previous" and "Next" buttons improves the flow for users going through the tutorials in order.
+## 💡 Why
+The previous implementation only shared a snapshot of the current board state (FEN). By sharing the entire PGN, the recipient can now see the history of previous moves, analyze how the game reached its current state, and use the "Undo" button, significantly improving the viral sharing loop and user experience.
 
-### 📸 Before/After
-Before: The tutorial view only had buttons for each individual tutorial.
-After: The tutorial view now features prominent "Previous" and "Next" buttons below the tutorial description, which are appropriately disabled when at the beginning or end of the tutorial list.
+## ✅ Verification
+- The app successfully initializes from URLs containing `?pgn=` (base64/URI encoded).
+- The app still safely falls back to FEN strings if `pgn` is not provided.
+- Malformed PGN strings are safely caught in a try/catch block and logged without crashing the app.
+- "Share Game" correctly removes the old `fen` parameter and injects the new `pgn` parameter.
+- All existing tests pass.
 
-### ♿ Accessibility
-Added `aria-label` attributes (`aria-label="Previous tutorial"` and `aria-label="Next tutorial"`) to the new buttons to ensure screen reader users have clear context for these controls. The buttons also use proper `disabled` states when no further navigation in that direction is possible, preventing confusion and following standard interactive patterns.
+## ✨ Result
+Players can now share full game histories with friends to review mistakes or show off brilliant moves, making shared links highly engaging.

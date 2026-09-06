@@ -13,10 +13,21 @@ function App() {
   const [view, setView] = useState<'game' | 'tutorial'>(() => {
     // If we are loading a shared game (fen param exists), default to game view
     const params = new URLSearchParams(window.location.search);
-    return params.has('fen') ? 'game' : 'tutorial';
+    return (params.has('fen') || params.has('pgn')) ? 'game' : 'tutorial';
   });
   const [game, setGame] = useState(() => {
     const params = new URLSearchParams(window.location.search);
+    const pgnParam = params.get('pgn');
+    if (pgnParam) {
+      try {
+        const decodedPgn = decodeURIComponent(pgnParam);
+        const g = new Chess();
+        g.loadPgn(decodedPgn);
+        return g;
+      } catch (e) {
+        console.error("Invalid PGN in URL", e);
+      }
+    }
     const fenParam = params.get('fen');
     if (fenParam && fenParam.length <= 100 && validateFen(fenParam).ok) {
       try {
@@ -57,7 +68,8 @@ function App() {
 
   const shareGame = () => {
     const url = new URL(window.location.href);
-    url.searchParams.set('fen', game.fen());
+    url.searchParams.delete('fen');
+    url.searchParams.set('pgn', encodeURIComponent(game.pgn()));
     navigator.clipboard.writeText(url.toString()).then(() => {
       const originalMessage = message;
       setMessage("Link copied to clipboard!");
