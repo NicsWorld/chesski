@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 
 interface MoveHistoryProps {
     history: string[];
@@ -15,13 +15,16 @@ const MoveHistory: React.FC<MoveHistoryProps> = ({ history }) => {
     }, [history]);
 
     // Group moves into pairs (White, Black)
-    const movePairs: { white: string; black?: string }[] = [];
-    for (let i = 0; i < history.length; i += 2) {
-        movePairs.push({
-            white: history[i],
-            black: history[i + 1]
-        });
-    }
+    const movePairs = useMemo(() => {
+        const pairs: { white: string; black?: string }[] = [];
+        for (let i = 0; i < history.length; i += 2) {
+            pairs.push({
+                white: history[i],
+                black: history[i + 1]
+            });
+        }
+        return pairs;
+    }, [history]);
 
     return (
         <div className="move-history-card">
