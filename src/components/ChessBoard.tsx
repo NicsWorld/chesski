@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Chess } from 'chess.js';
 import { useDrop } from 'react-dnd';
 import Piece from './Piece';
@@ -111,6 +111,12 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
     const board = game.board();
     const [validMoves, setValidMoves] = useState<string[]>([]);
 
+    const fen = game.fen();
+    const moveCache = useMemo(() => {
+        return new Map<string, string[]>();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fen]);
+
     const isBlackSquare = (fileIndex: number, rankIndex: number) => {
         return (fileIndex + rankIndex) % 2 === 1;
     };
@@ -155,8 +161,13 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                                 position={square}
                                 pieceTheme={pieceTheme}
                                 onDragStart={() => {
-                                    const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
-                                    setValidMoves(moves.map(m => m.to));
+                                    let toSquares = moveCache.get(square);
+                                    if (!toSquares) {
+                                        const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
+                                        toSquares = moves.map(m => m.to);
+                                        moveCache.set(square, toSquares);
+                                    }
+                                    setValidMoves(toSquares);
                                 }}
                                 onDragEnd={() => setValidMoves([])}
                             />}
