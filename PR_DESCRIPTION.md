@@ -1,14 +1,9 @@
-## 🎨 Palette: Improve Move History Empty State
+# 🧹 Code Health: Remove stale conversational comment about memoization
 
-### 💡 What
-Updated the "No moves yet" state in the Move History panel to be more visually engaging and helpful. Added a decorative pawn icon, improved typography with a title and subtitle, and applied appropriate contrast colors for better readability. Added `aria-hidden="true"` to the decorative icon to ensure screen readers skip it.
+🎯 **What:** Removed a stale conversational comment in `src/App.tsx` regarding memoization that added unnecessary noise.
 
-### 🎯 Why
-The previous empty state was a plain, small text string ("No moves yet") that didn't provide enough guidance and looked slightly detached from the rest of the polished UI. A good empty state should guide the user and look intentional.
+💡 **Why:** The comment described a non-issue and contradicted its own premise in the subsequent line, making the codebase harder to read and maintain. Removing it improves the readability and code health of the file without altering any functionality.
 
-### 📸 Before/After
-See screenshots above.
+✅ **Verification:** Verified by checking the Git diff to ensure only the comment was removed. Ran `npm run lint` and `npx vitest run` to ensure no linting or test regressions were introduced.
 
-### ♿ Accessibility
-- Added `aria-hidden="true"` to the decorative pawn emoji so screen readers don't read out "black chess pawn" unnecessarily.
-- Used high contrast colors (`var(--color-text-muted)` for the container, full opacity for the title, and 80% opacity for the subtitle) to maintain readability while keeping the empty state distinct from active content.
+✨ **Result:** A cleaner `src/App.tsx` file with improved maintainability and less noise.
