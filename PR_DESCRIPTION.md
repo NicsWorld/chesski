@@ -1,15 +1,8 @@
-## PR_DESCRIPTION
-🎨 Palette: Add linear navigation to tutorials
+🎯 **What:**
+The application was directly passing unvalidated `fen` URL parameters to the `validateFen` function from `chess.js` and subsequently attempting to instantiate `new Chess(fenParam)`. The `validateFen` function internally uses regex and `.split(/\s+/)` operations which can be vulnerable to Regular Expression Denial of Service (ReDoS) or cause unexpected behavior if exposed to completely unvalidated user input strings.
 
-### 💡 What
-Added "Previous" and "Next" buttons to the tutorial view to allow users to navigate through the tutorials sequentially.
+⚠️ **Risk:**
+An attacker could craft malicious URLs with extremely long or specifically formatted `fen` parameters designed to exploit regex processing inefficiencies (ReDoS) within `chess.js`, leading to degraded performance, freezing, or crashing of the client's browser or any server-side rendering processes evaluating the input.
 
-### 🎯 Why
-Previously, users could only navigate the tutorials by clicking the individual tutorial buttons. Providing explicit "Previous" and "Next" buttons improves the flow for users going through the tutorials in order.
-
-### 📸 Before/After
-Before: The tutorial view only had buttons for each individual tutorial.
-After: The tutorial view now features prominent "Previous" and "Next" buttons below the tutorial description, which are appropriately disabled when at the beginning or end of the tutorial list.
-
-### ♿ Accessibility
-Added `aria-label` attributes (`aria-label="Previous tutorial"` and `aria-label="Next tutorial"`) to the new buttons to ensure screen reader users have clear context for these controls. The buttons also use proper `disabled` states when no further navigation in that direction is possible, preventing confusion and following standard interactive patterns.
+🛡️ **Solution:**
+Implemented strict regex validation for the FEN string format *before* it is processed by the `chess.js` library. The FEN parameter must now pass a strict regex check (`FEN_REGEX.test(fenParam)`) that ensures it matches standard FEN structure before being evaluated, thus mitigating the ReDoS vulnerability by strictly bounding the format of acceptable input.
