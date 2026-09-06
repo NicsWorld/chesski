@@ -1,15 +1,14 @@
-## PR_DESCRIPTION
-🎨 Palette: Add linear navigation to tutorials
+## 🎨 Palette: Improve Move History Empty State
 
 ### 💡 What
-Added "Previous" and "Next" buttons to the tutorial view to allow users to navigate through the tutorials sequentially.
+Updated the "No moves yet" state in the Move History panel to be more visually engaging and helpful. Added a decorative pawn icon, improved typography with a title and subtitle, and applied appropriate contrast colors for better readability. Added `aria-hidden="true"` to the decorative icon to ensure screen readers skip it.
 
 ### 🎯 Why
-Previously, users could only navigate the tutorials by clicking the individual tutorial buttons. Providing explicit "Previous" and "Next" buttons improves the flow for users going through the tutorials in order.
+The previous empty state was a plain, small text string ("No moves yet") that didn't provide enough guidance and looked slightly detached from the rest of the polished UI. A good empty state should guide the user and look intentional.
 
 ### 📸 Before/After
-Before: The tutorial view only had buttons for each individual tutorial.
-After: The tutorial view now features prominent "Previous" and "Next" buttons below the tutorial description, which are appropriately disabled when at the beginning or end of the tutorial list.
+See screenshots above.
 
 ### ♿ Accessibility
-Added `aria-label` attributes (`aria-label="Previous tutorial"` and `aria-label="Next tutorial"`) to the new buttons to ensure screen reader users have clear context for these controls. The buttons also use proper `disabled` states when no further navigation in that direction is possible, preventing confusion and following standard interactive patterns.
+- Added `aria-hidden="true"` to the decorative pawn emoji so screen readers don't read out "black chess pawn" unnecessarily.
+- Used high contrast colors (`var(--color-text-muted)` for the container, full opacity for the title, and 80% opacity for the subtitle) to maintain readability while keeping the empty state distinct from active content.

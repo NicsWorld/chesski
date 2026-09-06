@@ -28,7 +28,11 @@ const MoveHistory: React.FC<MoveHistoryProps> = ({ history }) => {
             <h3>Move History</h3>
             <div className="move-list" ref={scrollRef}>
                 {movePairs.length === 0 ? (
-                    <div className="empty-history">No moves yet</div>
+                    <div className="empty-history">
+                        <div className="empty-history-icon" aria-hidden="true">♟️</div>
+                        <p className="empty-history-title">No moves yet</p>
+                        <p className="empty-history-subtitle">Make a move to start recording your game.</p>
+                    </div>
                 ) : (
                     <table className="history-table">
                         <thead>
