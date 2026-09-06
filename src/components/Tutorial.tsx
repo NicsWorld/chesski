@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Chess } from 'chess.js';
+import { Chess, SQUARES } from 'chess.js';
 import ChessBoard from './ChessBoard';
 
 const tutorials = [
@@ -42,61 +42,39 @@ const tutorials = [
 ];
 
 const addKingsToFen = (fen: string) => {
-    const parts = fen.split(' ');
+    const parts = fen.split(' ', 1);
     const boardStr = parts[0];
 
-    let whiteKingPlaced = boardStr.includes('K');
-    let blackKingPlaced = boardStr.includes('k');
+    const hasWhite = boardStr.includes('K');
+    const hasBlack = boardStr.includes('k');
 
-    if (whiteKingPlaced && blackKingPlaced) return fen;
+    if (hasWhite && hasBlack) return fen;
 
-    const rows = boardStr.split('/');
+    let newFen = fen;
+    if (!hasWhite) {
+        newFen = newFen.replace(/[1-8]/, (match) => {
+            const num = parseInt(match, 10);
+            return num === 1 ? 'K' : 'K' + (num - 1);
+        });
+    }
 
-    const newRows = rows.map(row => {
-        if (whiteKingPlaced && blackKingPlaced) return row;
+    if (!hasBlack) {
+        newFen = newFen.replace(/[1-8]/, (match) => {
+            const num = parseInt(match, 10);
+            return num === 1 ? 'k' : 'k' + (num - 1);
+        });
+    }
 
-        let newRow = '';
-        for (let i = 0; i < row.length; i++) {
-            const char = row[i];
-            if (!isNaN(parseInt(char))) {
-                let count = parseInt(char);
-                while (count > 0) {
-                    if (!whiteKingPlaced) {
-                        newRow += 'K';
-                        whiteKingPlaced = true;
-                    } else if (!blackKingPlaced) {
-                        newRow += 'k';
-                        blackKingPlaced = true;
-                    } else {
-                        newRow += '1';
-                    }
-                    count--;
-                }
-            } else {
-                newRow += char;
-            }
-        }
-        return newRow.replace(/1+/g, (match) => match.length.toString());
-    });
-
-    parts[0] = newRows.join('/');
-    return parts.join(' ');
+    return newFen;
 };
 
 const removeKings = (game: Chess, tutorialId: string) => {
-    const board = game.board();
-    for (let r = 0; r < 8; r++) {
-        for (let c = 0; c < 8; c++) {
-            const piece = board[r][c];
-            if (piece) {
-                if (piece.type === 'k' && piece.color === 'b') {
-                    // Remove black king
-                    game.remove(piece.square);
-                }
-                if (piece.type === 'k' && piece.color === 'w' && tutorialId !== 'k') {
-                    // Remove white king unless it's king tutorial
-                    game.remove(piece.square);
-                }
+    for (let i = 0; i < SQUARES.length; i++) {
+        const square = SQUARES[i];
+        const piece = game.get(square);
+        if (piece && piece.type === 'k') {
+            if (piece.color === 'b' || (piece.color === 'w' && tutorialId !== 'k')) {
+                game.remove(square);
             }
         }
     }
@@ -127,9 +105,7 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
             const result = game.move(move);
             if (result) {
                 let currentFen = game.fen();
-                const fenParts = currentFen.split(' ');
-                fenParts[1] = 'w';
-                currentFen = fenParts.join(' ');
+                currentFen = currentFen.replace(/ ([wb]) /, ' w ');
 
                 const validFen = addKingsToFen(currentFen);
                 const newGame = new Chess(validFen);
