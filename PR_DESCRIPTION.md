@@ -1,15 +1,10 @@
-## PR_DESCRIPTION
-🎨 Palette: Add linear navigation to tutorials
+Title: 🔒 [Fix Missing Input Validation on FEN Parameter]
 
-### 💡 What
-Added "Previous" and "Next" buttons to the tutorial view to allow users to navigate through the tutorials sequentially.
+🎯 What
+Added strict regex pre-validation for the FEN string in `src/App.tsx` before passing it to `chess.js`'s `validateFen()` method.
 
-### 🎯 Why
-Previously, users could only navigate the tutorials by clicking the individual tutorial buttons. Providing explicit "Previous" and "Next" buttons improves the flow for users going through the tutorials in order.
+⚠️ Risk
+The `chess.js` `validateFen` function uses `.split(/\s+/)` internally, which can be vulnerable to Regular Expression Denial of Service (ReDoS) attacks. Without pre-validation, a maliciously crafted FEN string could cause the application to consume excessive CPU resources when loaded via the URL parameter.
 
-### 📸 Before/After
-Before: The tutorial view only had buttons for each individual tutorial.
-After: The tutorial view now features prominent "Previous" and "Next" buttons below the tutorial description, which are appropriately disabled when at the beginning or end of the tutorial list.
-
-### ♿ Accessibility
-Added `aria-label` attributes (`aria-label="Previous tutorial"` and `aria-label="Next tutorial"`) to the new buttons to ensure screen reader users have clear context for these controls. The buttons also use proper `disabled` states when no further navigation in that direction is possible, preventing confusion and following standard interactive patterns.
+🛡️ Solution
+Implemented a strict regex pre-validation `^([pPnNbBrRqQkK1-8]+\/){7}[pPnNbBrRqQkK1-8]+ [bw] (-|[KQkq]{1,4}) (-|[a-h][36])( \d+ \d+)?$` that ensures the FEN string structurally matches expected inputs before delegating to `validateFen()`. This regex ensures that only potentially valid FEN configurations (up to the required 4 fields, and optional halfmove and fullmove fields) are ever processed by `chess.js`, avoiding the ReDoS vector.
