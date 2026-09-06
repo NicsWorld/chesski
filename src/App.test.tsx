@@ -162,7 +162,7 @@ describe('App invalid FEN fallback', () => {
   it('catches invalid FEN in URL, logs error, and falls back to default board', () => {
     render(<App />);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Invalid FEN in URL',
+      'Invalid FEN parameter in URL',
       expect.any(Error)
     );
     expect(screen.getByTestId('mock-chessboard')).toBeInTheDocument();
