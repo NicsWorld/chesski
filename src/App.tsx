@@ -9,6 +9,8 @@ import CapturedPieces from './components/CapturedPieces';
 import { evaluateGameStatus } from './utils/gameStatus';
 import './App.css';
 
+const FEN_REGEX = /^[a-zA-Z0-9/]+ [wb] (?:-|[KkQq]+) (?:-|[a-h][36])(?: \d+ \d+)?$/;
+
 function App() {
   const [view, setView] = useState<'game' | 'tutorial'>(() => {
     // If we are loading a shared game (fen param exists), default to game view
@@ -18,7 +20,7 @@ function App() {
   const [game, setGame] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
-    if (fenParam && fenParam.length <= 100 && validateFen(fenParam).ok) {
+    if (fenParam && fenParam.length <= 100 && FEN_REGEX.test(fenParam) && validateFen(fenParam).ok) {
       try {
         return new Chess(fenParam);
       } catch (e) {
