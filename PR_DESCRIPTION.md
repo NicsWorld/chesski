@@ -1,15 +1,10 @@
-## PR_DESCRIPTION
-🎨 Palette: Add linear navigation to tutorials
+# 🔒 Prevent ReDoS vulnerability in chess.js v1.x
 
-### 💡 What
-Added "Previous" and "Next" buttons to the tutorial view to allow users to navigate through the tutorials sequentially.
+## 🎯 What
+This PR addresses a potential Regular Expression Denial of Service (ReDoS) vulnerability by adding strict regex pre-validation for FEN strings parsed from the URL parameters before they are passed to the `chess.js` library's `validateFen` function.
 
-### 🎯 Why
-Previously, users could only navigate the tutorials by clicking the individual tutorial buttons. Providing explicit "Previous" and "Next" buttons improves the flow for users going through the tutorials in order.
+## ⚠️ Risk
+The `validateFen` function in `chess.js` v1.x uses `.split(/\s+/)` internally. If it processes unvalidated or maliciously crafted input, it could be vulnerable to ReDoS attacks, leading to performance degradation or application crash.
 
-### 📸 Before/After
-Before: The tutorial view only had buttons for each individual tutorial.
-After: The tutorial view now features prominent "Previous" and "Next" buttons below the tutorial description, which are appropriately disabled when at the beginning or end of the tutorial list.
-
-### ♿ Accessibility
-Added `aria-label` attributes (`aria-label="Previous tutorial"` and `aria-label="Next tutorial"`) to the new buttons to ensure screen reader users have clear context for these controls. The buttons also use proper `disabled` states when no further navigation in that direction is possible, preventing confusion and following standard interactive patterns.
+## 🛡️ Solution
+A regex validation (`fenRegex`) has been added in `src/App.tsx` that ensures the FEN string strictly adheres to the expected pattern of a FEN string before calling `validateFen`. This effectively sanitizes the input and neutralizes any malformed string before it reaches the vulnerable `split(/\s+/)` execution within `chess.js`.
