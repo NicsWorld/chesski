@@ -27,4 +27,18 @@ describe('Tutorial Component', () => {
 
         expect(() => fireEvent.click(board)).not.toThrow();
     });
+
+    it('logs a warning for invalid moves', () => {
+        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        render(<Tutorial pieceTheme="standard" />);
+
+        const board = screen.getByTestId('mock-chessboard');
+
+        board.setAttribute('data-move', JSON.stringify({ from: 'h8', to: 'a1' }));
+
+        fireEvent.click(board);
+
+        expect(consoleWarnSpy).toHaveBeenCalledWith("Invalid move:", expect.any(Error));
+        consoleWarnSpy.mockRestore();
+    });
 });
