@@ -1,15 +1,12 @@
-## PR_DESCRIPTION
-🎨 Palette: Add linear navigation to tutorials
+## 🔒 Fix: Add Regex Validation for FEN Parameter
 
-### 💡 What
-Added "Previous" and "Next" buttons to the tutorial view to allow users to navigate through the tutorials sequentially.
+### 🎯 What
+This PR fixes a missing input validation vulnerability by adding a regular expression to validate the FEN parameter from the URL before passing it to `chess.js`'s `validateFen` function.
 
-### 🎯 Why
-Previously, users could only navigate the tutorials by clicking the individual tutorial buttons. Providing explicit "Previous" and "Next" buttons improves the flow for users going through the tutorials in order.
+### ⚠️ Risk
+Without pre-validation, the `validateFen` function in `chess.js` (v1.x) uses `.split(/\s+/)` internally. This can be vulnerable to Regular Expression Denial of Service (ReDoS) if exposed to unvalidated, maliciously crafted user input via the `fen` URL parameter. A specially crafted, very long string containing many spaces or crafted sequences could potentially cause the browser to freeze or become unresponsive when parsing the URL parameter.
 
-### 📸 Before/After
-Before: The tutorial view only had buttons for each individual tutorial.
-After: The tutorial view now features prominent "Previous" and "Next" buttons below the tutorial description, which are appropriately disabled when at the beginning or end of the tutorial list.
-
-### ♿ Accessibility
-Added `aria-label` attributes (`aria-label="Previous tutorial"` and `aria-label="Next tutorial"`) to the new buttons to ensure screen reader users have clear context for these controls. The buttons also use proper `disabled` states when no further navigation in that direction is possible, preventing confusion and following standard interactive patterns.
+### 🛡️ Solution
+The solution addresses the vulnerability by:
+1. Adding a strict regular expression `FEN_REGEX` that enforces the structural constraints of a valid FEN string (including optional fields for halfmove and fullmove counts).
+2. Updating the conditional check in `src/App.tsx` to ensure `FEN_REGEX.test(fenParam)` passes *before* invoking `validateFen(fenParam).ok`. This ensures that malformed input is rejected outright and never reaches the potentially vulnerable splitting logic within the library.

@@ -18,7 +18,8 @@ function App() {
   const [game, setGame] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
-    if (fenParam && fenParam.length <= 100 && validateFen(fenParam).ok) {
+    const FEN_REGEX = /^([rnbqkpRNBQKP1-8]+\/){7}[rnbqkpRNBQKP1-8]+ [wb] (-|[KQkq]+) (-|[a-h][36])( \d+ \d+)?$/;
+    if (fenParam && fenParam.length <= 100 && FEN_REGEX.test(fenParam) && validateFen(fenParam).ok) {
       try {
         return new Chess(fenParam);
       } catch (e) {
