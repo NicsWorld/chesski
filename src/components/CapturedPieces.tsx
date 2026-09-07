@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Chess, type PieceSymbol } from 'chess.js';
+import { Chess, SQUARES, type PieceSymbol } from 'chess.js';
 
 interface CapturedPiecesProps {
     game: Chess;
@@ -14,19 +14,17 @@ const CapturedPieces: React.FC<CapturedPiecesProps> = ({ game }) => {
     const fen = game.fen();
     // Calculate captured pieces
     const { whiteCaptured, blackCaptured } = useMemo(() => {
-        const board = game.board();
         const currentCounts = {
             w: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
             b: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 }
         };
 
-        // Count pieces currently on the board
-        for (let r = 0; r < 8; r++) {
-            for (let c = 0; c < 8; c++) {
-                const piece = board[r][c];
-                if (piece) {
-                    currentCounts[piece.color as 'w' | 'b'][piece.type as PieceSymbol]++;
-                }
+        // Count pieces currently on the board.
+        // Optimized: Iterating SQUARES and using game.get(square) is faster than game.board()
+        for (const square of SQUARES) {
+            const piece = game.get(square);
+            if (piece) {
+                currentCounts[piece.color as 'w' | 'b'][piece.type as PieceSymbol]++;
             }
         }
 
