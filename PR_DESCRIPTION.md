@@ -1,10 +1,13 @@
-⚡ Bolt: Optimize chess.js board access
+🧪 [Add component tests for CapturedPieces]
 
-💡 What:
-Replaced `game.board()` calls with `SQUARES` iteration and `game.get(square)` in `ChessBoard`, `CapturedPieces`, and `Tutorial` components.
+🎯 **What:**
+Added a comprehensive test suite for `CapturedPieces.tsx` using Vitest and React Testing Library. This fills a testing gap identified in the project for tracking and rendering captured pieces correctly.
 
-🎯 Why:
-`game.board()` is computationally expensive because it dynamically generates a 2D array representation of the board state.
+📊 **Coverage:**
+The tests now verify:
+- Initial state rendering (no captured pieces shown at the start of a game).
+- Correct mapping and rendering of missing pieces (by removing specific pieces from a `chess.js` instance and ensuring the corresponding images/icons appear).
+- Standard piece theme rendering as a baseline for the component.
 
-📊 Measured Improvement:
-Benchmark showed a ~16% speedup (34.0ms down to 28.3ms for 10,000 iterations).
+✨ **Result:**
+Improved testing reliability and safety net for the component, ensuring that refactoring piece capture logic will not silently introduce regressions.
