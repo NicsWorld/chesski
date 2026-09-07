@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Chess } from 'chess.js';
 import { useDrop } from 'react-dnd';
 import Piece from './Piece';
@@ -108,6 +108,9 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
 }
 
 const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => {
+    const fen = game.fen();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const board = useMemo(() => game.board(), [game, fen]);
     const [validMoves, setValidMoves] = useState<string[]>([]);
 
     const isBlackSquare = (fileIndex: number, rankIndex: number) => {
@@ -137,8 +140,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
             {RANKS.map((rank, rankIndex) =>
                 FILES.map((file, fileIndex) => {
                     const square = `${file}${rank}`;
-                    // Using game.get(square) is faster than game.board() (avoiding 2D array generation overhead)
-                    const piece = game.get(square as import('chess.js').Square);
+                    const piece = board[rankIndex][fileIndex];
                     const isBlack = isBlackSquare(fileIndex, rankIndex);
 
                     return (
