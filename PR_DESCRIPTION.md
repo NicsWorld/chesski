@@ -1,10 +1,14 @@
-⚡ Bolt: Optimize chess.js board access
+## Title: 🧪 [testing improvement] Add component tests for ChessBoard
 
-💡 What:
-Replaced `game.board()` calls with `SQUARES` iteration and `game.get(square)` in `ChessBoard`, `CapturedPieces`, and `Tutorial` components.
+🎯 **What:**
+Added a test suite for `ChessBoard.tsx` to verify drag and drop logic, move highlights, and board rendering since it had no coverage.
 
-🎯 Why:
-`game.board()` is computationally expensive because it dynamically generates a 2D array representation of the board state.
+📊 **Coverage:**
+- Rendering of the 64-square grid and proper piece placement based on FEN.
+- Highlights rendering when a piece is dragged showing legal moves.
+- `onMove` callback triggering correctly when a piece is dropped on a square.
+- Highlights clearing correctly after dropping or dragging ends.
+- Piece theme passing to child pieces correctly.
 
-📊 Measured Improvement:
-Benchmark showed a ~16% speedup (34.0ms down to 28.3ms for 10,000 iterations).
+✨ **Result:**
+Significant improvement in component-level test coverage. Ensures drag, drop, and visual indicators remain functional during refactoring.
