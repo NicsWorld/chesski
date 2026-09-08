@@ -1,10 +1,7 @@
-⚡ Bolt: Optimize chess.js board access
+## Title
+🔒 Fix FEN Parameter ReDoS Vulnerability
 
-💡 What:
-Replaced `game.board()` calls with `SQUARES` iteration and `game.get(square)` in `ChessBoard`, `CapturedPieces`, and `Tutorial` components.
-
-🎯 Why:
-`game.board()` is computationally expensive because it dynamically generates a 2D array representation of the board state.
-
-📊 Measured Improvement:
-Benchmark showed a ~16% speedup (34.0ms down to 28.3ms for 10,000 iterations).
+## Description
+🎯 **What:** The FEN parameter from the URL was being processed directly without sufficient structural validation, leading to potential Regular Expression Denial of Service (ReDoS) issues in the underlying `chess.js` library's `validateFen` function.
+⚠️ **Risk:** An attacker could craft a malicious, overly long or complex FEN string in the URL that causes the server or client to hang while processing the regex, resulting in denial of service.
+🛡️ **Solution:** Added a strict `FEN_REGEX` check and a length limit (`<= 100`) before calling `validateFen` or instantiating a new `Chess` game, ensuring only structurally valid strings are processed.

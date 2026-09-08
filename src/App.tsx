@@ -20,9 +20,12 @@ function App() {
   const [game, setGame] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
-    if (fenParam && fenParam.length <= 100 && FEN_REGEX.test(fenParam) && validateFen(fenParam).ok) {
+    // Pre-validate FEN structure to prevent ReDoS when passed to validateFen
+    const isValidLength = fenParam && fenParam.length <= 100;
+    if (isValidLength && FEN_REGEX.test(fenParam as string) && validateFen(fenParam as string).ok) {
       try {
-        return new Chess(fenParam);
+        const loadedGame = new Chess(fenParam as string);
+        return loadedGame;
       } catch (e) {
         console.error("Invalid FEN in URL", e);
       }
