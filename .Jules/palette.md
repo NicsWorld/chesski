@@ -1,3 +1,3 @@
-## 2025-03-05 - Added linear navigation to tutorials
-**Learning:** For a view with sequential steps, using an index and navigating by calculating the previous and next states with explicit boundary disabling is a helpful pattern. Added `aria-label`s directly to standard `button` elements instead of generic empty strings is simple and standardizes accessibility for the user interaction.
-**Action:** Always provide explicit navigation controls for linear sequences (like tutorials or wizards), with appropriately disabled boundary states, and ensure icon-only or generic labels (if any, like simply "Next" or "Previous") are supported by explicit `aria-label` properties.
+## 2025-03-08 - Added accessible live regions and state toggles
+**Learning:** Screen readers need `aria-live` on status elements that change dynamically (like game messages). State toggles (like "Play" vs "Tutorial" or "Zoo" vs "Standard" buttons) should use `aria-pressed` or `aria-current` to communicate their active state, as well as `role="group"` to tie related toggles together.
+**Action:** Use `aria-live="polite"` for dynamic text updates, and ensure toggle buttons communicate state to screen readers.

@@ -38,7 +38,7 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
             ref={drag as unknown as React.RefObject<HTMLDivElement>}
             style={{
                 opacity: isDragging ? 0.5 : 1,
-                cursor: 'move',
+                cursor: isDragging ? 'grabbing' : 'grab',
                 width: '100%',
                 height: '100%',
                 display: 'flex',
