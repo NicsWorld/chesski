@@ -1,10 +1,10 @@
-⚡ Bolt: Optimize chess.js board access
+🛡️ Sentinel: [security improvement] Remove Error objects from console output to prevent stack trace leakage
 
-💡 What:
-Replaced `game.board()` calls with `SQUARES` iteration and `game.get(square)` in `ChessBoard`, `CapturedPieces`, and `Tutorial` components.
+🎯 **What:**
+Removed the exposure of raw `Error` objects and exception details in `console.error` and `console.debug` logs across `App.tsx` and `Tutorial.tsx`. Tests were updated accordingly.
 
-🎯 Why:
-`game.board()` is computationally expensive because it dynamically generates a 2D array representation of the board state.
+⚠️ **Risk:**
+Printing raw exception objects (like `e` or `new Error()`) directly to the console exposes internal stack traces, system information, and execution paths. This is a common medium-severity risk where information leakage can assist attackers in understanding the app's internal structure or discovering vulnerabilities.
 
-📊 Measured Improvement:
-Benchmark showed a ~16% speedup (34.0ms down to 28.3ms for 10,000 iterations).
+🛡️ **Solution:**
+Modified error handling to log generic fallback messages (`console.error("Invalid FEN in URL")` and `console.debug("Invalid move")`) without passing the raw error object, successfully suppressing stack trace exposure while retaining operational visibility.
