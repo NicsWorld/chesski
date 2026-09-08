@@ -1,10 +1,10 @@
-⚡ Bolt: Optimize chess.js board access
+# 🛡️ Sentinel: [CRITICAL] Fix Missing Input Validation on FEN Parameter
 
-💡 What:
-Replaced `game.board()` calls with `SQUARES` iteration and `game.get(square)` in `ChessBoard`, `CapturedPieces`, and `Tutorial` components.
+**🎯 What:**
+Added pre-validation for the `fen` URL parameter using a strict regular expression (`FEN_REGEX`) and a length check before passing the input to `chess.js`.
 
-🎯 Why:
-`game.board()` is computationally expensive because it dynamically generates a 2D array representation of the board state.
+**⚠️ Risk:**
+Without pre-validation, the `chess.js` (v1.x) `validateFen` function processes unvalidated user input. Internally, it uses `.split(/\s+/)` which is susceptible to Regular Expression Denial of Service (ReDoS), potentially leading to application unresponsiveness if malformed FEN strings are provided.
 
-📊 Measured Improvement:
-Benchmark showed a ~16% speedup (34.0ms down to 28.3ms for 10,000 iterations).
+**🛡️ Solution:**
+We apply strict bounds by checking `fenParam.length <= 100` and `FEN_REGEX.test(fenParam)` before calling `validateFen`. This ensures only well-structured inputs are processed by the vulnerable internal regex.
