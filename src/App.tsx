@@ -20,6 +20,7 @@ function App() {
   const [game, setGame] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const fenParam = params.get('fen');
+    // Pre-validate FEN to prevent ReDoS in chess.js
     if (fenParam && fenParam.length <= 100 && FEN_REGEX.test(fenParam) && validateFen(fenParam).ok) {
       try {
         return new Chess(fenParam);
