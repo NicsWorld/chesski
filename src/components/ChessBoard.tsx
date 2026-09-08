@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Chess } from 'chess.js';
 import { useDrop } from 'react-dnd';
 import Piece from './Piece';
@@ -120,6 +120,20 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
         setValidMoves([]);
     };
 
+    const fen = game.fen();
+    const legalMovesMap = useMemo(() => {
+        const map = new Map<string, string[]>();
+        const moves = game.moves({ verbose: true });
+        for (const move of moves) {
+            if (!map.has(move.from)) {
+                map.set(move.from, []);
+            }
+            map.get(move.from)!.push(move.to);
+        }
+        return map;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fen]);
+
     return (
         <div style={{
             width: '100%',
@@ -155,8 +169,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                                 position={square}
                                 pieceTheme={pieceTheme}
                                 onDragStart={() => {
-                                    const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
-                                    setValidMoves(moves.map(m => m.to));
+                                    const moves = legalMovesMap.get(square) || [];
+                                    setValidMoves(moves);
                                 }}
                                 onDragEnd={() => setValidMoves([])}
                             />}
