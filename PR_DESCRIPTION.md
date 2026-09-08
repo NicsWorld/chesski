@@ -1,10 +1,6 @@
-⚡ Bolt: Optimize chess.js board access
+⚡ Bolt: Memoize legal moves to optimize drag performance
 
-💡 What:
-Replaced `game.board()` calls with `SQUARES` iteration and `game.get(square)` in `ChessBoard`, `CapturedPieces`, and `Tutorial` components.
-
-🎯 Why:
-`game.board()` is computationally expensive because it dynamically generates a 2D array representation of the board state.
-
-📊 Measured Improvement:
-Benchmark showed a ~16% speedup (34.0ms down to 28.3ms for 10,000 iterations).
+💡 What: Cached `game.moves()` into a memoized `Map` keyed by starting square based on `game.fen()`, rather than calling `game.moves({ square })` dynamically on every `onDragStart`.
+🎯 Why: `game.moves()` evaluates the board state to generate pseudo-legal and legal moves. Calling it repetitively during UI interactions like dragging causes stutter. Precomputing and memoizing avoids redundant computation.
+📊 Impact: Eliminates expensive `game.moves()` computation during `onDragStart`, providing smoother dragging UX.
+🔬 Measurement: Verify by dragging pieces repeatedly and checking interaction latency. Run tests to ensure no regressions.
