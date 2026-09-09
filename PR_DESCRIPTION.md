@@ -1,10 +1,7 @@
-⚡ Bolt: Optimize chess.js board access
+🛡️ Sentinel: [MEDIUM] Fix information leakage in error handling
 
-💡 What:
-Replaced `game.board()` calls with `SQUARES` iteration and `game.get(square)` in `ChessBoard`, `CapturedPieces`, and `Tutorial` components.
-
-🎯 Why:
-`game.board()` is computationally expensive because it dynamically generates a 2D array representation of the board state.
-
-📊 Measured Improvement:
-Benchmark showed a ~16% speedup (34.0ms down to 28.3ms for 10,000 iterations).
+🚨 Severity: MEDIUM
+💡 Vulnerability: Raw Error objects containing internal stack traces and logic were being directly output to the client console on invalid FENs and moves.
+🎯 Impact: This exposes internal application structure and dependency details to potentially malicious users, increasing the attack surface.
+🔧 Fix: Sanitized the error logging statements to output generic error strings instead of raw Error objects, and updated the associated Vitest spies.
+✅ Verification: Ensure tests pass and the console output only contains generic strings during error states.
