@@ -1,3 +1,3 @@
-## 2024-11-20 - [chess.js game.board() Performance]
-**Learning:** Calling `game.board()` in `chess.js` is computationally expensive because it dynamically generates a 2D array representation of the board state.
-**Action:** Replace `game.board()` with iteration over the `SQUARES` constant and use `game.get(square)` to lookup pieces efficiently, especially in tight loops like rendering `ChessBoard`, rendering `CapturedPieces`, or parsing board state in `Tutorial`.
+## 2024-05-18 - Memoizing Components to Avoid Excessive Re-renders in Drag Contexts
+**Learning:** In a React application using `react-dnd` within a large grid structure (like a 64-square chessboard), triggering state updates (like highlighting valid moves) inside an event handler such as `onDragStart` causes the entire parent component to re-render. If the grid items are not memoized, this forces all 64 squares and their respective pieces (and internal `useDrag`/`useDrop` hooks) to unnecessarily re-render, resulting in severe drag initiation stutters.
+**Action:** Extract the individual grid cell rendering into a child component wrapped in `React.memo` (e.g., `MemoizedSquare`) and use `useCallback` for all event handlers (`onDrop`, `onDragStart`, `onDragEnd`). This ensures that only the squares whose specific props (like `highlight`) have explicitly changed will re-render during drag interactions.
