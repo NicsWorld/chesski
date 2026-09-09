@@ -1,0 +1,3 @@
+## 2025-05-24 - Screen Reader Announcements for Dynamic Board Game Status
+**Learning:** In a single-page board game application where game state changes (like "Checkmate" or "Link copied!") are displayed visually but without page reloads, screen reader users miss crucial updates.
+**Action:** Always add `aria-live="polite"` and `aria-atomic="true"` to dynamic text containers (like `.status-card`) to ensure accessibility for game notifications, and use `aria-pressed` for toggleable UI states.
