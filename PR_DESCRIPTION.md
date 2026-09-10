@@ -1,10 +1,15 @@
-⚡ Bolt: Optimize chess.js board access
+⚡ Bolt: Optimize FEN string manipulation and avoid React state serialization overhead
 
-💡 What:
-Replaced `game.board()` calls with `SQUARES` iteration and `game.get(square)` in `ChessBoard`, `CapturedPieces`, and `Tutorial` components.
+💡 What
+- Replaced slow `split` and `map` logic in `addKingsToFen` with optimized regex `.replace()` operations.
+- Removed unused `useState(game.fen())` anti-pattern from `Tutorial.tsx`.
 
-🎯 Why:
-`game.board()` is computationally expensive because it dynamically generates a 2D array representation of the board state.
+🎯 Why
+- `addKingsToFen` previously relied on heavy string splitting and array mapping, which is inefficient.
+- Calling `game.fen()` directly inside the React render cycle (un-lazily) forces the `chess.js` engine to perform computationally expensive string serialization on every re-render, degrading component performance.
 
-📊 Measured Improvement:
-Benchmark showed a ~16% speedup (34.0ms down to 28.3ms for 10,000 iterations).
+📊 Impact
+- Reduces execution time of `addKingsToFen` and avoids an unnecessary O(N) serialization cost on every render of the `Tutorial` component, significantly improving rendering speed when interacting with the tutorial board.
+
+🔬 Measurement
+- Measure `addKingsToFen` speed with a benchmark script. Profiling React renders will show `game.fen()` is no longer invoked repeatedly upon DOM updates in the `Tutorial` component.
