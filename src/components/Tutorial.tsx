@@ -42,45 +42,33 @@ const tutorials = [
 ];
 
 const addKingsToFen = (fen: string) => {
-    const parts = fen.split(' ');
-    const boardStr = parts[0];
-
-    let whiteKingPlaced = boardStr.includes('K');
-    let blackKingPlaced = boardStr.includes('k');
+    let whiteKingPlaced = fen.includes('K');
+    let blackKingPlaced = fen.includes('k');
 
     if (whiteKingPlaced && blackKingPlaced) return fen;
 
-    const rows = boardStr.split('/');
+    return fen.replace(/^[^\s]+/, (boardStr) => {
+        return boardStr.replace(/[1-8]/g, (match) => {
+            if (whiteKingPlaced && blackKingPlaced) return match;
 
-    const newRows = rows.map(row => {
-        if (whiteKingPlaced && blackKingPlaced) return row;
+            let count = parseInt(match);
+            let replacement = '';
 
-        let newRow = '';
-        for (let i = 0; i < row.length; i++) {
-            const char = row[i];
-            if (!isNaN(parseInt(char))) {
-                let count = parseInt(char);
-                while (count > 0) {
-                    if (!whiteKingPlaced) {
-                        newRow += 'K';
-                        whiteKingPlaced = true;
-                    } else if (!blackKingPlaced) {
-                        newRow += 'k';
-                        blackKingPlaced = true;
-                    } else {
-                        newRow += '1';
-                    }
-                    count--;
+            while (count > 0) {
+                if (!whiteKingPlaced) {
+                    replacement += 'K';
+                    whiteKingPlaced = true;
+                } else if (!blackKingPlaced) {
+                    replacement += 'k';
+                    blackKingPlaced = true;
+                } else {
+                    replacement += '1';
                 }
-            } else {
-                newRow += char;
+                count--;
             }
-        }
-        return newRow.replace(/1+/g, (match) => match.length.toString());
+            return replacement;
+        }).replace(/1+/g, (match) => match.length.toString());
     });
-
-    parts[0] = newRows.join('/');
-    return parts.join(' ');
 };
 
 const removeKings = (game: Chess, tutorialId: string) => {
@@ -110,14 +98,11 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
     };
 
     const [game, setGame] = useState(() => initGame(tutorials[0]));
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    const [_, setFen] = useState(game.fen());
 
     const handleSelectTutorial = (t: typeof tutorials[0]) => {
         setActiveTutorial(t);
         const newGame = initGame(t);
         setGame(newGame);
-        setFen(newGame.fen());
     };
 
     const handleMove = (move: { from: string; to: string; promotion?: string }) => {
@@ -135,7 +120,6 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
                 removeKings(newGame, activeTutorial.id);
 
                 setGame(newGame);
-                setFen(newGame.fen());
             }
         } catch (error) {
             console.debug("Invalid move:", error);
@@ -188,7 +172,6 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
                 <button className="btn-secondary" onClick={() => {
                     const resetGame = initGame(activeTutorial);
                     setGame(resetGame);
-                    setFen(resetGame.fen());
                 }}>Reset Position</button>
             </aside>
         </div>
