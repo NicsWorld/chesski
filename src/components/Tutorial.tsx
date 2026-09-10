@@ -152,7 +152,7 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
                 <ChessBoard game={game} onMove={handleMove} pieceTheme={pieceTheme} />
             </div>
             <aside className="info-panel">
-                <div className="status-card">
+                <div className="status-card" aria-live="polite" aria-atomic="true">
                     <h2>Tutorial: {activeTutorial.title}</h2>
                     <p>{activeTutorial.description}</p>
                 </div>
@@ -179,6 +179,7 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
                         <button
                             key={t.id}
                             className={activeTutorial.id === t.id ? '' : 'btn-secondary'}
+                            aria-pressed={activeTutorial.id === t.id}
                             onClick={() => handleSelectTutorial(t)}
                         >
                             {t.title}
