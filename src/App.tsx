@@ -23,11 +23,13 @@ function App() {
     if (fenParam && fenParam.length <= 100 && FEN_REGEX.test(fenParam) && validateFen(fenParam).ok) {
       try {
         return new Chess(fenParam);
-      } catch (e) {
-        console.error("Invalid FEN in URL", e);
+      } catch {
+        // Security: Prevent information leakage by not logging raw Error objects (stack traces)
+        console.error("Invalid FEN in URL: failed to parse");
       }
     } else if (fenParam) {
-      console.error("Invalid FEN in URL", new Error("FEN length exceeded 100 characters or validation failed"));
+      // Security: Prevent information leakage by not logging raw Error objects
+      console.error("Invalid FEN in URL: FEN length exceeded 100 characters or validation failed");
     }
     return new Chess();
   });

@@ -1,0 +1,4 @@
+## 2026-09-11 - Prevent Stack Trace Leakage in Console Logs
+**Vulnerability:** Raw Error objects were being passed to `console.error` and `console.debug` (e.g., `console.error("...", e)`), which could leak sensitive stack traces and internal application structure to the client console.
+**Learning:** The default behavior of logging errors in catch blocks often inadvertently exposes system internals. Failing securely means standardizing error messages and never exposing raw error structures or stack traces to the client side.
+**Prevention:** Always use explicit, sanitized string literals for error logging in client-side code instead of passing the raw Error object.
