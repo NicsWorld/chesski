@@ -80,12 +80,14 @@ function App() {
             <button
               className={view === 'game' ? '' : 'btn-secondary'}
               onClick={() => setView('game')}
+              aria-pressed={view === 'game'}
             >
               Play Game
             </button>
             <button
               className={view === 'tutorial' ? '' : 'btn-secondary'}
               onClick={() => setView('tutorial')}
+              aria-pressed={view === 'tutorial'}
             >
               Tutorials
             </button>
@@ -95,12 +97,14 @@ function App() {
               <button
                 className={`btn-secondary theme-btn ${pieceTheme === 'zoo' ? 'active' : ''}`}
                 onClick={() => setPieceTheme('zoo')}
+                aria-pressed={pieceTheme === 'zoo'}
               >
                 Zoo
               </button>
               <button
                 className={`btn-secondary theme-btn ${pieceTheme === 'standard' ? 'active' : ''}`}
                 onClick={() => setPieceTheme('standard')}
+                aria-pressed={pieceTheme === 'standard'}
               >
                 Standard
               </button>
@@ -115,7 +119,7 @@ function App() {
             </div>
 
             <aside className="info-panel">
-              <div className="status-card">
+              <div className="status-card" aria-live="polite" aria-atomic="true">
                 <h2>{message}</h2>
               </div>
 
