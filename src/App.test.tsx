@@ -83,8 +83,11 @@ describe('App Main Functionality', () => {
     expect(screen.getByText("Black's turn (Cool Animals)")).toBeInTheDocument();
 
     // Click New Game
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
     fireEvent.click(screen.getByText('New Game'));
+    expect(confirmSpy).toHaveBeenCalledWith("Are you sure you want to start a new game? Your current game will be lost.");
     expect(screen.getByText("New Game! White starts.")).toBeInTheDocument();
+    confirmSpy.mockRestore();
   });
 
   it('undoes a move when Undo is clicked', () => {
