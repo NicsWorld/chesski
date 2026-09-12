@@ -1,14 +1,13 @@
-# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
+🎨 Palette: Add multi-theme color palette support
 
-## 💡 What:
-Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
+💡 What:
+Added support for three new color palettes (Ocean, Forest, Sunset) alongside the Default theme. Introduced a new "Color" theme selector in the header to allow users to toggle and test out the new palettes.
 
-## 🎯 Why:
-To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
+🎯 Why:
+To provide users with more visual variety and to allow testing of different color schemes to touch up the UI. The CSS-variable based implementation ensures smooth and efficient switching without reloading or layout shifts.
 
-## 📸 Before/After:
-No visual changes. (Accessibility improvements only)
+📸 Before/After:
+Added a new theme selector in the app header controls. The background, board colors, and primary button colors now update dynamically based on the selected theme.
 
-## ♿ Accessibility:
-- Added `aria-pressed` to active toggle buttons.
-- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
+♿ Accessibility:
+Ensured the new theme selector buttons utilize `aria-pressed` to clearly indicate the currently active color theme to screen readers, matching the pattern used by the piece theme selector.
