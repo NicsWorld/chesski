@@ -1,10 +1,14 @@
-⚡ Bolt: Optimize chess.js board access
+# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
 
-💡 What:
-Replaced `game.board()` calls with `SQUARES` iteration and `game.get(square)` in `ChessBoard`, `CapturedPieces`, and `Tutorial` components.
+## 💡 What:
+Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
 
-🎯 Why:
-`game.board()` is computationally expensive because it dynamically generates a 2D array representation of the board state.
+## 🎯 Why:
+To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
 
-📊 Measured Improvement:
-Benchmark showed a ~16% speedup (34.0ms down to 28.3ms for 10,000 iterations).
+## 📸 Before/After:
+No visual changes. (Accessibility improvements only)
+
+## ♿ Accessibility:
+- Added `aria-pressed` to active toggle buttons.
+- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
