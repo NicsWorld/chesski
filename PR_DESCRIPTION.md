@@ -1,10 +1,6 @@
-⚡ Bolt: Optimize chess.js board access
+⚡ Bolt: Remove unnecessary game.fen() calls in Tutorial
 
-💡 What:
-Replaced `game.board()` calls with `SQUARES` iteration and `game.get(square)` in `ChessBoard`, `CapturedPieces`, and `Tutorial` components.
-
-🎯 Why:
-`game.board()` is computationally expensive because it dynamically generates a 2D array representation of the board state.
-
-📊 Measured Improvement:
-Benchmark showed a ~16% speedup (34.0ms down to 28.3ms for 10,000 iterations).
+💡 What: Removed the unused `setFen` state and its associated `game.fen()` calls in `Tutorial.tsx`.
+🎯 Why: The `game.fen()` function in `chess.js` is notoriously computationally expensive because it serializes the entire board state to a string. It was being called on initial render and after every move or tutorial switch, but the result was never used (`_`).
+📊 Impact: Eliminates expensive string serialization on every interaction in the Tutorial view, leading to faster re-renders and lower CPU usage.
+🔬 Measurement: Check the React DevTools profiler or manually observe lower CPU usage during move interactions in the Tutorial view.
