@@ -1,10 +1,7 @@
-⚡ Bolt: Optimize chess.js board access
+# 🛡️ Sentinel: [security improvement] Prevent Stack Trace Information Leakage
 
-💡 What:
-Replaced `game.board()` calls with `SQUARES` iteration and `game.get(square)` in `ChessBoard`, `CapturedPieces`, and `Tutorial` components.
-
-🎯 Why:
-`game.board()` is computationally expensive because it dynamically generates a 2D array representation of the board state.
-
-📊 Measured Improvement:
-Benchmark showed a ~16% speedup (34.0ms down to 28.3ms for 10,000 iterations).
+🚨 **Severity:** MEDIUM
+💡 **Vulnerability:** Information leakage via stack traces exposed in the client-side console.
+🎯 **Impact:** Attackers can inspect leaked stack traces and Error objects to gain insight into internal structure and execution flow.
+🔧 **Fix:** Refactored catch blocks to omit error variable bindings and replaced raw Error logging with generic, sanitized error strings.
+✅ **Verification:** Ran tests and linting to ensure no regressions or unused variables.
