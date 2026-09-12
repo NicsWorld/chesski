@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Chess, validateFen } from 'chess.js';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -32,6 +32,11 @@ function App() {
     return new Chess();
   });
   const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
+  const [colorTheme, setColorTheme] = useState<'default' | 'ocean' | 'forest' | 'sunset'>('default');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', colorTheme);
+  }, [colorTheme]);
   const [message, setMessage] = useState("Welcome! Drag the white pieces to start.");
 
   const handleMove = (move: { from: string; to: string; promotion?: string }) => {
@@ -93,7 +98,38 @@ function App() {
             </button>
 
             <div className="theme-selector">
-              <span className="theme-selector-label">Theme:</span>
+              <span className="theme-selector-label">Color:</span>
+              <button
+                className={`btn-secondary theme-btn ${colorTheme === 'default' ? 'active' : ''}`}
+                onClick={() => setColorTheme('default')}
+                aria-pressed={colorTheme === 'default'}
+              >
+                Default
+              </button>
+              <button
+                className={`btn-secondary theme-btn ${colorTheme === 'ocean' ? 'active' : ''}`}
+                onClick={() => setColorTheme('ocean')}
+                aria-pressed={colorTheme === 'ocean'}
+              >
+                Ocean
+              </button>
+              <button
+                className={`btn-secondary theme-btn ${colorTheme === 'forest' ? 'active' : ''}`}
+                onClick={() => setColorTheme('forest')}
+                aria-pressed={colorTheme === 'forest'}
+              >
+                Forest
+              </button>
+              <button
+                className={`btn-secondary theme-btn ${colorTheme === 'sunset' ? 'active' : ''}`}
+                onClick={() => setColorTheme('sunset')}
+                aria-pressed={colorTheme === 'sunset'}
+              >
+                Sunset
+              </button>
+            </div>
+            <div className="theme-selector">
+              <span className="theme-selector-label">Pieces:</span>
               <button
                 className={`btn-secondary theme-btn ${pieceTheme === 'zoo' ? 'active' : ''}`}
                 onClick={() => setPieceTheme('zoo')}
