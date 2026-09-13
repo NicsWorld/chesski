@@ -1,14 +1,7 @@
-# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
+🛡️ Sentinel: [MEDIUM] Fix stack trace leakage in error logging
 
-## 💡 What:
-Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
-
-## 🎯 Why:
-To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
-
-## 📸 Before/After:
-No visual changes. (Accessibility improvements only)
-
-## ♿ Accessibility:
-- Added `aria-pressed` to active toggle buttons.
-- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
+🚨 Severity: MEDIUM
+💡 Vulnerability: Raw `Error` objects were being passed directly to `console.error` and `console.debug`, which exposes internal stack traces and application structure to the client side.
+🎯 Impact: An attacker or malicious user could inspect the browser console to gather internal implementation details (e.g. stack traces) that could aid in further attacks.
+🔧 Fix: Removed raw `Error` objects from console logging. Changed the exception handling syntax to omit the error variable (`catch {`) to satisfy ESLint unused variable checks, and sanitized the error messages logged to the console.
+✅ Verification: `pnpm lint` and `npx vitest run` will succeed, ensuring the application handles these gracefully without emitting raw error objects.
