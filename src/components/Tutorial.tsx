@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Chess, SQUARES } from 'chess.js';
+import { Chess } from 'chess.js';
 import ChessBoard from './ChessBoard';
 
 const tutorials = [
@@ -83,18 +83,46 @@ const addKingsToFen = (fen: string) => {
     return parts.join(' ');
 };
 
+// Optimized: O(1) algebraic coordinate conversion based on 0x88 board representation
+const algebraic = (sq: number) => {
+    const f = sq & 15;
+    const r = sq >> 4;
+    return ('abcdefgh'[f] + '87654321'[r]) as import('chess.js').Square;
+};
+
 const removeKings = (game: Chess, tutorialId: string) => {
-    // Optimized: Using game.get(square) over game.board() yields better performance
-    for (const square of SQUARES) {
-        const piece = game.get(square);
-        if (piece) {
-            if (piece.type === 'k' && piece.color === 'b') {
-                // Remove black king
-                game.remove(square);
-            }
-            if (piece.type === 'k' && piece.color === 'w' && tutorialId !== 'k') {
-                // Remove white king unless it's king tutorial
-                game.remove(square);
+    // Optimized: Use internal _kings property for O(1) removal, avoiding full board scan
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    const kings = (game as any)._kings;
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+
+    if (kings) {
+        if (kings.b !== undefined && kings.b !== -1) {
+            game.remove(algebraic(kings.b));
+        }
+        if (tutorialId !== 'k' && kings.w !== undefined && kings.w !== -1) {
+            game.remove(algebraic(kings.w));
+        }
+    } else {
+        // Fallback to O(N) iteration if internal property changes in future library versions
+        const SQUARES = ['a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8',
+            'a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7',
+            'a6', 'b6', 'c6', 'd6', 'e6', 'f6', 'g6', 'h6',
+            'a5', 'b5', 'c5', 'd5', 'e5', 'f5', 'g5', 'h5',
+            'a4', 'b4', 'c4', 'd4', 'e4', 'f4', 'g4', 'h4',
+            'a3', 'b3', 'c3', 'd3', 'e3', 'f3', 'g3', 'h3',
+            'a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2',
+            'a1', 'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1'] as const;
+
+        for (const square of SQUARES) {
+            const piece = game.get(square);
+            if (piece) {
+                if (piece.type === 'k' && piece.color === 'b') {
+                    game.remove(square);
+                }
+                if (piece.type === 'k' && piece.color === 'w' && tutorialId !== 'k') {
+                    game.remove(square);
+                }
             }
         }
     }
