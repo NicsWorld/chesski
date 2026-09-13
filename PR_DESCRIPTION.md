@@ -1,14 +1,14 @@
-# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
+# 🧪 Test: Add test coverage for CapturedPieces
 
-## 💡 What:
-Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
+## 🎯 **What:**
+Added comprehensive testing for the `CapturedPieces` React component which was missing test coverage.
 
-## 🎯 Why:
-To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
+## 📊 **Coverage:**
+The newly added tests now cover:
+- Initial state rendering (no captured pieces at the start of a game).
+- Rendering of captured white pieces when missing from the board.
+- Rendering of captured black pieces when missing from the board.
+- Rendering of multiple captured pieces including different piece types across both colors concurrently.
 
-## 📸 Before/After:
-No visual changes. (Accessibility improvements only)
-
-## ♿ Accessibility:
-- Added `aria-pressed` to active toggle buttons.
-- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
+## ✨ **Result:**
+Improved test coverage and established safety nets for refactoring visual captured piece renderings and underlying chess piece calculation logic.
