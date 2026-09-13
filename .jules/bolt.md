@@ -1,3 +1,3 @@
-## 2024-11-20 - [chess.js game.board() Performance]
-**Learning:** Calling `game.board()` in `chess.js` is computationally expensive because it dynamically generates a 2D array representation of the board state.
-**Action:** Replace `game.board()` with iteration over the `SQUARES` constant and use `game.get(square)` to lookup pieces efficiently, especially in tight loops like rendering `ChessBoard`, rendering `CapturedPieces`, or parsing board state in `Tutorial`.
+## 2025-02-12 - Reusing class instances for React state
+**Learning:** In projects utilizing chess.js (or similar stateful class instances), performing deep serialization and deserialization (e.g., `loadPgn()`) simply to create a new instance for React state triggers unnecessary performance overhead that scales linearly with history length.
+**Action:** Mutate the existing class instance and perform a shallow copy (e.g. `Object.assign(new ClassName(), instance)`) to yield a new object reference that triggers React component re-renders while bypassing costly serialization.

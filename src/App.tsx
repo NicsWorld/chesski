@@ -36,10 +36,9 @@ function App() {
 
   const handleMove = (move: { from: string; to: string; promotion?: string }) => {
     try {
-      const gameClone = new Chess();
-      gameClone.loadPgn(game.pgn());
-      const result = gameClone.move(move);
+      const result = game.move(move);
       if (result) {
+        const gameClone = Object.assign(new Chess(), game);
         setGame(gameClone);
         setMessage(evaluateGameStatus(gameClone));
       }
@@ -130,9 +129,8 @@ function App() {
                 <button
                   className="btn-secondary"
                   onClick={() => {
-                    const gameClone = new Chess();
-                    gameClone.loadPgn(game.pgn());
-                    gameClone.undo();
+                    game.undo();
+                    const gameClone = Object.assign(new Chess(), game);
                     setGame(gameClone);
                     setMessage(evaluateGameStatus(gameClone));
                   }}
