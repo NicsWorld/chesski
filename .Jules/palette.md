@@ -4,3 +4,6 @@
 ## 2024-05-14 - Aria-Live for Status Messages
 **Learning:** React components that manage dynamic textual game state updates without page reloads (e.g., status messages, checkmate alerts) should wrap the text container with `aria-live="polite"` and `aria-atomic="true"` to ensure screen readers announce the changes. Also, use `aria-pressed` to semantically indicate the active state of UI toggle buttons.
 **Action:** Always add `aria-live` and `aria-atomic` to dynamic status messages, and `aria-pressed` to toggle buttons.
+## 2025-05-15 - Confirmation for Destructive Actions
+**Learning:** Users can accidentally click reset buttons, resulting in irreversible data loss. Implementing a confirmation dialog for destructive actions (like starting a new game or resetting tutorial progress) provides a necessary safety net.
+**Action:** Always implement a confirmation dialog (such as a native `window.confirm`) for destructive UI actions that reset state or result in irreversible data loss.

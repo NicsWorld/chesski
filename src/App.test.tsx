@@ -77,6 +77,7 @@ describe('App Main Functionality', () => {
   });
 
   it('resets game when New Game is clicked', () => {
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
     render(<App />);
     // Make a move first
     fireEvent.click(screen.getByText('Valid Move'));
@@ -85,6 +86,9 @@ describe('App Main Functionality', () => {
     // Click New Game
     fireEvent.click(screen.getByText('New Game'));
     expect(screen.getByText("New Game! White starts.")).toBeInTheDocument();
+
+    expect(confirmSpy).toHaveBeenCalledWith("Are you sure you want to start a new game? Current progress will be lost.");
+    confirmSpy.mockRestore();
   });
 
   it('undoes a move when Undo is clicked', () => {

@@ -186,9 +186,11 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
                     ))}
                 </div>
                 <button className="btn-secondary" onClick={() => {
-                    const resetGame = initGame(activeTutorial);
-                    setGame(resetGame);
-                    setFen(resetGame.fen());
+                    if (window.confirm("Are you sure you want to reset the tutorial position?")) {
+                        const resetGame = initGame(activeTutorial);
+                        setGame(resetGame);
+                        setFen(resetGame.fen());
+                    }
                 }}>Reset Position</button>
             </aside>
         </div>
