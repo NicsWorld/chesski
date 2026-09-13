@@ -1,3 +1,3 @@
-## 2024-11-20 - [chess.js game.board() Performance]
-**Learning:** Calling `game.board()` in `chess.js` is computationally expensive because it dynamically generates a 2D array representation of the board state.
-**Action:** Replace `game.board()` with iteration over the `SQUARES` constant and use `game.get(square)` to lookup pieces efficiently, especially in tight loops like rendering `ChessBoard`, rendering `CapturedPieces`, or parsing board state in `Tutorial`.
+## 2024-09-13 - Memoize CapturedPieces Iteration
+**Learning:** Caching board-level piece iteration using `useMemo` keyed by `game.fen()` significantly reduces redundant calculations during repetitive component re-renders.
+**Action:** When calculating derived state from a chess game in a React component, use `useMemo` dependent on a serialized state like FEN rather than recalculating from scratch on every render cycle.
