@@ -1,0 +1,4 @@
+## 2024-09-13 - Prevent stack trace leakage in console logs
+**Vulnerability:** Raw `Error` objects were passed directly to `console.error` and `console.debug`, potentially leaking stack traces to the client console.
+**Learning:** React catch blocks can expose internal structure if the raw error object is logged. It is necessary to omit the variable binding in the catch block (e.g. `catch {`) to satisfy ESLint while preventing the leak.
+**Prevention:** Always log explicitly sanitized strings or generic error messages, avoiding passing raw `Error` objects directly to console logging functions. Ensure the `catch (e)` is changed to `catch {` to prevent `@typescript-eslint/no-unused-vars` linting errors.
