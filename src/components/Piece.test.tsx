@@ -75,9 +75,9 @@ describe('Piece component', () => {
         expect(img).toHaveAttribute('src', '/pieces/bP.svg');
     });
 
-    it('calls onDragStart when isDragging becomes true', () => {
+    it('calls onDragStart when drag begins', () => {
         const onDragStart = vi.fn();
-        const { rerender } = render(
+        render(
             <Piece
                 piece={{ type: 'p', color: 'w' }}
                 position="e2"
@@ -89,16 +89,9 @@ describe('Piece component', () => {
 
         expect(onDragStart).not.toHaveBeenCalled();
 
-        mockIsDragging = true;
-        rerender(
-            <Piece
-                piece={{ type: 'p', color: 'w' }}
-                position="e2"
-                pieceTheme="standard"
-                onDragStart={onDragStart}
-                onDragEnd={() => {}}
-            />
-        );
+        act(() => {
+            if (typeof mockSpec.item === 'function') { mockSpec.item(); }
+        });
 
         expect(onDragStart).toHaveBeenCalledTimes(1);
     });
