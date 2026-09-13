@@ -1,14 +1,14 @@
-# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
+🧪 Add tests for evaluateGameStatus utility
 
-## 💡 What:
-Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
+🎯 **What:**
+Added comprehensive unit tests for the `evaluateGameStatus` utility function in `src/utils/gameStatus.ts`, which previously had no test coverage.
 
-## 🎯 Why:
-To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
+📊 **Coverage:**
+The new tests cover all possible game states evaluated by the utility:
+- Checkmate (both Black and White winning scenarios)
+- Draw conditions
+- Check conditions
+- Normal ongoing turns (for both White and Black)
 
-## 📸 Before/After:
-No visual changes. (Accessibility improvements only)
-
-## ♿ Accessibility:
-- Added `aria-pressed` to active toggle buttons.
-- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
+✨ **Result:**
+Improved test coverage and reliability for game state evaluation logic. By mocking `Chess` instance methods, the tests are simple, isolated, and deterministic.
