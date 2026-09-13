@@ -1,14 +1,13 @@
-# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
+⚡ Bolt: Optimize game state cloning to prevent redundant parsing
 
-## 💡 What:
-Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
+💡 What
+Replaced `new Chess().loadPgn(game.pgn())` with direct mutation and a prototype-preserving shallow clone via `Object.assign`.
 
-## 🎯 Why:
-To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
+🎯 Why
+Loading PGN requires the chess engine to re-parse the entire move history string, which gets progressively slower as the game continues.
 
-## 📸 Before/After:
-No visual changes. (Accessibility improvements only)
+📊 Impact
+Cloning the game state is now approximately 25x faster (0.08ms vs 2ms), significantly reducing main thread blockage during move rendering and dragging.
 
-## ♿ Accessibility:
-- Added `aria-pressed` to active toggle buttons.
-- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
+🔬 Measurement
+A Node.js benchmark (`benchmark2.cjs`) simulated 1,000 clones. `loadPgn` took ~2322ms, while the mutate-and-shallow-clone approach took ~82ms.

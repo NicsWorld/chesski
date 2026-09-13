@@ -1,3 +1,3 @@
-## 2024-11-20 - [chess.js game.board() Performance]
-**Learning:** Calling `game.board()` in `chess.js` is computationally expensive because it dynamically generates a 2D array representation of the board state.
-**Action:** Replace `game.board()` with iteration over the `SQUARES` constant and use `game.get(square)` to lookup pieces efficiently, especially in tight loops like rendering `ChessBoard`, rendering `CapturedPieces`, or parsing board state in `Tutorial`.
+## 2024-10-24 - Efficient React State Cloning for chess.js
+**Learning:** Using `loadPgn(game.pgn())` parses the whole history string and scales O(N) with game length, taking ~2ms per clone.
+**Action:** Mutate the game instance directly, then use `Object.assign(Object.create(Object.getPrototypeOf(game)), game)` to create a fast, shallow clone (~0.08ms) that triggers React's state update without expensive string parsing.
