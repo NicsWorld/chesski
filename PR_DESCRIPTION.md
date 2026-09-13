@@ -1,14 +1,7 @@
-# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
+Title: "🧹 Refactor to use imported Square type"
 
-## 💡 What:
-Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
-
-## 🎯 Why:
-To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
-
-## 📸 Before/After:
-No visual changes. (Accessibility improvements only)
-
-## ♿ Accessibility:
-- Added `aria-pressed` to active toggle buttons.
-- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
+Description:
+🎯 **What:** The code health issue addressed is inline type casting of `import('chess.js').Square` in `ChessBoard.tsx`. We replaced it with an imported `Square` type.
+💡 **Why:** It improves readability by moving type imports to the top of the file rather than relying on inline `import()` casts in render methods.
+✅ **Verification:** Ran `pnpm lint` and `npx vitest run` to ensure no functionality is broken and code is clean.
+✨ **Result:** Cleaner code that is easier to read and maintain.

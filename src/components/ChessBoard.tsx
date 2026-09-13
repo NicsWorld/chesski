@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Chess } from 'chess.js';
+import { Chess, Square } from 'chess.js';
 import { useDrop } from 'react-dnd';
 import Piece from './Piece';
 
@@ -138,7 +138,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                 FILES.map((file, fileIndex) => {
                     const square = `${file}${rank}`;
                     // Using game.get(square) is faster than game.board() (avoiding 2D array generation overhead)
-                    const piece = game.get(square as import('chess.js').Square);
+                    const piece = game.get(square as Square);
                     const isBlack = isBlackSquare(fileIndex, rankIndex);
 
                     return (
@@ -155,7 +155,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                                 position={square}
                                 pieceTheme={pieceTheme}
                                 onDragStart={() => {
-                                    const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
+                                    const moves = game.moves({ square: square as Square, verbose: true });
                                     setValidMoves(moves.map(m => m.to));
                                 }}
                                 onDragEnd={() => setValidMoves([])}
