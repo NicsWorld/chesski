@@ -1,14 +1,5 @@
-# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
+🧪 [Testing] Add missing tests for ChessBoard component
 
-## 💡 What:
-Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
-
-## 🎯 Why:
-To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
-
-## 📸 Before/After:
-No visual changes. (Accessibility improvements only)
-
-## ♿ Accessibility:
-- Added `aria-pressed` to active toggle buttons.
-- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
+🎯 **What:** The ChessBoard component was lacking test coverage. Added tests to verify its rendering and interaction logic.
+📊 **Coverage:** Scenarios now tested include initial board rendering (64 squares), triggering `onMove` callback via drop, and correctly managing valid moves state upon drag start/end.
+✨ **Result:** Enhanced test coverage and reliability for the core chessboard UI component.
