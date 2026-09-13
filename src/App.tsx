@@ -64,6 +64,13 @@ function App() {
       const originalMessage = message;
       setMessage("Link copied to clipboard!");
       setTimeout(() => setMessage(originalMessage), 2000);
+    }).catch(() => {
+      // Security: Prevent unhandled promise rejections and potential information leakage
+      // by omitting raw error objects and displaying a generic, sanitized message.
+      console.error("Failed to copy link to clipboard.");
+      const originalMessage = message;
+      setMessage("Failed to copy link.");
+      setTimeout(() => setMessage(originalMessage), 2000);
     });
   };
 
