@@ -1,14 +1,10 @@
-# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
+Title: 🛡️ Sentinel: [CRITICAL/HIGH] Fix unhandled promise rejection in clipboard API
 
-## 💡 What:
-Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
+🎯 **What:**
+Added a `.catch()` block to the `navigator.clipboard.writeText` promise chain in `shareGame`.
 
-## 🎯 Why:
-To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
+⚠️ **Risk:**
+Without error handling, if the clipboard API fails (e.g. lack of permissions), it throws an unhandled promise rejection, which can crash the application or leave it in an inconsistent state.
 
-## 📸 Before/After:
-No visual changes. (Accessibility improvements only)
-
-## ♿ Accessibility:
-- Added `aria-pressed` to active toggle buttons.
-- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
+🛡️ **Solution:**
+Implemented a `.catch()` block that gracefully handles the failure by updating the UI message, preventing unhandled rejections.
