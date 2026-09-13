@@ -8,9 +8,17 @@ interface PieceProps {
 }
 
 const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => void }> = ({ piece, position, onDragStart, onDragEnd }) => {
+    const onDragStartRef = React.useRef(onDragStart);
+    React.useEffect(() => {
+        onDragStartRef.current = onDragStart;
+    }, [onDragStart]);
+
     const [{ isDragging }, drag, preview] = useDrag(() => ({
         type: 'PIECE',
-        item: { id: `${piece.color}${piece.type}`, position },
+        item: () => {
+            onDragStartRef.current();
+            return { id: `${piece.color}${piece.type}`, position };
+        },
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         }),
@@ -18,12 +26,6 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
             onDragEnd();
         }
     }), [position, piece, onDragEnd]);
-
-    React.useEffect(() => {
-        if (isDragging) {
-            onDragStart();
-        }
-    }, [isDragging, onDragStart]);
 
     const getPieceImage = () => {
         return `${piece.color}${piece.type.toUpperCase()}.svg`;
