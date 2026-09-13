@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Chess } from 'chess.js';
 import { useDrop } from 'react-dnd';
 import Piece from './Piece';
@@ -114,11 +114,44 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
         return (fileIndex + rankIndex) % 2 === 1;
     };
 
-    const handleDrop = (item: { id: string; position: string }, to: string) => {
+    const handleDrop = React.useCallback((item: { id: string; position: string }, to: string) => {
         const from = item.position;
         onMove({ from, to, promotion: 'q' });
         setValidMoves([]);
-    };
+    }, [onMove]);
+
+    const boardSquares = useMemo(() => {
+        return RANKS.map((rank, rankIndex) =>
+            FILES.map((file, fileIndex) => {
+                const square = `${file}${rank}`;
+                // Using game.get(square) is faster than game.board() (avoiding 2D array generation overhead)
+                const piece = game.get(square as import('chess.js').Square);
+                const isBlack = isBlackSquare(fileIndex, rankIndex);
+
+                return (
+                    <SquareWrapper
+                        key={square}
+                        position={square}
+                        isBlack={isBlack}
+                        onDrop={(item) => handleDrop(item, square)}
+                        highlight={validMoves.includes(square)}
+                        lastMove={false}
+                    >
+                        {piece && <Piece
+                            piece={piece}
+                            position={square}
+                            pieceTheme={pieceTheme}
+                            onDragStart={() => {
+                                const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
+                                setValidMoves(moves.map(m => m.to));
+                            }}
+                            onDragEnd={() => setValidMoves([])}
+                        />}
+                    </SquareWrapper>
+                );
+            })
+        );
+    }, [game, validMoves, pieceTheme, handleDrop]);
 
     return (
         <div style={{
@@ -134,36 +167,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
             overflow: 'hidden', // To clip corners
             transform: 'translateY(-6px)', // Lift it up so the shadow has room
         }}>
-            {RANKS.map((rank, rankIndex) =>
-                FILES.map((file, fileIndex) => {
-                    const square = `${file}${rank}`;
-                    // Using game.get(square) is faster than game.board() (avoiding 2D array generation overhead)
-                    const piece = game.get(square as import('chess.js').Square);
-                    const isBlack = isBlackSquare(fileIndex, rankIndex);
-
-                    return (
-                        <SquareWrapper
-                            key={square}
-                            position={square}
-                            isBlack={isBlack}
-                            onDrop={(item) => handleDrop(item, square)}
-                            highlight={validMoves.includes(square)}
-                            lastMove={false}
-                        >
-                            {piece && <Piece
-                                piece={piece}
-                                position={square}
-                                pieceTheme={pieceTheme}
-                                onDragStart={() => {
-                                    const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
-                                    setValidMoves(moves.map(m => m.to));
-                                }}
-                                onDragEnd={() => setValidMoves([])}
-                            />}
-                        </SquareWrapper>
-                    );
-                })
-            )}
+            {boardSquares}
         </div>
     );
 };

@@ -1,3 +1,3 @@
-## 2024-11-20 - [chess.js game.board() Performance]
-**Learning:** Calling `game.board()` in `chess.js` is computationally expensive because it dynamically generates a 2D array representation of the board state.
-**Action:** Replace `game.board()` with iteration over the `SQUARES` constant and use `game.get(square)` to lookup pieces efficiently, especially in tight loops like rendering `ChessBoard`, rendering `CapturedPieces`, or parsing board state in `Tutorial`.
+## 2023-10-25 - ChessBoard Rendering Optimization
+**Learning:** React components that render large grids (like a 64-square chessboard) recalculate their layouts on every parent re-render unless explicitly memoized. This causes unnecessary CPU overhead.
+**Action:** Use `useMemo` on computationally heavy array mappings inside render functions, especially for UI grids, ensuring the dependency array includes all variables that dictate the output state (e.g., game state, active moves).
