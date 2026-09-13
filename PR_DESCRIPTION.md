@@ -1,14 +1,6 @@
-# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
+🎨 Palette: Add confirmation dialogs for game resets
 
-## 💡 What:
-Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
-
-## 🎯 Why:
-To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
-
-## 📸 Before/After:
-No visual changes. (Accessibility improvements only)
-
-## ♿ Accessibility:
-- Added `aria-pressed` to active toggle buttons.
-- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
+💡 What: Added `window.confirm` dialogs to the "New Game" and "Reset Position" actions.
+🎯 Why: To provide a safety net for destructive UI actions, preventing users from accidentally losing their current game or tutorial progress due to an errant click.
+📸 Before/After: N/A (Native dialogs added)
+♿ Accessibility: Enhances usability by preventing accidental data loss without relying solely on motor precision.
