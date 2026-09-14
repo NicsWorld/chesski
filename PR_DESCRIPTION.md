@@ -1,14 +1,15 @@
-# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
+# 🛡️ Sentinel: [security improvement]
 
-## 💡 What:
-Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
+## 🚨 Severity: MEDIUM
 
-## 🎯 Why:
-To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
+## 💡 Vulnerability:
+The application was exposing internal stack traces to the client console by passing raw Error objects to `console.error` and `console.debug`.
 
-## 📸 Before/After:
-No visual changes. (Accessibility improvements only)
+## 🎯 Impact:
+Stack traces can leak internal implementation details, potentially aiding attackers in understanding the application structure and identifying further vulnerabilities.
 
-## ♿ Accessibility:
-- Added `aria-pressed` to active toggle buttons.
-- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
+## 🔧 Fix:
+Updated the catch blocks to omit the error variable and replaced the raw Error object logging with sanitized string messages, along with explanatory security comments.
+
+## ✅ Verification:
+Verified by running `pnpm lint` and `npx vitest run` to ensure no linting errors were introduced and that all tests pass.
