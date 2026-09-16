@@ -11,36 +11,42 @@ const STARTING_COUNTS: Record<PieceSymbol, number> = {
 };
 
 const CapturedPieces: React.FC<CapturedPiecesProps> = ({ game }) => {
-    // Calculate captured pieces
-    const currentCounts = {
-        w: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
-        b: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 }
-    };
+    const fen = game.fen();
+    const { whiteCaptured, blackCaptured } = React.useMemo(() => {
+        // Calculate captured pieces
+        const currentCounts = {
+            w: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
+            b: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 }
+        };
 
-    // Count pieces currently on the board.
-    // Optimized: Iterating SQUARES and using game.get(square) is faster than game.board()
-    for (const square of SQUARES) {
-        const piece = game.get(square);
-        if (piece) {
-            currentCounts[piece.color as 'w' | 'b'][piece.type as PieceSymbol]++;
-        }
-    }
-
-    // Determine what's missing (captured)
-    const getCaptured = (color: 'w' | 'b') => {
-        const captured: string[] = [];
-        const types: PieceSymbol[] = ['p', 'n', 'b', 'r', 'q']; // kings can't be captured
-        for (const type of types) {
-            const missing = STARTING_COUNTS[type] - currentCounts[color][type];
-            for (let i = 0; i < missing; i++) {
-                captured.push(type);
+        // Count pieces currently on the board.
+        // Optimized: Iterating SQUARES and using game.get(square) is faster than game.board()
+        for (const square of SQUARES) {
+            const piece = game.get(square);
+            if (piece) {
+                currentCounts[piece.color as 'w' | 'b'][piece.type as PieceSymbol]++;
             }
         }
-        return captured;
-    };
 
-    const whiteCaptured = getCaptured('w'); // White pieces captured by black
-    const blackCaptured = getCaptured('b'); // Black pieces captured by white
+        // Determine what's missing (captured)
+        const getCaptured = (color: 'w' | 'b') => {
+            const captured: string[] = [];
+            const types: PieceSymbol[] = ['p', 'n', 'b', 'r', 'q']; // kings can't be captured
+            for (const type of types) {
+                const missing = STARTING_COUNTS[type] - currentCounts[color][type];
+                for (let i = 0; i < missing; i++) {
+                    captured.push(type);
+                }
+            }
+            return captured;
+        };
+
+        return {
+            whiteCaptured: getCaptured('w'), // White pieces captured by black
+            blackCaptured: getCaptured('b')  // Black pieces captured by white
+        };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fen]);
 
     const renderPieceIcon = (type: string, color: 'w' | 'b', index: number) => {
         const imageName = `${color}${type.toUpperCase()}.svg`;
