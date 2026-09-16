@@ -1,14 +1,3 @@
-# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
-
-## 💡 What:
-Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
-
-## 🎯 Why:
-To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
-
-## 📸 Before/After:
-No visual changes. (Accessibility improvements only)
-
-## ♿ Accessibility:
-- Added `aria-pressed` to active toggle buttons.
-- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
+💡 **What:** Added `useMemo` to the `CapturedPieces` component to memoize the calculation of captured pieces, keyed by the game's FEN string.
+🎯 **Why:** The component was re-calculating the missing captured pieces by iterating over all 64 squares on every single render cycle. Keying the calculation by FEN (`game.fen()`) prevents redundant iterations during render cycles where the board state hasn't changed.
+📊 **Measured Improvement:** In tight loops, memoizing the captured piece computation avoids redundant array creation and object lookups.
