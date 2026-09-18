@@ -7,7 +7,9 @@ interface PieceProps {
     pieceTheme: 'zoo' | 'standard';
 }
 
-const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => void }> = ({ piece, position, onDragStart, onDragEnd }) => {
+// ⚡ Bolt: React.memo prevents the 32 Piece components from re-rendering
+// needlessly when the board state updates elsewhere (like hover states).
+const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => void }> = React.memo(({ piece, position, onDragStart, onDragEnd }) => {
     const [{ isDragging }, drag, preview] = useDrag(() => ({
         type: 'PIECE',
         item: { id: `${piece.color}${piece.type}`, position },
@@ -58,6 +60,7 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
             />
         </div>
     );
-};
+});
 
+Piece.displayName = 'Piece';
 export default Piece;
