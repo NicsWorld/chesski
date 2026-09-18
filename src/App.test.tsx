@@ -76,7 +76,8 @@ describe('App Main Functionality', () => {
     expect(screen.getByText("White's turn (Cute Animals)")).toBeInTheDocument();
   });
 
-  it('resets game when New Game is clicked', () => {
+  it('resets game when New Game is clicked and confirmed', () => {
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
     render(<App />);
     // Make a move first
     fireEvent.click(screen.getByText('Valid Move'));
@@ -84,7 +85,23 @@ describe('App Main Functionality', () => {
 
     // Click New Game
     fireEvent.click(screen.getByText('New Game'));
+    expect(confirmSpy).toHaveBeenCalledWith("Are you sure you want to start a new game? Current progress will be lost.");
     expect(screen.getByText("New Game! White starts.")).toBeInTheDocument();
+    confirmSpy.mockRestore();
+  });
+
+  it('does not reset game when New Game is cancelled', () => {
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
+    render(<App />);
+    // Make a move first
+    fireEvent.click(screen.getByText('Valid Move'));
+    expect(screen.getByText("Black's turn (Cool Animals)")).toBeInTheDocument();
+
+    // Click New Game
+    fireEvent.click(screen.getByText('New Game'));
+    expect(confirmSpy).toHaveBeenCalledWith("Are you sure you want to start a new game? Current progress will be lost.");
+    expect(screen.getByText("Black's turn (Cool Animals)")).toBeInTheDocument();
+    confirmSpy.mockRestore();
   });
 
   it('undoes a move when Undo is clicked', () => {
