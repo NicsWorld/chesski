@@ -90,17 +90,18 @@ describe('Piece component', () => {
         expect(onDragStart).not.toHaveBeenCalled();
 
         mockIsDragging = true;
+        // Change position to force a re-render so React.memo evaluates the new isDragging mock value
         rerender(
             <Piece
                 piece={{ type: 'p', color: 'w' }}
-                position="e2"
+                position="e3"
                 pieceTheme="standard"
                 onDragStart={onDragStart}
                 onDragEnd={() => {}}
             />
         );
 
-        expect(onDragStart).toHaveBeenCalledTimes(1);
+        expect(onDragStart).toHaveBeenCalledWith('e3');
     });
 
     it('calls onDragEnd when drag ends', () => {
