@@ -50,6 +50,9 @@ function App() {
   };
 
   const resetGame = () => {
+    if (game.history().length > 0) {
+      if (!window.confirm("Are you sure you want to start a new game? Your current progress will be lost.")) return;
+    }
     const newGame = new Chess();
     setGame(newGame);
     setMessage("New Game! White starts.");
