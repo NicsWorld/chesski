@@ -45,41 +45,14 @@ const addKingsToFen = (fen: string) => {
     const parts = fen.split(' ');
     const boardStr = parts[0];
 
-    let whiteKingPlaced = boardStr.includes('K');
-    let blackKingPlaced = boardStr.includes('k');
+    if (boardStr.includes('K') && boardStr.includes('k')) return fen;
 
-    if (whiteKingPlaced && blackKingPlaced) return fen;
+    let expanded = boardStr.replace(/[1-8]/g, (match) => '1'.repeat(parseInt(match, 10)));
 
-    const rows = boardStr.split('/');
+    if (!expanded.includes('K')) expanded = expanded.replace('1', 'K');
+    if (!expanded.includes('k')) expanded = expanded.replace('1', 'k');
 
-    const newRows = rows.map(row => {
-        if (whiteKingPlaced && blackKingPlaced) return row;
-
-        let newRow = '';
-        for (let i = 0; i < row.length; i++) {
-            const char = row[i];
-            if (!isNaN(parseInt(char))) {
-                let count = parseInt(char);
-                while (count > 0) {
-                    if (!whiteKingPlaced) {
-                        newRow += 'K';
-                        whiteKingPlaced = true;
-                    } else if (!blackKingPlaced) {
-                        newRow += 'k';
-                        blackKingPlaced = true;
-                    } else {
-                        newRow += '1';
-                    }
-                    count--;
-                }
-            } else {
-                newRow += char;
-            }
-        }
-        return newRow.replace(/1+/g, (match) => match.length.toString());
-    });
-
-    parts[0] = newRows.join('/');
+    parts[0] = expanded.replace(/1+/g, (match) => match.length.toString());
     return parts.join(' ');
 };
 
