@@ -7,6 +7,8 @@ interface PieceProps {
     pieceTheme: 'zoo' | 'standard';
 }
 
+const PIECE_NAMES: Record<string, string> = { p: 'Pawn', n: 'Knight', b: 'Bishop', r: 'Rook', q: 'Queen', k: 'King' };
+
 const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => void }> = ({ piece, position, onDragStart, onDragEnd }) => {
     const [{ isDragging }, drag, preview] = useDrag(() => ({
         type: 'PIECE',
@@ -30,8 +32,8 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
     };
 
     const imageName = getPieceImage();
-    const pieceNames: Record<string, string> = { p: 'Pawn', n: 'Knight', b: 'Bishop', r: 'Rook', q: 'Queen', k: 'King' };
-    const altText = `${piece.color === 'w' ? 'White' : 'Black'} ${pieceNames[piece.type]}`;
+
+    const altText = `${piece.color === 'w' ? 'White' : 'Black'} ${PIECE_NAMES[piece.type]}`;
 
     return (
         <div
