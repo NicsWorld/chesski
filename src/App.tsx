@@ -150,7 +150,7 @@ function App() {
                 </button>
               </div>
 
-              <CapturedPieces game={game} pieceTheme={pieceTheme} />
+              <CapturedPieces game={game} />
             </aside>
           </div>
         ) : (
