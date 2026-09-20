@@ -1,14 +1,3 @@
-# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
-
-## 💡 What:
-Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
-
-## 🎯 Why:
-To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
-
-## 📸 Before/After:
-No visual changes. (Accessibility improvements only)
-
-## ♿ Accessibility:
-- Added `aria-pressed` to active toggle buttons.
-- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
+🎯 **What:** Added comprehensive test coverage for `src/components/ChessBoard.tsx` which was previously untested.
+📊 **Coverage:** The tests now cover rendering the 64 squares, correct initial placement of pieces, edge labels rendering, drag and drop events handling, valid moves highlighting and capture highlights.
+✨ **Result:** Improved overall test coverage and reliability for core drag-and-drop mechanics in the application without requiring full DOM drag-and-drop contexts by utilizing effective mocks.
