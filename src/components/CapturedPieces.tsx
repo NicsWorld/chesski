@@ -3,7 +3,6 @@ import { Chess, SQUARES, type PieceSymbol } from 'chess.js';
 
 interface CapturedPiecesProps {
     game: Chess;
-    pieceTheme: 'zoo' | 'standard';
 }
 
 const STARTING_COUNTS: Record<PieceSymbol, number> = {
