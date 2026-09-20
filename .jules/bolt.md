@@ -1,3 +1,3 @@
-## 2024-11-20 - [chess.js game.board() Performance]
-**Learning:** Calling `game.board()` in `chess.js` is computationally expensive because it dynamically generates a 2D array representation of the board state.
-**Action:** Replace `game.board()` with iteration over the `SQUARES` constant and use `game.get(square)` to lookup pieces efficiently, especially in tight loops like rendering `ChessBoard`, rendering `CapturedPieces`, or parsing board state in `Tutorial`.
+## 2026-09-20 - Prevented Object Allocation on Render
+**Learning:** Object allocation (`const pieceNames = {...}`) inside a component causes it to be recreated on every single render. Since `Piece` components are rendered up to 32 times on the board, avoiding object allocation can marginally speed up rendering by saving memory and GC pressure.
+**Action:** Extract static variables/objects/arrays outside of component body scope whenever possible to ensure they are created only once per module evaluation.
