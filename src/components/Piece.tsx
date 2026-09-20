@@ -7,7 +7,7 @@ interface PieceProps {
     pieceTheme: 'zoo' | 'standard';
 }
 
-const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => void }> = ({ piece, position, onDragStart, onDragEnd }) => {
+const Piece: React.FC<PieceProps & { onDragStart: (position: string) => void, onDragEnd: () => void }> = React.memo(({ piece, position, onDragStart, onDragEnd }) => {
     const [{ isDragging }, drag, preview] = useDrag(() => ({
         type: 'PIECE',
         item: { id: `${piece.color}${piece.type}`, position },
@@ -21,9 +21,9 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
 
     React.useEffect(() => {
         if (isDragging) {
-            onDragStart();
+            onDragStart(position);
         }
-    }, [isDragging, onDragStart]);
+    }, [isDragging, onDragStart, position]);
 
     const getPieceImage = () => {
         return `${piece.color}${piece.type.toUpperCase()}.svg`;
@@ -58,6 +58,15 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
             />
         </div>
     );
-};
+}, (prevProps, nextProps) => {
+    return (
+        prevProps.position === nextProps.position &&
+        prevProps.pieceTheme === nextProps.pieceTheme &&
+        prevProps.piece.type === nextProps.piece.type &&
+        prevProps.piece.color === nextProps.piece.color &&
+        prevProps.onDragStart === nextProps.onDragStart &&
+        prevProps.onDragEnd === nextProps.onDragEnd
+    );
+});
 
 export default Piece;

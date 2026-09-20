@@ -100,6 +100,7 @@ describe('Piece component', () => {
             />
         );
 
+        expect(onDragStart).toHaveBeenCalledWith("e2");
         expect(onDragStart).toHaveBeenCalledTimes(1);
     });
 
