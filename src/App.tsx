@@ -50,11 +50,13 @@ function App() {
   };
 
   const resetGame = () => {
-    const newGame = new Chess();
-    setGame(newGame);
-    setMessage("New Game! White starts.");
-    // Clear the URL param
-    window.history.pushState({}, '', window.location.pathname);
+    if (window.confirm("Are you sure you want to start a new game? Current progress will be lost.")) {
+      const newGame = new Chess();
+      setGame(newGame);
+      setMessage("New Game! White starts.");
+      // Clear the URL param
+      window.history.pushState({}, '', window.location.pathname);
+    }
   };
 
   const shareGame = () => {
