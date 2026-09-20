@@ -1,14 +1,4 @@
-# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
-
-## 💡 What:
-Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
-
-## 🎯 Why:
-To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
-
-## 📸 Before/After:
-No visual changes. (Accessibility improvements only)
-
-## ♿ Accessibility:
-- Added `aria-pressed` to active toggle buttons.
-- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
+💡 What: Optimized `Piece` component to prevent unnecessary re-renders. Wrapped `Piece` with `React.memo` and a custom equality function comparing primitive piece properties (`type` and `color`). Updated `ChessBoard.tsx` to pass stable memoized callbacks (`useCallback`) to `Piece`.
+🎯 Why: Previously, all 32 pieces would re-render whenever the board state updated, because `chess.js` generates new object references for pieces.
+📊 Impact: Prevents O(N) re-renders of Piece components when a move is made, resulting in faster and smoother drag-and-drop gameplay.
+🔬 Measurement: Play a game locally or run performance profiling in the browser to verify pieces only re-render when actually moving or being captured.
