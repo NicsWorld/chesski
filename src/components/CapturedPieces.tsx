@@ -10,6 +10,8 @@ const STARTING_COUNTS: Record<PieceSymbol, number> = {
     p: 8, n: 2, b: 2, r: 2, q: 1, k: 1
 };
 
+const PIECE_NAMES: Record<string, string> = { p: 'Pawn', n: 'Knight', b: 'Bishop', r: 'Rook', q: 'Queen', k: 'King' };
+
 const CapturedPieces: React.FC<CapturedPiecesProps> = ({ game }) => {
     // Calculate captured pieces
     const currentCounts = {
@@ -44,8 +46,7 @@ const CapturedPieces: React.FC<CapturedPiecesProps> = ({ game }) => {
 
     const renderPieceIcon = (type: string, color: 'w' | 'b', index: number) => {
         const imageName = `${color}${type.toUpperCase()}.svg`;
-        const pieceNames: Record<string, string> = { p: 'Pawn', n: 'Knight', b: 'Bishop', r: 'Rook', q: 'Queen', k: 'King' };
-        const altText = `${color === 'w' ? 'White' : 'Black'} ${pieceNames[type]}`;
+        const altText = `${color === 'w' ? 'White' : 'Black'} ${PIECE_NAMES[type]}`;
 
         return (
             <img
