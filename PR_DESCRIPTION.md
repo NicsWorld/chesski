@@ -1,14 +1,4 @@
-# 🎨 Palette: Add accessibility attributes to toggle buttons and status messages
-
-## 💡 What:
-Added semantic `aria-pressed` attributes to toggle buttons and ARIA live regions to dynamic status messages.
-
-## 🎯 Why:
-To improve accessibility for screen reader users by semantically indicating the active state of UI toggle buttons (Play Game vs Tutorials, Zoo vs Standard theme) and ensuring dynamic textual game state updates are announced.
-
-## 📸 Before/After:
-No visual changes. (Accessibility improvements only)
-
-## ♿ Accessibility:
-- Added `aria-pressed` to active toggle buttons.
-- Wrapped the status message in an `aria-live="polite"` and `aria-atomic="true"` region.
+🎯 **What:** Removed unused state variable `_` and the associated `setFen` calls in `src/components/Tutorial.tsx`.
+💡 **Why:** `setFen` was maintained alongside `game` and was merely used to force a re-render. Since `setGame` takes a new `Chess` instance directly, the component will re-render automatically. Removing it cleans up code health.
+✅ **Verification:** Verified by running `pnpm lint` and `npx vitest run` and ensuring all unit tests pass.
+✨ **Result:** A more maintainable component logic with unnecessary state management removed.
