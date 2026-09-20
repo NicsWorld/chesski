@@ -1,5 +1,6 @@
 import React from 'react';
 import { Chess, SQUARES, type PieceSymbol } from 'chess.js';
+import { PIECE_NAMES } from '../utils/pieces';
 
 interface CapturedPiecesProps {
     game: Chess;
@@ -44,8 +45,7 @@ const CapturedPieces: React.FC<CapturedPiecesProps> = ({ game }) => {
 
     const renderPieceIcon = (type: string, color: 'w' | 'b', index: number) => {
         const imageName = `${color}${type.toUpperCase()}.svg`;
-        const pieceNames: Record<string, string> = { p: 'Pawn', n: 'Knight', b: 'Bishop', r: 'Rook', q: 'Queen', k: 'King' };
-        const altText = `${color === 'w' ? 'White' : 'Black'} ${pieceNames[type]}`;
+        const altText = `${color === 'w' ? 'White' : 'Black'} ${PIECE_NAMES[type]}`;
 
         return (
             <img

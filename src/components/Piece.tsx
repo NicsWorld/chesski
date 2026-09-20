@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
+import { PIECE_NAMES } from '../utils/pieces';
 
 interface PieceProps {
     piece: { type: string; color: 'w' | 'b' };
@@ -30,8 +31,7 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
     };
 
     const imageName = getPieceImage();
-    const pieceNames: Record<string, string> = { p: 'Pawn', n: 'Knight', b: 'Bishop', r: 'Rook', q: 'Queen', k: 'King' };
-    const altText = `${piece.color === 'w' ? 'White' : 'Black'} ${pieceNames[piece.type]}`;
+    const altText = `${piece.color === 'w' ? 'White' : 'Black'} ${PIECE_NAMES[piece.type]}`;
 
     return (
         <div
