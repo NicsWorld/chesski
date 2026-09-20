@@ -15,7 +15,6 @@ interface BoardSquareProps {
     children?: React.ReactNode;
     onDrop: (item: { id: string; position: string }) => void;
     highlight: boolean;
-    lastMove: boolean;
     isOver: boolean;
     canDrop: boolean;
 }
@@ -148,7 +147,6 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                             isBlack={isBlack}
                             onDrop={(item) => handleDrop(item, square)}
                             highlight={validMoves.includes(square)}
-                            lastMove={false}
                         >
                             {piece && <Piece
                                 piece={piece}
