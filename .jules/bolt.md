@@ -1,3 +1,6 @@
 ## 2024-11-20 - [chess.js game.board() Performance]
 **Learning:** Calling `game.board()` in `chess.js` is computationally expensive because it dynamically generates a 2D array representation of the board state.
 **Action:** Replace `game.board()` with iteration over the `SQUARES` constant and use `game.get(square)` to lookup pieces efficiently, especially in tight loops like rendering `ChessBoard`, rendering `CapturedPieces`, or parsing board state in `Tutorial`.
+## 2026-09-21 - [React.memo Custom Equality Function for chess.js]
+**Learning:** The `chess.js` `game.get()` returns new object references for pieces even if they represent the same piece on the same square (e.g., `{type: 'p', color: 'w'}`). This causes `React.memo` to fail its default shallow comparison and unnecessarily re-render pieces globally when unrelated states (like `validMoves` array) change.
+**Action:** When memoizing React components that receive dynamic object props from external libraries, provide a custom equality function that explicitly checks the underlying primitive properties (like `type` and `color`) rather than relying on shallow object reference checks. Also extract rendering logic into separate memoized components when using `.map` loops to allow callback memoization.

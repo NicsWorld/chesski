@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Chess } from 'chess.js';
 import { useDrop } from 'react-dnd';
 import Piece from './Piece';
@@ -107,6 +107,40 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
     )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const MemoizedSquare = React.memo(({ square, piece, isBlack, highlight, pieceTheme, handleDrop, handleDragStart, handleDragEnd }: any) => {
+    return (
+        <SquareWrapper
+            position={square}
+            isBlack={isBlack}
+            onDrop={(item) => handleDrop(item, square)}
+            highlight={highlight}
+            lastMove={false}
+        >
+            {piece && <Piece
+                piece={piece}
+                position={square}
+                pieceTheme={pieceTheme}
+                onDragStart={() => handleDragStart(square)}
+                onDragEnd={handleDragEnd}
+            />}
+        </SquareWrapper>
+    );
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+}, (prevProps: any, nextProps: any) => {
+    return (
+        prevProps.square === nextProps.square &&
+        prevProps.isBlack === nextProps.isBlack &&
+        prevProps.highlight === nextProps.highlight &&
+        prevProps.pieceTheme === nextProps.pieceTheme &&
+        prevProps.piece?.type === nextProps.piece?.type &&
+        prevProps.piece?.color === nextProps.piece?.color &&
+        prevProps.handleDrop === nextProps.handleDrop &&
+        prevProps.handleDragStart === nextProps.handleDragStart &&
+        prevProps.handleDragEnd === nextProps.handleDragEnd
+    );
+});
+
 const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => {
     const [validMoves, setValidMoves] = useState<string[]>([]);
 
@@ -114,11 +148,20 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
         return (fileIndex + rankIndex) % 2 === 1;
     };
 
-    const handleDrop = (item: { id: string; position: string }, to: string) => {
+    const handleDrop = useCallback((item: { id: string; position: string }, to: string) => {
         const from = item.position;
         onMove({ from, to, promotion: 'q' });
         setValidMoves([]);
-    };
+    }, [onMove]);
+
+    const handleDragStart = useCallback((square: string) => {
+        const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
+        setValidMoves(moves.map(m => m.to));
+    }, [game]);
+
+    const handleDragEnd = useCallback(() => {
+        setValidMoves([]);
+    }, []);
 
     return (
         <div style={{
@@ -142,25 +185,17 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                     const isBlack = isBlackSquare(fileIndex, rankIndex);
 
                     return (
-                        <SquareWrapper
+                        <MemoizedSquare
                             key={square}
-                            position={square}
+                            square={square}
+                            piece={piece}
                             isBlack={isBlack}
-                            onDrop={(item) => handleDrop(item, square)}
                             highlight={validMoves.includes(square)}
-                            lastMove={false}
-                        >
-                            {piece && <Piece
-                                piece={piece}
-                                position={square}
-                                pieceTheme={pieceTheme}
-                                onDragStart={() => {
-                                    const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
-                                    setValidMoves(moves.map(m => m.to));
-                                }}
-                                onDragEnd={() => setValidMoves([])}
-                            />}
-                        </SquareWrapper>
+                            pieceTheme={pieceTheme}
+                            handleDrop={handleDrop}
+                            handleDragStart={handleDragStart}
+                            handleDragEnd={handleDragEnd}
+                        />
                     );
                 })
             )}
