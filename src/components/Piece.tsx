@@ -60,4 +60,13 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
     );
 };
 
-export default Piece;
+export default React.memo(Piece, (prevProps, nextProps) => {
+    return (
+        prevProps.position === nextProps.position &&
+        prevProps.pieceTheme === nextProps.pieceTheme &&
+        prevProps.piece.type === nextProps.piece.type &&
+        prevProps.piece.color === nextProps.piece.color &&
+        prevProps.onDragStart === nextProps.onDragStart &&
+        prevProps.onDragEnd === nextProps.onDragEnd
+    );
+});
