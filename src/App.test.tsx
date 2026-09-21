@@ -162,9 +162,22 @@ describe('App invalid FEN fallback', () => {
   it('catches invalid FEN in URL, logs error, and falls back to default board', () => {
     render(<App />);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Invalid FEN in URL',
-      expect.any(Error)
+      'Invalid FEN in URL: Validation failed'
     );
     expect(screen.getByTestId('mock-chessboard')).toBeInTheDocument();
+  });
+
+  it('handles clipboard write failure securely without leaking info', async () => {
+    navigator.clipboard.writeText = vi.fn().mockRejectedValue(new Error('Permission denied'));
+
+    render(<App />);
+    const shareBtn = screen.getByText('Share Game');
+
+    await act(async () => {
+      fireEvent.click(shareBtn);
+    });
+
+    expect(navigator.clipboard.writeText).toHaveBeenCalled();
+    expect(screen.getByText("Failed to copy link")).toBeInTheDocument();
   });
 });
