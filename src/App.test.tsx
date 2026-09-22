@@ -163,7 +163,7 @@ describe('App invalid FEN fallback', () => {
     render(<App />);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'Invalid FEN in URL',
-      expect.any(Error)
+      'FEN length exceeded 100 characters or validation failed'
     );
     expect(screen.getByTestId('mock-chessboard')).toBeInTheDocument();
   });
