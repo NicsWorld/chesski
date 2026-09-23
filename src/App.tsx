@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Chess, validateFen } from 'chess.js';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -34,7 +34,9 @@ function App() {
   const [pieceTheme, setPieceTheme] = useState<'zoo' | 'standard'>('zoo');
   const [message, setMessage] = useState("Welcome! Drag the white pieces to start.");
 
-  const handleMove = (move: { from: string; to: string; promotion?: string }) => {
+  // Optimize: wrap handleMove in useCallback so its reference remains stable across re-renders
+  // This prevents the memoized ChessBoard component from unnecessarily re-rendering.
+  const handleMove = useCallback((move: { from: string; to: string; promotion?: string }) => {
     try {
       const gameClone = new Chess();
       gameClone.loadPgn(game.pgn());
@@ -47,7 +49,7 @@ function App() {
       setMessage("Oops! You can't move there.");
       setTimeout(() => setMessage(evaluateGameStatus(game)), 2000);
     }
-  };
+  }, [game]);
 
   const resetGame = () => {
     const newGame = new Chess();

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Chess } from 'chess.js';
 import { useDrop } from 'react-dnd';
 import Piece from './Piece';
@@ -168,4 +168,5 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
     );
 };
 
-export default ChessBoard;
+// Optimize: wrap ChessBoard in React.memo to prevent unnecessary re-renders
+export default React.memo(ChessBoard);
