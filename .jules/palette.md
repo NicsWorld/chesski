@@ -1,0 +1,3 @@
+## 2026-09-23 - Screen Reader Support for Toggle Buttons
+**Learning:** In React components rendering arrays of toggleable buttons (like tutorial selectors or tabs), relying solely on visual class names (e.g., `btn-secondary` vs empty) leaves screen reader users completely unaware of which option is currently active. This is a common pattern that is easy to miss when building interactive lists.
+**Action:** Always ensure that when mapping over data to create selection buttons, an `aria-pressed={isActive}` or `aria-selected={isActive}` attribute is dynamically applied to accurately convey the current selection state to assistive technologies.
