@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { Chess } from 'chess.js';
 import { useDrop } from 'react-dnd';
 import Piece from './Piece';
@@ -107,18 +107,81 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
     )
 }
 
+interface MemoizedSquareProps {
+    square: string;
+    isBlack: boolean;
+    piece: { type: string; color: 'w' | 'b' } | undefined;
+    highlight: boolean;
+    pieceTheme: 'zoo' | 'standard';
+    handleDrop: (item: { id: string; position: string }, to: string) => void;
+    handleDragStart: (square: string) => void;
+    handleDragEnd: () => void;
+}
+
+// Optimize: Extract item rendering into a memoized component to prevent re-renders in list
+const MemoizedSquare = memo(({
+    square,
+    isBlack,
+    piece,
+    highlight,
+    pieceTheme,
+    handleDrop,
+    handleDragStart,
+    handleDragEnd
+}: MemoizedSquareProps) => {
+    const onDrop = useCallback((item: { id: string; position: string }) => handleDrop(item, square), [handleDrop, square]);
+    const onDragStart = useCallback(() => handleDragStart(square), [handleDragStart, square]);
+
+    return (
+        <SquareWrapper
+            position={square}
+            isBlack={isBlack}
+            onDrop={onDrop}
+            highlight={highlight}
+            lastMove={false}
+        >
+            {piece && <Piece
+                piece={piece}
+                position={square}
+                pieceTheme={pieceTheme}
+                onDragStart={onDragStart}
+                onDragEnd={handleDragEnd}
+            />}
+        </SquareWrapper>
+    );
+}, (prev, next) => {
+    return prev.square === next.square &&
+           prev.isBlack === next.isBlack &&
+           prev.highlight === next.highlight &&
+           prev.pieceTheme === next.pieceTheme &&
+           prev.handleDrop === next.handleDrop &&
+           prev.handleDragStart === next.handleDragStart &&
+           prev.handleDragEnd === next.handleDragEnd &&
+           (prev.piece ? (next.piece !== undefined && prev.piece.type === next.piece.type && prev.piece.color === next.piece.color) : next.piece === undefined);
+});
+
 const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => {
     const [validMoves, setValidMoves] = useState<string[]>([]);
 
-    const isBlackSquare = (fileIndex: number, rankIndex: number) => {
+    const isBlackSquare = useCallback((fileIndex: number, rankIndex: number) => {
         return (fileIndex + rankIndex) % 2 === 1;
-    };
+    }, []);
 
-    const handleDrop = (item: { id: string; position: string }, to: string) => {
+    // Optimize: memoize callbacks to pass stable references to child components
+    const handleDrop = useCallback((item: { id: string; position: string }, to: string) => {
         const from = item.position;
         onMove({ from, to, promotion: 'q' });
         setValidMoves([]);
-    };
+    }, [onMove]);
+
+    const handleDragStart = useCallback((square: string) => {
+        const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
+        setValidMoves(moves.map(m => m.to));
+    }, [game]);
+
+    const handleDragEnd = useCallback(() => {
+        setValidMoves([]);
+    }, []);
 
     return (
         <div style={{
@@ -142,25 +205,17 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                     const isBlack = isBlackSquare(fileIndex, rankIndex);
 
                     return (
-                        <SquareWrapper
+                        <MemoizedSquare
                             key={square}
-                            position={square}
+                            square={square}
                             isBlack={isBlack}
-                            onDrop={(item) => handleDrop(item, square)}
+                            piece={piece}
                             highlight={validMoves.includes(square)}
-                            lastMove={false}
-                        >
-                            {piece && <Piece
-                                piece={piece}
-                                position={square}
-                                pieceTheme={pieceTheme}
-                                onDragStart={() => {
-                                    const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
-                                    setValidMoves(moves.map(m => m.to));
-                                }}
-                                onDragEnd={() => setValidMoves([])}
-                            />}
-                        </SquareWrapper>
+                            pieceTheme={pieceTheme}
+                            handleDrop={handleDrop}
+                            handleDragStart={handleDragStart}
+                            handleDragEnd={handleDragEnd}
+                        />
                     );
                 })
             )}

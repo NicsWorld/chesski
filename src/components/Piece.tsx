@@ -7,7 +7,7 @@ interface PieceProps {
     pieceTheme: 'zoo' | 'standard';
 }
 
-const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => void }> = ({ piece, position, onDragStart, onDragEnd }) => {
+const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => void }> = React.memo(({ piece, position, onDragStart, onDragEnd }) => {
     const [{ isDragging }, drag, preview] = useDrag(() => ({
         type: 'PIECE',
         item: { id: `${piece.color}${piece.type}`, position },
@@ -58,6 +58,12 @@ const Piece: React.FC<PieceProps & { onDragStart: () => void, onDragEnd: () => v
             />
         </div>
     );
-};
+}, (prev, next) => {
+    return prev.position === next.position &&
+           prev.onDragStart === next.onDragStart &&
+           prev.onDragEnd === next.onDragEnd &&
+           prev.piece.type === next.piece.type &&
+           prev.piece.color === next.piece.color;
+});
 
 export default Piece;
