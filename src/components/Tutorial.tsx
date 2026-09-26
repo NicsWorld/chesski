@@ -180,16 +180,23 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
                             key={t.id}
                             className={activeTutorial.id === t.id ? '' : 'btn-secondary'}
                             onClick={() => handleSelectTutorial(t)}
+                            aria-pressed={activeTutorial.id === t.id}
                         >
                             {t.title}
                         </button>
                     ))}
                 </div>
-                <button className="btn-secondary" onClick={() => {
-                    const resetGame = initGame(activeTutorial);
-                    setGame(resetGame);
-                    setFen(resetGame.fen());
-                }}>Reset Position</button>
+                <button
+                    className="btn-secondary"
+                    onClick={() => {
+                        const resetGame = initGame(activeTutorial);
+                        setGame(resetGame);
+                        setFen(resetGame.fen());
+                    }}
+                    title="Reset tutorial board to starting position"
+                >
+                    Reset Position
+                </button>
             </aside>
         </div>
     );
