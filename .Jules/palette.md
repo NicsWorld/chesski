@@ -4,3 +4,6 @@
 ## 2024-05-14 - Aria-Live for Status Messages
 **Learning:** React components that manage dynamic textual game state updates without page reloads (e.g., status messages, checkmate alerts) should wrap the text container with `aria-live="polite"` and `aria-atomic="true"` to ensure screen readers announce the changes. Also, use `aria-pressed` to semantically indicate the active state of UI toggle buttons.
 **Action:** Always add `aria-live` and `aria-atomic` to dynamic status messages, and `aria-pressed` to toggle buttons.
+## 2026-09-26 - Add aria-pressed to dynamic toggle lists
+**Learning:** When mapping arrays to render toggle buttons (like tutorial selection tabs), it is easy to forget `aria-pressed`, unlike hardcoded toggle groups where it is more obvious.
+**Action:** Always verify that dynamically generated buttons acting as tabs or toggles include `aria-pressed={isActive}`.
