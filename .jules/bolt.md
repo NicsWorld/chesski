@@ -1,3 +1,4 @@
-## 2024-11-20 - [chess.js game.board() Performance]
-**Learning:** Calling `game.board()` in `chess.js` is computationally expensive because it dynamically generates a 2D array representation of the board state.
-**Action:** Replace `game.board()` with iteration over the `SQUARES` constant and use `game.get(square)` to lookup pieces efficiently, especially in tight loops like rendering `ChessBoard`, rendering `CapturedPieces`, or parsing board state in `Tutorial`.
+## 2026-09-27 - chess.js object allocation and React Re-renders
+**Learning:** In `App.tsx`, making a move clones the `Chess` instance (`const gameClone = new Chess(); gameClone.loadPgn(...)`). As discovered by tests, calling `game.get(square)` on a cloned `Chess` instance returns *new* object references for pieces (`{ type: 'p', color: 'w' }`), even for pieces that didn't move. Because `ChessBoard` creates 64 `SquareWrapper`s and 32 `Piece`s directly in a render loop without `React.memo` or a custom equality function, every single piece and square re-renders on every single move, not just the squares that changed.
+
+**Action:** Wrap frequently rendered components like `Piece` (and potentially `SquareWrapper`/`BoardSquare`) in `React.memo` with a custom equality function that strictly compares the underlying piece properties (`prev.piece.type === next.piece.type && prev.piece.color === next.piece.color`) rather than relying on default shallow comparison, mitigating the constant object reallocation overhead from `chess.js` clones.

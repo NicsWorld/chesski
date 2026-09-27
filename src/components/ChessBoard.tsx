@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Chess } from 'chess.js';
 import { useDrop } from 'react-dnd';
 import Piece from './Piece';
@@ -120,6 +120,15 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
         setValidMoves([]);
     };
 
+    const handleDragStart = useCallback((square: string) => {
+        const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
+        setValidMoves(moves.map(m => m.to));
+    }, [game]);
+
+    const handleDragEnd = useCallback(() => {
+        setValidMoves([]);
+    }, []);
+
     return (
         <div style={{
             width: '100%',
@@ -154,11 +163,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                                 piece={piece}
                                 position={square}
                                 pieceTheme={pieceTheme}
-                                onDragStart={() => {
-                                    const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
-                                    setValidMoves(moves.map(m => m.to));
-                                }}
-                                onDragEnd={() => setValidMoves([])}
+                                onDragStart={handleDragStart}
+                                onDragEnd={handleDragEnd}
                             />}
                         </SquareWrapper>
                     );
