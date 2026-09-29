@@ -90,7 +90,7 @@ const FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const RANKS = ['8', '7', '6', '5', '4', '3', '2', '1'];
 
 // Wrapper handling drop logic to keep BoardSquare clean(er)
-const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { onDrop: (item: { id: string; position: string }) => void }> = (props) => {
+const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { onDrop: (item: { id: string; position: string }) => void, ariaLabel?: string }> = (props) => {
     const [{ isOver, canDrop }, drop] = useDrop(() => ({
         accept: 'PIECE',
         drop: (item: { id: string; position: string }) => props.onDrop(item),
@@ -101,7 +101,7 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
     }), [props.onDrop]);
 
     return (
-        <div ref={drop as unknown as React.RefObject<HTMLDivElement>} style={{ width: '100%', height: '100%' }} data-testid={props.position}>
+        <div ref={drop as unknown as React.RefObject<HTMLDivElement>} style={{ width: '100%', height: '100%' }} data-testid={props.position} aria-label={props.ariaLabel} role="gridcell">
             <BoardSquare {...props} isOver={isOver} canDrop={canDrop} />
         </div>
     )
@@ -121,7 +121,10 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
     };
 
     return (
-        <div style={{
+        <div
+            role="grid"
+            aria-label="Chess board"
+            style={{
             width: '100%',
             maxWidth: '70vmin',
             aspectRatio: '1 / 1',
@@ -141,6 +144,10 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                     const piece = game.get(square as import('chess.js').Square);
                     const isBlack = isBlackSquare(fileIndex, rankIndex);
 
+                    const pieceNames: Record<string, string> = { p: 'Pawn', n: 'Knight', b: 'Bishop', r: 'Rook', q: 'Queen', k: 'King' };
+                    const pieceDesc = piece ? `${piece.color === 'w' ? 'White' : 'Black'} ${pieceNames[piece.type]}` : 'Empty';
+                    const ariaLabel = `${square}, ${pieceDesc}`;
+
                     return (
                         <SquareWrapper
                             key={square}
@@ -149,6 +156,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                             onDrop={(item) => handleDrop(item, square)}
                             highlight={validMoves.includes(square)}
                             lastMove={false}
+                            ariaLabel={ariaLabel}
                         >
                             {piece && <Piece
                                 piece={piece}
