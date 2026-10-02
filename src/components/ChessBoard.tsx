@@ -121,7 +121,10 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
     };
 
     return (
-        <div style={{
+        <div
+            role="grid"
+            aria-label="Chess Board"
+            style={{
             width: '100%',
             maxWidth: '70vmin',
             aspectRatio: '1 / 1',
@@ -141,9 +144,14 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                     const piece = game.get(square as import('chess.js').Square);
                     const isBlack = isBlackSquare(fileIndex, rankIndex);
 
+                    const pieceNames: Record<string, string> = { p: 'Pawn', n: 'Knight', b: 'Bishop', r: 'Rook', q: 'Queen', k: 'King' };
+                    const ariaLabel = piece
+                        ? `${square}, ${piece.color === 'w' ? 'White' : 'Black'} ${pieceNames[piece.type]}`
+                        : `${square}, empty`;
+
                     return (
+                        <div key={square} role="gridcell" aria-label={ariaLabel} style={{ display: 'contents' }}>
                         <SquareWrapper
-                            key={square}
                             position={square}
                             isBlack={isBlack}
                             onDrop={(item) => handleDrop(item, square)}
@@ -161,6 +169,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                                 onDragEnd={() => setValidMoves([])}
                             />}
                         </SquareWrapper>
+                        </div>
                     );
                 })
             )}
