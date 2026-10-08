@@ -54,8 +54,8 @@ const BoardSquare: React.FC<BoardSquareProps> = ({ position, isBlack, children, 
             }} />
 
             {/* Coordinate Labels - Only show on edges */}
-            {position.includes('1') && <span style={{ position: 'absolute', bottom: 4, right: 4, fontSize: '0.7em', fontWeight: '900', color: isBlack ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.4)', zIndex: 1 }}>{position[0]}</span>}
-            {position.includes('a') && <span style={{ position: 'absolute', top: 4, left: 4, fontSize: '0.7em', fontWeight: '900', color: isBlack ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.4)', zIndex: 1 }}>{position[1]}</span>}
+            {position.includes('1') && <span style={{ position: 'absolute', bottom: 4, right: 4, fontSize: '0.7em', fontWeight: '900', color: isBlack ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.4)', zIndex: 1 }} aria-hidden="true">{position[0]}</span>}
+            {position.includes('a') && <span style={{ position: 'absolute', top: 4, left: 4, fontSize: '0.7em', fontWeight: '900', color: isBlack ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.4)', zIndex: 1 }} aria-hidden="true">{position[1]}</span>}
 
             {children}
 
@@ -101,7 +101,13 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
     }), [props.onDrop]);
 
     return (
-        <div ref={drop as unknown as React.RefObject<HTMLDivElement>} style={{ width: '100%', height: '100%' }} data-testid={props.position}>
+        <div
+            ref={drop as unknown as React.RefObject<HTMLDivElement>}
+            style={{ width: '100%', height: '100%' }}
+            data-testid={props.position}
+            role="gridcell"
+            aria-label={props.position}
+        >
             <BoardSquare {...props} isOver={isOver} canDrop={canDrop} />
         </div>
     )
@@ -121,7 +127,10 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
     };
 
     return (
-        <div style={{
+        <div
+            role="grid"
+            aria-label="Chess board"
+            style={{
             width: '100%',
             maxWidth: '70vmin',
             aspectRatio: '1 / 1',

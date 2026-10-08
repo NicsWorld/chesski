@@ -4,3 +4,6 @@
 ## 2024-05-14 - Aria-Live for Status Messages
 **Learning:** React components that manage dynamic textual game state updates without page reloads (e.g., status messages, checkmate alerts) should wrap the text container with `aria-live="polite"` and `aria-atomic="true"` to ensure screen readers announce the changes. Also, use `aria-pressed` to semantically indicate the active state of UI toggle buttons.
 **Action:** Always add `aria-live` and `aria-atomic` to dynamic status messages, and `aria-pressed` to toggle buttons.
+## 2024-10-08 - Accessible Chessboard Grid
+**Learning:** When improving accessibility for complex 2D grids like chessboards, adding `tabIndex={0}` to every cell without full grid keyboard navigation severely pollutes the document's tab sequence.
+**Action:** Use `role="grid"` on the parent container and `role="gridcell"` on individual squares with descriptive `aria-label`s, but avoid blanket `tabIndex={0}` unless implementing complete grid keyboard management.
