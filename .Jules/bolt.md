@@ -1,0 +1,3 @@
+## 2024-05-19 - [Memoizing ChessBoard Squares]
+**Learning:** Extracting components that are mapping over data, such as a chess board, and memoizing them reduces render load immensely when interacting with pieces. `React.memo` struggles when props include objects that are dynamically created on each parent render or complex callbacks that close over state unless properly constructed. In this case passing primitive piece data or using `useCallback` for functions, combined with a memoized `SquareRenderer` wrapper, avoids unneeded grid tile renders.
+**Action:** Move the `square` rendering loop content into a `React.memo`ized `MemoizedSquareRenderer` component inside `ChessBoard.tsx`.
