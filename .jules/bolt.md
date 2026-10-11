@@ -1,3 +1,3 @@
-## 2024-11-20 - [chess.js game.board() Performance]
-**Learning:** Calling `game.board()` in `chess.js` is computationally expensive because it dynamically generates a 2D array representation of the board state.
-**Action:** Replace `game.board()` with iteration over the `SQUARES` constant and use `game.get(square)` to lookup pieces efficiently, especially in tight loops like rendering `ChessBoard`, rendering `CapturedPieces`, or parsing board state in `Tutorial`.
+## 2024-11-20 - [ChessBoard Square Rendering Optimization]
+**Learning:** In `chess.js`, `game.get(square)` can return a newly instantiated object across calls or new game instances, causing object equality checks (like `prev.piece === next.piece`) to fail. Also, rendering the `children` prop containing newly instantiated React elements inside `.map` loops breaks `React.memo` components because the `children` prop gets a new reference on every render.
+**Action:** Extract the item rendering logic into a separate `React.memo` component, passing only primitive piece properties (e.g., `piece?.type`, `piece?.color`) instead of the piece object, and creating callbacks inside the memoized wrapper or using `useCallback` to ensure shallow comparison prevents unnecessary re-renders.
