@@ -101,7 +101,13 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
     }), [props.onDrop]);
 
     return (
-        <div ref={drop as unknown as React.RefObject<HTMLDivElement>} style={{ width: '100%', height: '100%' }} data-testid={props.position}>
+        <div
+            ref={drop as unknown as React.RefObject<HTMLDivElement>}
+            style={{ width: '100%', height: '100%' }}
+            data-testid={props.position}
+            role="gridcell"
+            aria-label={`Square ${props.position}`}
+        >
             <BoardSquare {...props} isOver={isOver} canDrop={canDrop} />
         </div>
     )
@@ -121,9 +127,12 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
     };
 
     return (
-        <div style={{
-            width: '100%',
-            maxWidth: '70vmin',
+        <div
+            role="grid"
+            aria-label="Chess board"
+            style={{
+                width: '100%',
+                maxWidth: '70vmin',
             aspectRatio: '1 / 1',
             display: 'grid',
             gridTemplateColumns: 'repeat(8, 1fr)',
