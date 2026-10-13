@@ -180,6 +180,7 @@ const Tutorial = ({ pieceTheme }: { pieceTheme: 'zoo' | 'standard' }) => {
                             key={t.id}
                             className={activeTutorial.id === t.id ? '' : 'btn-secondary'}
                             onClick={() => handleSelectTutorial(t)}
+                            aria-pressed={activeTutorial.id === t.id}
                         >
                             {t.title}
                         </button>
