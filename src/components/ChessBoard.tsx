@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, memo } from 'react';
 import { Chess } from 'chess.js';
 import { useDrop } from 'react-dnd';
 import Piece from './Piece';
@@ -107,6 +107,59 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
     )
 }
 
+interface MemoizedRenderSquareProps {
+    square: string;
+    isBlack: boolean;
+    pieceType?: string;
+    pieceColor?: 'w' | 'b';
+    pieceTheme: 'zoo' | 'standard';
+    isHighlighted: boolean;
+    onDrop: (item: { id: string; position: string }, to: string) => void;
+    onDragStart: (square: string) => void;
+    onDragEnd: () => void;
+}
+
+const MemoizedRenderSquare = memo(({
+    square,
+    isBlack,
+    pieceType,
+    pieceColor,
+    pieceTheme,
+    isHighlighted,
+    onDrop,
+    onDragStart,
+    onDragEnd,
+}: MemoizedRenderSquareProps) => {
+    // Optimize: Prevent creating new closures on every render in .map
+    const handleDrop = useCallback((item: { id: string; position: string }) => {
+        onDrop(item, square);
+    }, [onDrop, square]);
+
+    const handleDragStart = useCallback(() => {
+        onDragStart(square);
+    }, [onDragStart, square]);
+
+    return (
+        <SquareWrapper
+            position={square}
+            isBlack={isBlack}
+            onDrop={handleDrop}
+            highlight={isHighlighted}
+            lastMove={false}
+        >
+            {pieceType && pieceColor && (
+                <Piece
+                    piece={{ type: pieceType, color: pieceColor }}
+                    position={square}
+                    pieceTheme={pieceTheme}
+                    onDragStart={handleDragStart}
+                    onDragEnd={onDragEnd}
+                />
+            )}
+        </SquareWrapper>
+    );
+});
+
 const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => {
     const [validMoves, setValidMoves] = useState<string[]>([]);
 
@@ -114,11 +167,20 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
         return (fileIndex + rankIndex) % 2 === 1;
     };
 
-    const handleDrop = (item: { id: string; position: string }, to: string) => {
+    const handleDragStart = useCallback((square: string) => {
+        const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
+        setValidMoves(moves.map(m => m.to));
+    }, [game]);
+
+    const handleDragEnd = useCallback(() => {
+        setValidMoves([]);
+    }, []);
+
+    const handleDrop = useCallback((item: { id: string; position: string }, to: string) => {
         const from = item.position;
         onMove({ from, to, promotion: 'q' });
         setValidMoves([]);
-    };
+    }, [onMove]);
 
     return (
         <div style={{
@@ -142,25 +204,18 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                     const isBlack = isBlackSquare(fileIndex, rankIndex);
 
                     return (
-                        <SquareWrapper
+                        <MemoizedRenderSquare
                             key={square}
-                            position={square}
+                            square={square}
                             isBlack={isBlack}
-                            onDrop={(item) => handleDrop(item, square)}
-                            highlight={validMoves.includes(square)}
-                            lastMove={false}
-                        >
-                            {piece && <Piece
-                                piece={piece}
-                                position={square}
-                                pieceTheme={pieceTheme}
-                                onDragStart={() => {
-                                    const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
-                                    setValidMoves(moves.map(m => m.to));
-                                }}
-                                onDragEnd={() => setValidMoves([])}
-                            />}
-                        </SquareWrapper>
+                            pieceType={piece?.type}
+                            pieceColor={piece?.color}
+                            pieceTheme={pieceTheme}
+                            isHighlighted={validMoves.includes(square)}
+                            onDrop={handleDrop}
+                            onDragStart={handleDragStart}
+                            onDragEnd={handleDragEnd}
+                        />
                     );
                 })
             )}
