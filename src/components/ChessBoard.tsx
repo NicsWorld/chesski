@@ -101,7 +101,7 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
     }), [props.onDrop]);
 
     return (
-        <div ref={drop as unknown as React.RefObject<HTMLDivElement>} style={{ width: '100%', height: '100%' }} data-testid={props.position}>
+        <div role="gridcell" aria-label={props.position} ref={drop as unknown as React.RefObject<HTMLDivElement>} style={{ width: '100%', height: '100%' }} data-testid={props.position}>
             <BoardSquare {...props} isOver={isOver} canDrop={canDrop} />
         </div>
     )
@@ -121,7 +121,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
     };
 
     return (
-        <div style={{
+        <div role="grid" aria-label="Chess Board" style={{
             width: '100%',
             maxWidth: '70vmin',
             aspectRatio: '1 / 1',
@@ -134,22 +134,23 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
             overflow: 'hidden', // To clip corners
             transform: 'translateY(-6px)', // Lift it up so the shadow has room
         }}>
-            {RANKS.map((rank, rankIndex) =>
-                FILES.map((file, fileIndex) => {
-                    const square = `${file}${rank}`;
-                    // Using game.get(square) is faster than game.board() (avoiding 2D array generation overhead)
-                    const piece = game.get(square as import('chess.js').Square);
-                    const isBlack = isBlackSquare(fileIndex, rankIndex);
+            {RANKS.map((rank, rankIndex) => (
+                <div key={rank} role="row" style={{ display: 'contents' }}>
+                    {FILES.map((file, fileIndex) => {
+                        const square = `${file}${rank}`;
+                        // Using game.get(square) is faster than game.board() (avoiding 2D array generation overhead)
+                        const piece = game.get(square as import('chess.js').Square);
+                        const isBlack = isBlackSquare(fileIndex, rankIndex);
 
-                    return (
-                        <SquareWrapper
-                            key={square}
-                            position={square}
-                            isBlack={isBlack}
-                            onDrop={(item) => handleDrop(item, square)}
-                            highlight={validMoves.includes(square)}
-                            lastMove={false}
-                        >
+                        return (
+                            <SquareWrapper
+                                key={square}
+                                position={square}
+                                isBlack={isBlack}
+                                onDrop={(item) => handleDrop(item, square)}
+                                highlight={validMoves.includes(square)}
+                                lastMove={false}
+                            >
                             {piece && <Piece
                                 piece={piece}
                                 position={square}
@@ -162,8 +163,9 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                             />}
                         </SquareWrapper>
                     );
-                })
-            )}
+                    })}
+                </div>
+            ))}
         </div>
     );
 };
