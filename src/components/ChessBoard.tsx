@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Chess } from 'chess.js';
 import { useDrop } from 'react-dnd';
 import Piece from './Piece';
@@ -107,6 +107,39 @@ const SquareWrapper: React.FC<Omit<BoardSquareProps, 'isOver' | 'canDrop'> & { o
     )
 }
 
+interface MemoizedSquareProps {
+    square: string;
+    isBlack: boolean;
+    highlight: boolean;
+    pieceType?: string;
+    pieceColor?: string;
+    pieceTheme: 'zoo' | 'standard';
+    onDrop: (item: { id: string; position: string }, to: string) => void;
+    onDragStart: (square: string) => void;
+    onDragEnd: () => void;
+}
+
+// Optimize: Memoize square components to avoid re-rendering unchanged squares
+const MemoizedSquare = React.memo(({ square, isBlack, highlight, pieceType, pieceColor, pieceTheme, onDrop, onDragStart, onDragEnd }: MemoizedSquareProps) => {
+    return (
+        <SquareWrapper
+            position={square}
+            isBlack={isBlack}
+            onDrop={(item) => onDrop(item, square)}
+            highlight={highlight}
+            lastMove={false}
+        >
+            {pieceType && pieceColor && <Piece
+                piece={{ type: pieceType, color: pieceColor as 'w' | 'b' }}
+                position={square}
+                pieceTheme={pieceTheme}
+                onDragStart={() => onDragStart(square)}
+                onDragEnd={onDragEnd}
+            />}
+        </SquareWrapper>
+    );
+});
+
 const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => {
     const [validMoves, setValidMoves] = useState<string[]>([]);
 
@@ -114,11 +147,21 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
         return (fileIndex + rankIndex) % 2 === 1;
     };
 
-    const handleDrop = (item: { id: string; position: string }, to: string) => {
+    const handleDrop = useCallback((item: { id: string; position: string }, to: string) => {
         const from = item.position;
         onMove({ from, to, promotion: 'q' });
         setValidMoves([]);
-    };
+    }, [onMove]);
+
+    const handleDragStart = useCallback((square: string) => {
+        // Optimize: calculate moves here to avoid passing complex objects
+        const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
+        setValidMoves(moves.map(m => m.to));
+    }, [game]);
+
+    const handleDragEnd = useCallback(() => {
+        setValidMoves([]);
+    }, []);
 
     return (
         <div style={{
@@ -142,25 +185,18 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, onMove, pieceTheme }) => 
                     const isBlack = isBlackSquare(fileIndex, rankIndex);
 
                     return (
-                        <SquareWrapper
+                        <MemoizedSquare
                             key={square}
-                            position={square}
+                            square={square}
                             isBlack={isBlack}
-                            onDrop={(item) => handleDrop(item, square)}
                             highlight={validMoves.includes(square)}
-                            lastMove={false}
-                        >
-                            {piece && <Piece
-                                piece={piece}
-                                position={square}
-                                pieceTheme={pieceTheme}
-                                onDragStart={() => {
-                                    const moves = game.moves({ square: square as import('chess.js').Square, verbose: true });
-                                    setValidMoves(moves.map(m => m.to));
-                                }}
-                                onDragEnd={() => setValidMoves([])}
-                            />}
-                        </SquareWrapper>
+                            pieceType={piece?.type}
+                            pieceColor={piece?.color}
+                            pieceTheme={pieceTheme}
+                            onDrop={handleDrop}
+                            onDragStart={handleDragStart}
+                            onDragEnd={handleDragEnd}
+                        />
                     );
                 })
             )}
