@@ -1,0 +1,4 @@
+## 2024-10-19 - Content Security Policy Configuration for Vite
+**Vulnerability:** Missing Content Security Policy (CSP) leaving the app completely vulnerable to XSS and data injection attacks.
+**Learning:** Adding a CSP to a modern frontend application (like Vite/React) requires tailoring to avoid breaking the app. Directives like `'unsafe-inline'` and `'unsafe-eval'` are often required by development tooling (like Vite's HMR and module compilation), and legitimate external sources (like Google Fonts) must be explicitly whitelisted. WebSocket connections (`connect-src 'self' ws: wss:;`) are also crucial for Vite's HMR to function correctly.
+**Prevention:** Always include a tailored CSP in `index.html` from the start of a project, balancing strict security with necessary development and functional requirements.
