@@ -1,0 +1,3 @@
+## 2024-10-19 - ARIA Hierarchy for CSS Grid Chessboard
+**Learning:** Adding `role="grid"` and `role="gridcell"` directly to CSS Grid children violates ARIA hierarchy requirements if the cells aren't contained in a `role="row"` parent. However, grouping children in a DOM `div` typically breaks CSS Grid layouts.
+**Action:** Use a `div role="row"` wrapper around the grid cells but apply `style={{ display: 'contents' }}` to it. This satisfies the strict ARIA `grid` -> `row` -> `gridcell` nesting hierarchy for screen readers while allowing the `gridcell`s to act as direct children of the CSS grid for visual layout purposes.
