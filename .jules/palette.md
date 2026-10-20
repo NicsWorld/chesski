@@ -1,0 +1,3 @@
+## 2024-05-24 - ARIA Grid Roles in CSS Grid Layouts
+**Learning:** When using CSS grid layouts for complex 2D structures (like a chessboard), mapped elements lack semantic meaning for screen readers. However, adding ARIA `role="row"` wrappers to elements inside a CSS Grid layout breaks the visual layout unless `style={{ display: 'contents' }}` is applied to the row wrapper. This satisfies the ARIA hierarchy requirement for nested `gridcell` elements without breaking the CSS grid visual layout.
+**Action:** Apply `style={{ display: 'contents' }}` to intermediate wrapper elements with semantic roles (like `role="row"`) when necessary for accessibility but not required for visual CSS grid structure.
